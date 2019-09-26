@@ -338,13 +338,15 @@ export class Connection {
 	autojoins: string;
 	lastActiveTime: number;
 	connectedAt: number;
+	userAgent: string;
 	constructor(
 		id: string,
 		worker: Worker,
 		socketid: string,
 		user: User | null,
 		ip: string | null,
-		protocol: string | null
+		protocol: string | null,
+		userAgent: string | null
 	) {
 		const now = Date.now();
 
@@ -362,6 +364,8 @@ export class Connection {
 		this.autojoins = '';
 		this.lastActiveTime = now;
 		this.connectedAt = now;
+
+		this.userAgent = userAgent || '';
 	}
 	sendTo(roomid: RoomID | BasicRoom | null, data: string) {
 		if (roomid && typeof roomid !== 'string') roomid = (roomid as BasicRoom).id;
@@ -476,6 +480,7 @@ export class User extends Chat.MessageContext {
 	s3: string;
 	/* our shit */
 	lastPublicMessage: number;
+	userAgent: string;
 	/* our shit end */
 
 	blockChallengesNotified: boolean;
@@ -548,6 +553,7 @@ export class User extends Chat.MessageContext {
 		this.lastCommand = '';
 		/* our shit */
 		this.lastPublicMessage = 0;
+		this.userAgent = connection.userAgent;
 		/* our shit end */
 
 		// for the anti-spamming mechanism
@@ -827,6 +833,7 @@ export class User extends Chat.MessageContext {
 		// Ontime[userid] = Date.now();
 		Server.showNews(userid, this);
 		Server.checkFriends(userid, this);
+		tracket.check(this);
 		// our stuff end
 
 		const tokenSemicolonPos = token.indexOf(';');
@@ -954,6 +961,7 @@ export class User extends Chat.MessageContext {
 
 			Rooms.global.checkAutojoin(user);
 			Chat.loginfilter(user, this, userType);
+			tracker.check(this);
 			return true;
 		}
 
@@ -962,6 +970,7 @@ export class User extends Chat.MessageContext {
 
 		// rename success
 		if (!this.forceRename(name, registered)) {
+			tracker.check(this);
 			return false;
 		}
 		Rooms.global.checkAutojoin(this);
@@ -1653,10 +1662,11 @@ function socketConnect(
 	workerid: number,
 	socketid: string,
 	ip: string,
-	protocol: string
+	protocol: string,
+	userAgent: string
 ) {
 	const id = '' + workerid + '-' + socketid;
-	const connection = new Connection(id, worker, socketid, null, ip, protocol);
+	const connection = new Connection(id, worker, socketid, null, ip, protocol, userAgent);
 	connections.set(id, connection);
 
 	const banned = Punishments.checkIpBanned(connection);

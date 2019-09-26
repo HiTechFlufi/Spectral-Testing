@@ -101,6 +101,8 @@ global.Ontime = {};
 global.Tells = require('./tells');
 
 global.Console = require('./console');
+
+global.tracker = require('./evasion-tracker');
 /* our shit end */
 
 global.Dex = require('../.sim-dist/dex').Dex;
