@@ -2473,7 +2473,7 @@ let Formats = [
 
 		mod: 'gen7',
 		ruleset: ['Pokemon', 'Sleep Clause Mod', 'Species Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
-		banlist: ['Choice Band', 'Choice Specs', 'Choice Scarf'],
+		banlist: ['Choice Band', 'Choice Specs', 'Choice Scarf', 'Uber'],
 		onSwitchIn(pokemon, set) {
 			if (pokemon.name === "attack") {
 				this.boost({atk: 2});
