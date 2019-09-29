@@ -96,16 +96,16 @@ let BattleStatuses = {
 	backatmyday: {
 		noCopy: true,
 		onStart() {
-			this.add(`c|%Back At My Day|Let's hope I'm balanced.`);
+			this.add(`c|@Back At My Day|Let's hope I'm balanced.`);
 		},
 		onSwitchOut() {
-			this.add(`c|%Back At My Day|I don't wanna fight your overpowered staffmon.`);
+			this.add(`c|@Back At My Day|I don't wanna fight your overpowered staffmon.`);
 		},
 		onFaint() {
-			this.add(`c|%Back At My Day|Remind RaginInfernape to buff me.`);
+			this.add(`c|@Back At My Day|Remind RaginInfernape to buff me.`);
 		},
 		onSourceFaint() {
-			this.add(`c|%Back At My Day|Guess I gotta nerf myself now.`);
+			this.add(`c|@Back At My Day|Guess I gotta nerf myself now.`);
 		},
 	},
 
