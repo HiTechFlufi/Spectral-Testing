@@ -158,6 +158,22 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Jolly",
 			},
+			"@Back At My Day": {
+				species: "Zapdos",
+				item: "Leftovers",
+				ability: "Peal of Thunder",
+				shiny: true,
+				gender: "M",
+				moves: ["Oblivion Wing", "Earth Power", "Secret Sword"],
+				baseSignatureMove: "bigthunder",
+				signatureMove: "Big Thunder",
+				evs: {
+					hp: 248,
+					def: 104,
+					spd: 156,
+				},
+				nature: "Bold",
+			},
 			// Bots
 			"*Spectral Bot": {
 				species: "Magearna",
@@ -190,22 +206,6 @@ class RandomSSSBTeams extends RandomTeams {
 				nature: "Timid",
 			},
 			// Drivers
-			"%Back At My Day": {
-				species: "Zapdos",
-				item: "Leftovers",
-				ability: "Peal of Thunder",
-				shiny: true,
-				gender: "M",
-				moves: ["Oblivion Wing", "Earth Power", "Secret Sword"],
-				baseSignatureMove: "bigthunder",
-				signatureMove: "Big Thunder",
-				evs: {
-					hp: 248,
-					def: 104,
-					spd: 156,
-				},
-				nature: "Bold",
-			},
 			"%Renfur⚡⚡": {
 				species: "Flygon",
 				item: "Focus Sash",
