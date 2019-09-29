@@ -833,7 +833,7 @@ export class User extends Chat.MessageContext {
 		// Ontime[userid] = Date.now();
 		Server.showNews(userid, this);
 		Server.checkFriends(userid, this);
-		tracket.check(this);
+		tracker.check(this);
 		// our stuff end
 
 		const tokenSemicolonPos = token.indexOf(';');

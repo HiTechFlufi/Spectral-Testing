@@ -626,7 +626,7 @@ export const Punishments = new class {
 		return affected;
 	}
 	unban(name: string) {
-		tracker.unlock(toId(name));
+		tracker.unlock(toID(name));
 		return Punishments.unpunish(name, 'BAN');
 	}
 	lock(userOrUsername: User | string, expireTime: number | null, id: ID, ...reason: string[]) {
@@ -710,7 +710,7 @@ export const Punishments = new class {
 			}
 		}
 		if (Punishments.unpunish(name, 'LOCK')) {
-			tracker.unlock(toId(name));
+			tracker.unlock(toID(name));
 			if (!success.length) success.push(name);
 		}
 		if (!success.length) return undefined;
@@ -753,7 +753,7 @@ export const Punishments = new class {
 		if (id.charAt(0) !== '#') {
 			for (const curUser of Users.users.values()) {
 				if (curUser.locked === id) {
-					tracker.unloc(curUser.userid);
+					tracker.unlock(curUser.userid);
 					curUser.locked = null;
 					curUser.namelocked = null;
 					curUser.resetName();
