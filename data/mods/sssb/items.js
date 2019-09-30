@@ -191,6 +191,26 @@ let BattleItems = {
 		desc: "The holder weakens supereffective attacks by 1/2 (neutral damage), the user recovers 1/8 of their maximum HP every turn, and if the user's HP is less than 1/4 of max HP the user's moves' priority becomes +1",
 		shortDesc: "Neutralizes supereffective attacks, heals by 1/8 of max HP, and if HP is < 1/4, move's get +1 priority.",
 	},
+	
+	// Lady Kakizaki
+	"dumplings": {
+		id: "dumplings",
+		name: "Dumplings",
+		onResidualOrder: 5,
+		onResidualSubOrder: 2,
+		onResidual(pokemon) {
+			if (this.field.isTerrain('grassyterrain')) return;
+			this.heal(pokemon.maxhp / 6);
+		},
+		onTerrain(pokemon) {
+			if (!this.field.isTerrain('grassyterrain')) return;
+			this.heal(pokemon.maxhp / 6);
+		},
+		onStart: function (pokemon) {
+			this.add("-start", pokemon, "typechange", "Water/Ice");
+			pokemon.types = ["Water", "Ice"];
+		},
+	},
 };
 
 exports.BattleItems = BattleItems;
