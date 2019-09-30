@@ -32,7 +32,7 @@ class PassTheBomb {
 		msg += `The game will begin in <strong>${Math.round((this.timeLeft - Date.now()) / 1000)}</strong> seconds<br />`;
 		msg += `<button name="send" value="/passthebomb join">Join!</button></center>`;
 		if (this.players.size > 0) {
-			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? `user has` : `users have`)} joined: ${Array.from(this.players).map(player => Chat.escapeHTML(player[1].name, true, true)).join(",")}</center>`;
+			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? `user has` : `users have`)} joined: ${Chat.toListString(Array.from(this.players).map(player => Server.nameColor(player[1].name, true, true)))}</center>`;
 		}
 		this.room.add(`|uhtmlchange|${msg}</div>`);
 	}
@@ -75,7 +75,7 @@ class PassTheBomb {
 
 	getMsg() {
 		let msg = `bomb${this.room.bombCount}${this.round}|<div class="infobox"><center><strong>Round: ${this.round}</strong><br />`;
-		msg += `Players: ${this.getSurvivors().map(player => Server.nameColor(player[1].name).join(", "))}<br />`;
+		msg += `Players: ${Chat.toListString(this.getSurvivors().map(player => Server.nameColor(player[1].name)))}<br />`;
 		msg += `<small>Use /pb or /passbomb [player] to Pass The Bomb to another player!</small>`;
 		return msg;
 	}
