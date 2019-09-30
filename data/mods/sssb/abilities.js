@@ -164,7 +164,7 @@ let BattleAbilities = {
 		},
 	},
 
-	// Tactician Loki
+	// Tactician Loki and Lady Kakizaki
 	"chaoticaura": {
 		id: "chaoticaura",
 		name: "Chaotic Aura",
