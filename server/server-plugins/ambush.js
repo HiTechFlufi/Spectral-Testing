@@ -34,7 +34,7 @@ class Ambush {
 	updateJoins() {
 		let msg = `ambush${this.room.ambushCount}${this.round}|<div style="background-color: #000000; border: 12px double #860000; color: #DF0101"><center><h3><img style="transform: scaleX(-1);" src="https://pldh.net/media/pokemon/gen6/xy-animated/491.gif" height="87" width="121" align="left"><font face="arial" size="4"><u><strong>A game of Ambush has been started!</strong></u></font><img src="https://pldh.net/media/pokemon/gen6/xy-animated/488.gif" height="87" width="121" align="right"></h3><br /><br /><br /><br /><br /><center>The game will begin in <strong>${Math.round((this.timeLeft - Date.now()) / 1000)}</strong> seconds.<br /><br /><button style="border: 4px solid #000; background: white; box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.3) inset; color: #DF0101; margin: 1px 6px; padding: 8px 40px" name = "send" value = "/ambush join"><font size="3">Join!</font></button><br /><br />`;
 		if (this.players.size > 0) {
-			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? "user has" : "users have")} joined: ${Array.from(this.players).map(player => Server.nameColor(player[0].name)).join(", ")}</center>`;
+			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? "user has" : "users have")} joined: ${Chat.toListString(Array.from(this.players).map(player => Server.nameColor(player[0].name)))}</center>`;
 		}
 		this.room.add(`|uhtmlchange|${msg}</center></div>`);
 	}
@@ -76,7 +76,7 @@ class Ambush {
 
 		this.round++;
 		this.loadGuns();
-		let msg = `ambush${this.room.ambushCount}${this.round}|<div style="background-color: #000; border: 12px double #860000; color: #DF0101"><center><h3><img style="transform: scaleX(-1);" src="http://pldh.net/media/pokemon/gen6/xy-animated/491.gif" height="87" width="121" align="left"><font face="arial" size="4"><u><strong>Round ${this.round}</strong></u></font><img src="http://pldh.net/media/pokemon/gen6/xy-animated/488.gif" height="87" width="121" align="right"></h3><br /><br /><br /><br /><br /><br />Players: ${this.getSurvivors().map(player => Server.nameColor(player[0].name)).join(", ")}<br /><br /><small>Use /fire [player] to shoot another player!</small>`;
+		let msg = `ambush${this.room.ambushCount}${this.round}|<div style="background-color: #000; border: 12px double #860000; color: #DF0101"><center><h3><img style="transform: scaleX(-1);" src="http://pldh.net/media/pokemon/gen6/xy-animated/491.gif" height="87" width="121" align="left"><font face="arial" size="4"><u><strong>Round ${this.round}</strong></u></font><img src="http://pldh.net/media/pokemon/gen6/xy-animated/488.gif" height="87" width="121" align="right"></h3><br /><br /><br /><br /><br /><br />Players: ${Chat.toListString(this.getSurvivors().map(player => Server.nameColor(player[0].name)))}<br /><br /><small>Use /ambush fire [player] to shoot another player!</small>`;
 		this.room.add(`|uhtml|${msg}<br /><br /><i>Wait for it...</i>`).update();
 
 		this.release = setTimeout(() => {
