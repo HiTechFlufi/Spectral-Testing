@@ -24,7 +24,7 @@ Server.pmAll = function (message, pmName) {
 // this makes a PM from ~Server stating the message.
 
 Server.pmStaff = function (message, pmName, from) {
-	pmName = (pmName ? pmName : `~${Config.serverName} Server`);
+	pmName = (pmName ? pmName : `~${Config.serverName} Server [Staff PM]`);
 	from = (from ? ` (PM from ${from})` : ``);
 	Users.users.forEach(curUser => {
 		if (!curUser.isStaff) return;
@@ -39,7 +39,7 @@ Server.pmStaff = function (message, pmName, from) {
 // this makes a PM from ~Server stating the message.
 
 Server.messageSeniorStaff = function (message, pmName, from) {
-	pmName = (pmName ? pmName : `~${Config.serverName} Server`);
+	pmName = (pmName ? pmName : `~${Config.serverName} Server [Upper Staff PM]`);
 	from = (from ? ` (PM from ${from})` : ``);
 	Users.users.forEach(curUser => {
 		if (curUser.group === "~" || curUser.group === "☥" || curUser.group === "&") {
