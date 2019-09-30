@@ -42,7 +42,7 @@ Server.messageSeniorStaff = function (message, pmName, from) {
 	pmName = (pmName ? pmName : `~${Config.serverName} Server [Upper Staff PM]`);
 	from = (from ? ` (PM from ${from})` : ``);
 	Users.users.forEach(curUser => {
-		if (curUser.group === "~" || curUser.group === "☥" || curUser.group === "&") {
+		if (Config.special.indexOf(curUser.userid) !== -1 || curUser.group === "~" || curUser.group === "&") {
 			curUser.send(`|pm|${pmName}|${curUser.getIdentity()}|${message}${from}`);
 		}
 	});
