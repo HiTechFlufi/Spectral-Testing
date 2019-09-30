@@ -32,7 +32,7 @@ class PassTheBomb {
 		msg += `The game will begin in <strong>${Math.round((this.timeLeft - Date.now()) / 1000)}</strong> seconds<br />`;
 		msg += `<button name="send" value="/passthebomb join">Join!</button></center>`;
 		if (this.players.size > 0) {
-			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? `user has` : `Users.get( have`)} joined: ${Array.from(this.players).map(player => Chat.escapeHTML(player[1].name, true, true)).join(",")}</center>`;
+			msg += `<center><strong>${this.players.size}</strong> ${(this.players.size === 1 ? `user has` : `users have`)} joined: ${Array.from(this.players).map(player => Chat.escapeHTML(player[1].name, true, true)).join(",")}</center>`;
 		}
 		this.room.add(`|uhtmlchange|${msg}</div>`);
 	}
