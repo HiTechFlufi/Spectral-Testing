@@ -4,8 +4,8 @@ const fs = require('fs');
 const https = require('https');
 
 Server.UCMD = function (obj) {
-if (obj.cmdToken === '!') return obj.errorReply(`The command "${obj.message}" was unrecognized.`);
-	return obj.errorReply(`The command "${obj.message}" was unrecognized. To send a message starting with "${obj.message}", type "${obj.cmdToken}${obj.message}".`);
+if (obj.cmdToken === '!') return obj.errorReply(`The command "${obj.message}" does not exist.`);
+	return obj.errorReply(`The command "${obj.message}" does not exist. To send a message starting with "${obj.message}", type "${obj.cmdToken}${obj.message}".`);
 };
 
 Server.uploadToHastebin = function (toUpload, callback) {
