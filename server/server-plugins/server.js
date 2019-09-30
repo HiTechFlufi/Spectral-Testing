@@ -583,7 +583,10 @@ exports.commands = {
 		if (!this.runBroadcast()) return false;
 		if (!target || target === "help") return this.parse("/help sssb");
 		if (toID(target) === "bamd") target = "backatmyday";
-		if (toID(target) === "c7") target = "c733937123";
+		if (toID(target) === "insist") target = "ragininfernape";
+		if (toID(target) === "mewth") target = "roughskull";
+		if (toID(target) === "infernape") target = "ragininfernape";
+		if (toID(target) === "bk") target = "bloodedkitten";
 		if (toID(target) === "as") target = "alfastorm";
 		let targetData = getMonData(toID(target));
 		if (!targetData) return this.errorReply(`The staffmon "${target}" could not be found.`);
@@ -974,7 +977,7 @@ exports.commands = {
 		target = target.replace(/<(?:.|\n)*?>/gm, "");
 
 		for (let i in room.users) {
-			let message = `|pm|${pmName}|${room.users[i].getIdentity()}|${target}`;
+			let message = `|pm|${pmName} [Room PM ${room.name}]|${room.users[i].getIdentity()}|${target}`;
 			room.users[i].send(message);
 		}
 		this.privateModAction(`(${user.name} mass (room) PM'ed: ${target})`);
