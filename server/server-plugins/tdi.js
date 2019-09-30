@@ -39,10 +39,10 @@ class TDI {
 
 	leave(user) {
 		if (!this.players.includes(user.userid)) return user.sendTo(this.room, `You have not joined this season of Total Drama Island yet.`);
-		this.room.add(`|html|${Server.nameColor(user.name, true)} has left this season of Total Drama Island.`);
 		if (this.state !== "signups") {
 			this.eliminate(user);
 		} else {
+			this.room.add(`|html|${Server.nameColor(user.name, true)} has left this season of Total Drama Island.`);
 			this.players.splice(this.players.indexOf(user.userid), 1);
 		}
 	}
@@ -83,6 +83,7 @@ class TDI {
 	eliminate(target) {
 		target = toID(target);
 		if (!this.players.includes(target)) return false;
+		this.room.add(`|html|${Server.nameColor(target, true)} has been casted off this season of Total Drama Island.`);
 		if (this.team1.includes(target)) {
 			this.team1.splice(this.team1.indexOf(target), 1);
 			this.players.splice(this.players.indexOf(target), 1);
