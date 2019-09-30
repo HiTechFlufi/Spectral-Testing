@@ -128,9 +128,7 @@ class Draft {
 	}
 
 	log(message) {
-		let file = path.join(__dirname, '../logs/' + this.room + 'DraftLogs.txt');
-		let text = `[${Date()}] ${message}\n`;
-		FS(file).append(text);
+		FS(`logs/drafts/${this.room}DraftLogs.txt`).append(`[${Date()}] ${message}\n`);
 	}
 
 	overWrite(self, team, pick, mon) {
