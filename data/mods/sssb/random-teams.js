@@ -258,6 +258,7 @@ class RandomSSSBTeams extends RandomTeams {
 				ability: "Slow Pixilate",
 				gender: "M",
 				moves: ["Fake Out", "Extreme Speed", "Bonemerang"],
+				baseSignatureMove: "sarcasmovertext",
 				signatureMove: "Sarcasm Over Text",
 				evs: {
 					hp: 4,
@@ -265,6 +266,21 @@ class RandomSSSBTeams extends RandomTeams {
 					spe: 252,
 				},
 				nature: "Jolly",
+			},
+			"+Lady✨Kakizaki": {
+				species: "Suicune",
+				item: "Dumplings",
+				ability: "Chaotic Aura",
+				gender: "F",
+				moves: ["Calm Mind", "Substitute", "Extrasensory"],
+				baseSignatureMove: "yandereblitz",
+				signatureMove: "Yandere Blitz",
+				evs: {
+					hp: 252,
+					spa: 252,
+					spd: 4,
+				},
+				nature: "Modest",
 			},
 		};
 		let pool = this.shuffle(Object.keys(sets));
