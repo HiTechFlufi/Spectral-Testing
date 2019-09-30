@@ -502,6 +502,38 @@ let BattleMovedex = {
 		target: "allAdjacent",
 		type: "Poison",
 	},
+	
+	// Lady Kakizaki
+	"yandereblitz": {
+		id: "yandereblitz",
+		name: "Yandere Blitz",
+		basePower: 100,
+		accuracy: 100,
+		desc: "20% chance to burn, 20% chance to freeze, 50% chance to confuse and heals 1/8 of damage dealt.",
+		shortdesc: "20% burn, 20% freeze, 50% confuse, heals 1/8 of damage dealt.",
+		pp: 10,
+		priority: 0,
+		category: "Special",
+		onPrepareHit(target, source) {
+			this.add('-anim', source, 'Tri Attack', target);
+		},
+		flags: {protect: 1, mirror: 1},
+		secondaries: [
+			{
+				chance: 20,
+				status: 'brn',
+			}, {
+				chance: 20,
+				status: 'frz',
+			}, {
+				chance: 50,
+				volatileStatus: 'confusion',
+			},
+		],
+		drain: [1, 8],
+		target: "normal",
+		type: "Ice",
+	},
 };
 
 exports.BattleMovedex = BattleMovedex;
