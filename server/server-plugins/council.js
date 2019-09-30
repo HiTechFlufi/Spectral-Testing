@@ -42,15 +42,15 @@ Server.isCouncilMember = isCouncilMember;
 
 let committee = {
 	// The name of the committee
-	name: "Perfected Pokemon",
+	name: "Exiled OU",
 	// The owner(s) who can manage anything
-	owners: ["ragininfernape", "backatmyday"],
+	owners: ["ragininfernape", "backatmyday", "roughskull"],
 	// VIPs of the committee who can manage anything unless suspended
 	vips: [],
 	// Forums link for the committee
 	forums: "https://docs.google.com/document/d/10UeZXi9q1zqXIXjTRwp0ZysSdGsy4HdraD3iGQL0k6g/edit?usp=sharing",
 	// Room of the Committee
-	room: "perfectedpokemon",
+	room: "exiledou",
 };
 
 function alertCouncilMembers(message) {
