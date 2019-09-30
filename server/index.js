@@ -165,6 +165,12 @@ global.TeamValidatorAsync = require('./team-validator-async');
 TeamValidatorAsync.PM.spawn();
 
 /*********************************************************
+ * Start up the githubhook server
+ ********************************************************/
+/* require('./github');
+Keep this disabled until we have a webhook url set up
+*/
+/*********************************************************
  * Start up the REPL server
  *********************************************************/
 
