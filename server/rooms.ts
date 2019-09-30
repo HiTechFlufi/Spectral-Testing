@@ -1295,6 +1295,7 @@ export class BasicChatRoom extends BasicRoom {
 			user.updateIdentity();
 		}
 		if (this.lottery) this.lottery.onConnect(user, connection);
+		if (this.tdi) this.tdi.onConnect(user, connection);
 		if (this.game && this.game.onConnect) this.game.onConnect(user, connection);
 	}
 	onJoin(user: User, connection: Connection) {
