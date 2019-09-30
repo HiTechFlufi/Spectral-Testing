@@ -175,6 +175,8 @@ Lady✨Kakizaki
 (Female Suicune)
 @ Dumplings
 	- Restore 1/6 of max HP per turn and become Water/Ice Type.
+Ability: Chaotic Aura
+	- Status moves receive +1 priority, a random stat is raised every turn by two stages and a random stat is lowered every turn by one stage.
 EVs: 252 HP / 252 SpA / 4 SpD
 Moves: Calm Mind, Substitute, Extrasensory
 Signature Move: Yandere Blitz
