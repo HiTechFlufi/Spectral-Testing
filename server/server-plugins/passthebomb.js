@@ -120,7 +120,7 @@ class PassTheBomb {
 			}
 			this.removeUser(user.userid);
 			self.sendReply("You have been disqualified for spamming /passbomb.");
-			self.privateModCommand(`(${user.name} was disqualified for spamming /passbomb.)`);
+			self.privateModAction(`(${user.name} was disqualified for spamming /passbomb.)`);
 			return;
 		}
 		this.madeMove = true;
@@ -148,7 +148,7 @@ class PassTheBomb {
 		let getUser = this.players.get(targetId);
 		if (!getUser) return self.sendReply(`${target} is not a player!`);
 		if (getUser.status === "dead") return self.sendReply(`${getUser.name} has already been killed!`);
-		self.privateModCommand(`(${getUser.name} was disqualified by ${user.name}.)`);
+		self.privateModAction(`(${getUser.name} was disqualified by ${user.name}.)`);
 		this.removeUser(targetId);
 	}
 
@@ -294,7 +294,7 @@ exports.commands = {
 
 		// Short-Cut Commands
 		"": "help",
-		help(target, room, user) {
+		help() {
 			this.parse(`/help passthebomb`);
 		},
 	},
