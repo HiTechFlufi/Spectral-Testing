@@ -2359,7 +2359,7 @@ let Formats = [
 			if (!template.learnset) {
 				template.learnset = this.data.Learnsets[toID(template.species.split("-")[0])].learnset;
 			} else {
-				template.learnset = this.data.Learnsets[(template.species.indexOf("-") !== -1 && template.isMega ? toID(template.species.split("-")[0]) : toId(template.species))].learnset;
+				template.learnset = this.data.Learnsets[(template.species.indexOf("-") !== -1 && template.isMega ? toID(template.species.split("-")[0]) : toID(template.species))].learnset;
 			}
 			do {
 				added[template.species] = true;
