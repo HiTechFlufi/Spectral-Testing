@@ -977,7 +977,7 @@ exports.commands = {
 		target = target.replace(/<(?:.|\n)*?>/gm, "");
 
 		for (let i in room.users) {
-			let message = `|pm|${pmName} [Room PM ${room.name}]|${room.users[i].getIdentity()}|${target}`;
+			let message = `|pm|${pmName} [Room PM ${room.title}]|${room.users[i].getIdentity()}|${target}`;
 			room.users[i].send(message);
 		}
 		this.privateModAction(`(${user.name} mass (room) PM'ed: ${target})`);
