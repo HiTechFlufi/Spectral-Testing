@@ -659,6 +659,7 @@ exports.commands = {
 				this.sendReplyBox(regdateReply(date));
 			} else {
 				this.sendReplyBox(`It appears ${Server.nameColor(target, true)} is unregistered.`);
+			}
 		});
 
 		function regdateReply(date) {
