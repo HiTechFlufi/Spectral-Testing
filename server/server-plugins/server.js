@@ -582,17 +582,23 @@ exports.commands = {
 	sssb(target, room, user) {
 		if (!this.runBroadcast()) return false;
 		if (!target || target === "help") return this.parse("/help sssb");
-		if (toID(target) === "bamd") target = "backatmyday";
-		if (toID(target) === "insist") target = "ragininfernape";
-		if (toID(target) === "mewth") target = "roughskull";
-		if (toID(target) === "infernape") target = "ragininfernape";
-		if (toID(target) === "bk") target = "bloodedkitten";
-		if (toID(target) === "as") target = "alfastorm";
-		let targetData = getMonData(toID(target));
+		let targetId = toID(target);
+		if (targetId === "as" || targetId === "alfa") target = "alfastorm";
+		if (targetId === "bamd") target = "backatmyday";
+		if (targetId === "horrific") target = "horrific17";
+		if (targetId === "kakizaki") target = "ladykakizaki";
+		if (targetId === "insist" || targetId === "infernape") target = "ragininfernape";
+		if (targetId === "clair") target = "revivalclair";
+		if (targetId === "xfloatz") target = "revivalxfloatz";
+		if (targetId === "mewth") target = "roughskull";
+		if (targetId === "maura") target = "shademaura";
+		if (targetId === "bk" || targetId === "loki" || targetId === "bloodedkitten") target = "tacticianloki";
+		if (targetId === "arrays") target = "volco";
+		let targetData = getMonData(targetId);
 		if (!targetData) return this.errorReply(`The staffmon "${target}" could not be found.`);
 		return this.sendReplyBox(targetData);
 	},
-	sssbhelp: [`/${Config.serverName.substr(0, 1).toLowerCase()}ssb [staff member's name] - displays data for a staffmon's movepool, custom move, and custom ability.`],
+	sssbhelp: [`/sssb [staff member's name] - displays data for a staffmon's movepool, custom move, and custom ability.`],
 
 	"!dubtrack": true,
 	dub: "dubtrack",
@@ -651,7 +657,8 @@ exports.commands = {
 		Server.regdate(target, date => {
 			if (date) {
 				this.sendReplyBox(regdateReply(date));
-			}
+			} else {
+				this.sendReplyBox(`It appears ${Server.nameColor(target, true)} is unregistered.`);
 		});
 
 		function regdateReply(date) {
@@ -708,7 +715,7 @@ exports.commands = {
 	digidexhelp: ["/digidex [Digimon] - Checks for a Digimon's data from Digimon Showdown."],
 
 	randomsurvey: "randsurvey",
-	randsurvey(target, room, user) {
+	randsurvey() {
 		let results = [
 			`/survey create What do you want to see added or updated in ${Config.serverName}?`,
 			`/survey create What's your most memorable experience on ${Config.serverName}?`,
@@ -865,8 +872,8 @@ exports.commands = {
 		if (!this.can("mute", targetUser, room)) return false;
 		if (!room.users[targetUser.userid]) return this.errorReply(`User "${this.targetUsername}" is not in this room.`);
 
-		this.addModAction(`${targetUser.name} was kicked from the room by ${user.name}. (${target})`);
-		targetUser.popup(`You were kicked from ${room.id} by ${user.name}. ${(target ? `(${target})` : ``)}`);
+		this.addModAction(`${targetUser.name} was kicked from the room by ${user.name}.${(target ? ` (${target})` : ``)}`);
+		targetUser.popup(`You were kicked from ${room.id} by ${user.name}.${(target ? ` (${target})` : ``)}`);
 		targetUser.leaveRoom(room.id);
 	},
 	kickhelp: ["/kick [user], [reason] - Kick a user out of a room [reasons are optional]. Requires: % @ # & ~"],
