@@ -234,7 +234,7 @@ exports.commands = {
 			if (!room.tdi) return this.errorReply(`There must be an ongoing season of Total Drama Island to check the pot.`);
 			if (!this.runBroadcast()) return;
 			let pot = this.room.tdi.players.length * 20;
-			return this.sendReplyBox(`<strong>The current prize money for this season of Total Drama Island is ${pot} ${moneyPlural}${(room.tdi.state === "signups" ? ", and may continue to rise/fall." : ".")}</strong>`);
+			return this.sendReplyBox(`<strong>The current prize money for this season of Total Drama Island is ${room.tdi.state === "signups" ? pot : room.tdi.prizeMoney} ${moneyPlural}${(room.tdi.state === "signups" ? ", and may continue to rise/fall." : ".")}</strong>`);
 		},
 
 		"": "help",
