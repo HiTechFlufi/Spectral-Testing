@@ -111,7 +111,7 @@ exports.commands = {
 			if (!this.runBroadcast()) return;
 			if (!room.lottery) return this.errorReply("There is no active Lottery drawing in this room.");
 			if (room.lottery.players.length < 1) return this.errorReply(`There are currently no players in this Lottery drawing.`);
-			return this.sendReplyBox(`<strong>Current Player Count:</strong> ${room.lottery.players.length} user${(room.lottery.players.length === 1 ? `` : `s`)} in the Lottery drawing.<br /><strong>Players:</strong> ${Chat.toListString(room.lottery.players)}.`);
+			return this.sendReplyBox(`<strong>Current Player Count:</strong> ${room.lottery.players.length} user${(room.lottery.players.length === 1 ? `` : `s`)} in the Lottery drawing.<br /><strong>Players:</strong> ${Chat.toListString(room.lottery.players.map(p => { return Server.nameColor(Users.get(p).name, true, true); }))}.`);
 		},
 
 		forcestart: "start",
