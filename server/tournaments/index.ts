@@ -1231,7 +1231,7 @@ const commands: {basic: TourCommands, creation: TourCommands, moderation: TourCo
 		},
 		getplayers: "getusers",
 		players: "getusers",
-		users: "players",
+		users: "getusers",
 		getusers(tournament) {
 			if (!this.runBroadcast()) return;
 			const users = usersToNames(tournament.getRemainingPlayers().sort());
