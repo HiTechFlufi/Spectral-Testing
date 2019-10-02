@@ -1333,22 +1333,6 @@ const commands = {
 	 * Informational commands
 	 *********************************************************/
 
-	'!uptime': true,
-	uptime(target, room, user) {
-		if (!this.runBroadcast()) return;
-		let uptime = process.uptime();
-		let uptimeText;
-		if (uptime > 24 * 60 * 60) {
-			let uptimeDays = Math.floor(uptime / (24 * 60 * 60));
-			uptimeText = uptimeDays + " " + (uptimeDays === 1 ? "day" : "days");
-			let uptimeHours = Math.floor(uptime / (60 * 60)) - uptimeDays * 24;
-			if (uptimeHours) uptimeText += ", " + uptimeHours + " " + (uptimeHours === 1 ? "hour" : "hours");
-		} else {
-			uptimeText = Chat.toDurationString(uptime * 1000);
-		}
-		this.sendReplyBox("Uptime: <b>" + uptimeText + "</b>");
-	},
-
 	'!servertime': true,
 	servertime(target, room, user) {
 		if (!this.runBroadcast()) return;
@@ -1456,7 +1440,7 @@ const commands = {
 	'!forums': true,
 	forums(target, room, user) {
 		if (!this.runBroadcast()) return;
-		this.sendReplyBox(`<a href="https://www.smogon.com/forums/forums/209/">Pok&eacute;mon Showdown Forums</a>`);
+		this.sendReplyBox(`<a href="http://spectralps.boards.net/">${Config.serverName} Forums</a>`);
 	},
 
 	'!privacypolicy': true,
