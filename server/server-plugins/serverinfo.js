@@ -92,27 +92,6 @@ exports.commands = {
 		"!randomtype - Broadcasts the generated typing.",
 	],
 
-	'!opensource': true,
-	github: "opensource",
-	os: "opensource",
-	git: "opensource",
-	opensource(target, room, user) {
-		if (!this.runBroadcast()) return;
-		this.sendReplyBox(
-			`${Config.serverName}'s Github's:<br />` +
-			`- Language: JavaScript (Node.js)<br />` +
-			`- <a href="https://github.com/DeathlyPlays/Spectral">${Config.serverName}'s Server Code</a><br />` +
-			`- <a href="https://github.com/DeathlyPlays/Spectral/commits/master">What's new?</a><br />` +
-			`- <a href="https://github.com/Zarel/Pokemon-Showdown">Main's source code</a><br />` +
-			`- <a href="https://github.com/Zarel/Pokemon-Showdown-Client">Client source code</a><br />` +
-			`- <a href="https://github.com/Zarel/Pokemon-Showdown-Dex">Dex source code</a>`
-		);
-	},
-	opensourcehelp: [
-		`/opensource - Links to ${Config.serverName}'s source code repository.`,
-		`!opensource - Show everyone that information. Requires: + % @ * # & ~`,
-	],
-
 	'!discord': true,
 	discord(target, room, user) {
 		if (!this.runBroadcast()) return;
@@ -126,7 +105,7 @@ exports.commands = {
 			`<hr />` +
 			`<u><strong>Server Maintainers:</u></strong><br />` +
 			`- ${Server.nameColor('Roughskull', true)} (Owner, Sysadmin, Developer)<br />` +
-			`- ${Server.nameColor('RaginInfernape', true)} (Host, Main Developer)<br />` +
+			`- ${Server.nameColor('RaginInfernape', true)} (Head Owner, Host, Main Developer)<br />` +
 			`- ${Server.nameColor('Volco', true)} (Sysadmin, and Emergency Developer)<br />` +
 			`<hr />` +
 			`<u><strong>Major Contributors:</strong></u><br />` +
@@ -168,7 +147,6 @@ exports.commands = {
 		display += `<li><button class="button" name="send" value="/committeehelp">Committee</button></li>`;
 		display += `<li><button class="button" name="send" value="/definehelp">Define</button></li>`;
 		display += `<li><button class="button" name="send" value="/dewtubehelp">DewTube</button></li>`;
-		display += `<li><button class="button" name="send" value="/digidexhelp">Digidex</button></li>`;
 		display += `<li><button class="button" name="send" value="/atm">Economy</button></li>`;
 		display += `<li><button class="button" name="send" value="/emotes help">Emotes</button></li>`;
 		display += `<li><button class="button" name="send" value="/essbhelp">ESSB Data</button></li>`;
@@ -181,7 +159,7 @@ exports.commands = {
 		display += `<li><button class="button" name="send" value="/mangahelp">Manga</button></li>`;
 		display += `<li><button class="button" name="send" value="/meme">Meme Randomizer</button></li>`;
 		display += `<li><button class="button" name="send" value="/serverannouncementshelp">News</button></li>`;
-		//display += `<li><button class="button" name="send" value="/ontimehelp">Ontime</button></li>`;
+		display += `<li><button class="button" name="send" value="/ontimehelp">Ontime</button></li>`;
 		display += `<li><button class="button" name="send" value="/playlisthelp">Playlist</button></li>`;
 		display += `<li><button class="button" name="send" value="/profilehelp">Profile</button></li>`;
 		display += `<li><button class="button" name="send" value="/quotehelp">Quotes</button></li>`;
