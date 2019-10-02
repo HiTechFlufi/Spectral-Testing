@@ -314,10 +314,10 @@ class UnoGame extends Rooms.RoomGame {
 	getPlayers(showCards) {
 		let playerList = Object.keys(this.playerTable);
 		if (!showCards) {
-			return playerList.sort().map(id => Server.nameColor(this.playerTable[id].name, false, true));
+			return playerList.sort().map(id => Server.nameColor(this.playerTable[id].name, true, true));
 		}
 		if (this.direction === -1) playerList = playerList.reverse();
-		return playerList.map(id => `${(this.currentPlayerid === id ? '<strong>' : '')}${Server.nameColor(this.playerTable[id].name, false, true)} (${this.playerTable[id].hand.length}) ${(this.currentPlayerid === id ? '</strong>' : "")}`);
+		return playerList.map(id => `${(this.currentPlayerid === id ? '<strong>' : '')}${Server.nameColor(this.playerTable[id].name, true, true)} (${this.playerTable[id].hand.length}) ${(this.currentPlayerid === id ? '</strong>' : "")}`);
 	}
 
 	/**
@@ -395,7 +395,7 @@ class UnoGame extends Rooms.RoomGame {
 
 		this.onCheckUno();
 
-		this.sendToRoom(`|html|${Server.nameColor(user.name, true, true)} has drawn a card.`);
+		this.sendToRoom(`|html|${Server.nameColor(player.name, true, true)} has drawn a card.`);
 
 		let card = this.onDrawCard(player, 1);
 		player.sendDisplay();
@@ -467,11 +467,11 @@ class UnoGame extends Rooms.RoomGame {
 			break;
 		case 'Skip':
 			this.onNextPlayer();
-			this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayer].name, true, true)}'s turn has been skipped.`);
+			this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayerid].name, true, true)}'s turn has been skipped.`);
 			break;
 		case '+2':
 			this.onNextPlayer();
-			this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayer].name, true, true)} has been forced to draw 2 cards.`);
+			this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayerid].name, true, true)} has been forced to draw 2 cards.`);
 			this.onDrawCard(this.playerTable[this.currentPlayerid], 2);
 			break;
 		case '+4':
@@ -483,7 +483,7 @@ class UnoGame extends Rooms.RoomGame {
 			this.onDrawCard(this.playerTable[next], 4);
 			this.isPlusFour = true;
 			this.timer = setTimeout(() => {
-				this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayer].name, true, true)} has been automatically disqualified.`);
+				this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayerid].name, true, true)} has been automatically disqualified.`);
 				this.eliminate(this.currentPlayerid);
 			}, this.maxTime * 1000);
 			break;
@@ -491,7 +491,7 @@ class UnoGame extends Rooms.RoomGame {
 			this.playerTable[this.currentPlayerid].sendRoom(colorDisplay);
 			this.state = 'color';
 			this.timer = setTimeout(() => {
-				this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayer].name, true, true)} has been automatically disqualified.`);
+				this.sendToRoom(`|html|${Server.nameColor(this.playerTable[this.currentPlayerid].name, true, true)} has been automatically disqualified.`);
 				this.eliminate(this.currentPlayerid);
 			}, this.maxTime * 1000);
 			break;
