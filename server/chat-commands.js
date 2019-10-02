@@ -1269,7 +1269,7 @@ const commands = {
 			this.sendReplyBox(Chat.html`The room description is: ${room.desc}`);
 			return;
 		}
-		if (!this.can('declare')) return false;
+		if (!this.can('declare') && room.founder !== user.userid) return false;
 		if (target.length > 80) return this.errorReply(`Error: Room description is too long (must be at most 80 characters).`);
 		let normalizedTarget = ' ' + target.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
 
@@ -1855,7 +1855,6 @@ const commands = {
 	 * Moderating: Punishments
 	 *********************************************************/
 
-	kick: 'warn',
 	k: 'warn',
 	warn(target, room, user) {
 		if (!target) return this.parse('/help warn');
