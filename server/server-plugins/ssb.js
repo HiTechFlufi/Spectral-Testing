@@ -538,7 +538,7 @@ class SSB {
 				this.cMove = "";
 			} else if (!customMovepool.includes(move.name)) {
 				// Purchased custom move
-				if (this.selfCustomMove !== move.id) {
+				if (toID(this.selfCustomMove) !== move.id) {
 					msg.push(`${pokemon.species}'s custom move "${move.name}" is not your custom move.`);
 					this.cMove = "";
 				}
