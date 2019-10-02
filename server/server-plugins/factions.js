@@ -513,9 +513,9 @@ exports.commands = {
 			let output = (factions[factionId].avatar ? `<img src="${factions[factionId].avatar}" height="80" width="80" align="left">` : ``) + `&nbsp;${factions[factionId].name}<br />`;
 			output += `<br />&nbsp;Faction VS Faction wins: ${factions[factionId].tourwins}<br /> &nbsp;Users: ${factions[factionId].users.length.toLocaleString()}<br />`;
 			output += `&nbsp;Description: ${factions[factionId].desc}<br />`;
-			output += `&nbsp;Owners: ${factions[factionId].ranks["owner"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
-			if (factions[factionId].ranks["noble"].users.length > 0) output += `&nbsp;Nobles: ${factions[factionId].ranks["noble"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
-			if (factions[factionId].ranks["commoner"].users.length > 0) output += `&nbsp;Commoners: ${factions[factionId].ranks["commoner"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
+			output += `&nbsp;Owners: ${Chat.toListString(factions[factionId].ranks["owner"].users.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (factions[factionId].ranks["noble"].users.length > 0) output += `&nbsp;Nobles: ${Chat.toListString(factions[factionId].ranks["noble"].users.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (factions[factionId].ranks["commoner"].users.length > 0) output += `&nbsp;Commoners: ${Chat.toListString(factions[factionId].ranks["commoner"].users.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			this.sendReplyBox(output);
 		},
 
