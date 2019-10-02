@@ -568,7 +568,7 @@ class UnoGame extends Rooms.RoomGame {
 	onUno(player, unoId) {
 		// uno id makes spamming /uno uno impossible
 		if (this.unoId !== unoId || player.userid !== this.awaitUno) return false;
-		this.sendToRoom(Chat.html`|raw|<strong>UNO!</strong> ${player.name} is down to their last card!`);
+		this.sendToRoom(Chat.html`|raw|<strong>UNO!</strong> ${Server.nameColor(player.name, true, true)} is down to their last card!`);
 		this.awaitUno = null;
 		this.unoId = null;
 	}
@@ -600,7 +600,7 @@ class UnoGame extends Rooms.RoomGame {
 	 */
 	onWin(player) {
 		this.sendToRoom(`|raw|<div class="broadcast-green">Congratulations to ${Server.nameColor(player.name, true, true)} for winning the game of UNO!</div>`, true);
-		let targetUserid = toId(player.name);
+		let targetUserid = toID(player.name);
 		let prize = 2;
 		prize += Math.floor(this.playerCount / 5);
 		for (let i in this.playerTable) {
