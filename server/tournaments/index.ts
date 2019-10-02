@@ -1229,10 +1229,13 @@ const commands: {basic: TourCommands, creation: TourCommands, moderation: TourCo
 				tournament.removeUser(user.userid, this);
 			}
 		},
+		getplayers: "getusers",
+		players: "getusers",
+		users: "players",
 		getusers(tournament) {
 			if (!this.runBroadcast()) return;
 			const users = usersToNames(tournament.getRemainingPlayers().sort());
-			this.sendReplyBox(`<strong>${users.length}/${tournament.players.length} users remain in this tournament:</strong><br />${Chat.escapeHTML(users.join(', '))}`);
+			this.sendReplyBox(`<strong>${users.length}/${tournament.players.length} users remain in this tournament:</strong><br />${Chat.toListString((users.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}`);
 		},
 		getupdate(tournament, user) {
 			tournament.updateFor(user);
