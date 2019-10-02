@@ -559,9 +559,10 @@ exports.commands = {
 		let regdate = "(Unregistered)";
 		Server.regdate(userid, date => {
 			if (date) {
-				let d = new Date(date);
+				regdate = Server.regdateReply(date, target, true);
+				/*let d = new Date(date);
 				let MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-				regdate = `${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+				regdate = `${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;*/
 			}
 		});
 
