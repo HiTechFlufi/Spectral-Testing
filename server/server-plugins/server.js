@@ -123,7 +123,7 @@ Server.regdate = function (target, callback) {
 	req.end();
 };
 
-function regdateReply(date, name) {
+function regdateReply(date, name, isProfile) {
 	if (date === 0) {
 		return `${Server.nameColor(name, true)} <strong><font color="red">is not registered.</font></strong>`;
 	} else {
@@ -132,6 +132,9 @@ function regdateReply(date, name) {
 			"July", "August", "September", "October", "November", "December",
 		];
 		let DayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		if (isProfile) {
+			return `${DayNames[d.getUTCDay()]}, ${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+		}
 		return `${Server.nameColor(name, true)} was registered on <strong>${DayNames[d.getUTCDay()]}, ${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}</strong> at <strong>${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()} UTC.</strong>`;
 	}
 }
