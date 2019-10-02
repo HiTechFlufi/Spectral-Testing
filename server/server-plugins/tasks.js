@@ -46,6 +46,7 @@ exports.commands = {
 			if (!task.issues[target]) return this.errorReply(`The issue "${target}" has not been reported.`);
 			delete task.issues[target];
 			Db.tasks.set("development", task);
+			alertDevs(`${Server.nameColor(user.name, true, true)} has completed the issue: "${target}".`);
 			return this.sendReply(`The task "${target}" has been deleted.`);
 		},
 
@@ -58,7 +59,7 @@ exports.commands = {
 			if (this.broadcasting && room.id !== "development") return this.errorReply(`You may only broadcast this command in Development.`);
 			let taskList = Db.tasks.get("development", {issues: {}});
 			if (Object.keys(taskList.issues).length < 1) return this.errorReply(`There are currently no issues on ${Config.serverName}.`);
-			let display = `<center><h1>${Config.serverName}'s Tasks List:</h1><table border="1" cellspacing ="0" cellpadding="4"><tr style="font-weight: bold"><td>Employer</td><td>Issue Title</td><td>Issue Description</td><td>Issue Priority</td><td>Resolved?</td></tr>`;
+			let display = `<center><h1>${Config.serverName}'s Tasks List:</h1><table border="1" cellspacing ="0" cellpadding="4"><tr style="font-weight: bold"><td>Employer</td><td>Issue Title</td><td>Issue Description</td><td>Issue Priority</td>${(!this.broadcasting ? `<td>Resolved?}</td>` : ``)}</tr>`;
 			let sortedIssues = Object.keys(taskList.issues).sort(function (a, b) {
 				a = taskList.issues[a].priority;
 				b = taskList.issues[b].priority;
