@@ -538,8 +538,8 @@ exports.commands = {
 		let profile = Db.profile.get(userid, {data: {title: {}, music: {}}});
 		let avatar;
 		if (targetUser) {
-			if (isNaN(targetUser.avatar) && targetUser.avatar.substring(0, userid.length) === userid) {
-				avatar = `http://${serverIp}:${Config.port}/avatars/${targetUser.avatar}`;
+			if (Config.customavatars[targetUser.userid]) {
+				avatar = `http://${serverIp}:${Config.port}/avatars/${Config.customavatars[targetUser.userid]}`;
 			} else if (isNaN(targetUser.avatar)) {
 				avatar = `http://play.pokemonshowdown.com/sprites/trainers/${targetUser.avatar}.png`;
 			} else {
@@ -559,10 +559,9 @@ exports.commands = {
 		let regdate = "(Unregistered)";
 		Server.regdate(userid, date => {
 			if (date) {
-				regdate = Server.regdateReply(date, target, true);
-				/*let d = new Date(date);
+				let d = new Date(date);
 				let MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-				regdate = `${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;*/
+				regdate = `${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 			}
 		});
 
