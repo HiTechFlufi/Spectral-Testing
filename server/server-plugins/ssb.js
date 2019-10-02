@@ -533,12 +533,12 @@ class SSB {
 		// Custom move
 		if (this.cMove) {
 			let move = dex.getMove(this.cMove);
-			if (!move.exists || Dex.getMove(move.name).exists) {
+			if (!move.exists || Dex.getMove(move.id).exists) {
 				msg.push(`${move.name} is not a custom move.`);
 				this.cMove = "";
 			} else if (!customMovepool.includes(move.name)) {
 				// Purchased custom move
-				if (this.selfCustomMove !== move.name) {
+				if (this.selfCustomMove !== move.id) {
 					msg.push(`${pokemon.species}'s custom move "${move.name}" is not your custom move.`);
 					this.cMove = "";
 				}
