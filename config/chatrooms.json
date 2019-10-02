@@ -1,0 +1,6 @@
+[
+{"title":"Lobby","isOfficial":true,"autojoin":true,"logTimes":true,"autoTruncate":true,"batchJoins":0},
+{"title":"Staff","isPrivate":true,"staffRoom":true,"staffAutojoin":true,"logTimes":true,"autoTruncate":true,"batchJoins":0},
+{"title":"Shadow Ban Room","logTimes":true,"autoTruncate":true,"batchJoins":0,"isPrivate":true,"staffRoom":true,"staffAutojoin":true,"addedUsers":{}},
+{"title":"Development","logTimes":true,"autoTruncate":true,"batchJoins":0,"aliases":["dev"]}
+]
