@@ -2562,18 +2562,7 @@ let Formats = [
 				pokemon.canMegaEvo = item.megaStone;
 			}
 		},
-	},
-	{
-		name: "[Gen 7] Mergemons",
-		desc: `Pok&eacute;mon gain the movepool of the previous and the next fully evolved Pok&eacute;mon, according to the Pok&eacute;dex.`,
-		threads: [
-			`&bullet; <a href="https://www.smogon.com/forums/threads/3591780/">Mergemons</a>`,
-		],
-
-		mod: 'mergemons',
-		ruleset: ['[Gen 7] OU'],
-		banlist: ['Serperior'],
-	},
+	},/*
 	{
 		name: "[Gen 7] Slowtown",
 		desc: `Trick room is constantly active for the duration of the battle and will reapply itself every 5 turns. Concept by Lycanium Z. Coded by Insist.`,
@@ -2598,7 +2587,7 @@ let Formats = [
 				this.add(`-message`, `Starting next turn, the battle will set another 5 rounds of ${this.startNewTrickRoom}!`);
 			}
 		},
-	},
+	},*/
 	{
 		name: "[Gen 7] Spectral Super Staff Bros",
 		mod: "sssb",
