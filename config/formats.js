@@ -2414,6 +2414,33 @@ let Formats = [
 		},
 	},*/
 	{
+		name: "[Gen 7] Scalemons",
+		desc: `Every Pok&eacute;mon's stats, barring HP, are scaled to give them a BST as close to 600 as possible.`,
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3607934/">Scalemons</a>`,
+		],
+
+		mod: 'gen7',
+		ruleset: ['Pokemon', 'Standard', 'Team Preview'],
+		banlist: [
+			'Gengar-Mega', 'Mawile-Mega', 'Medicham-Mega', 'Shedinja', 'Arena Trap', 'Shadow Tag', 'Deep Sea Scale',
+			'Deep Sea Tooth', 'Eevium Z', 'Eviolite', 'Light Ball', 'Thick Club', 'Baton Pass',
+		],
+		onModifyTemplate: function (template, target, source) {
+			template = Object.assign({}, template);
+			template.baseStats = Object.assign({}, template.baseStats);
+			let stats = ['atk', 'def', 'spa', 'spd', 'spe'];
+			// @ts-ignore
+			let pst = stats.map(stat => template.baseStats[stat]).reduce((x, y) => x + y);
+			let scale = 600 - template.baseStats['hp'];
+			for (const stat of stats) {
+				// @ts-ignore
+				template.baseStats[stat] = this.clampIntRange(template.baseStats[stat] * scale / pst, 1, 255);
+			}
+			return template;
+		},
+	},
+	{
 		name: "[Gen 7] Spectral Super Staff Bros",
 		mod: "sssb",
 		desc: "The Staff on Spectral all fight it out in a battle of Super Staff Bros.",
