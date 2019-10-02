@@ -1,9 +1,8 @@
-/*
 "use strict";
- ********************
+/*******************************************************************
  * Time Commands
  * This file contains commands that keep track of user's activity.
- *******************
+ *******************************************************************/
 
 function convertTime(time) {
 	time = time / 1000;
@@ -73,4 +72,3 @@ exports.commands = {
 		this.sendReplyBox(rankLadder("Ontime Ladder", "Total Ontime", keys, "time"));
 	},
 };
-*/
