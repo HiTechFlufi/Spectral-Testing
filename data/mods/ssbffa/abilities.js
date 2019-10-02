@@ -14,6 +14,7 @@ let BattleAbilities = {
 			this.useMove("leechseed", pokemon);
 			this.useMove("toxicspikes", pokemon);
 			this.useMove("toxicspikes", pokemon);
+			this.useMove("stickyweb", pokemon);
 		},
 	},
 };
