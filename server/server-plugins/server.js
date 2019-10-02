@@ -123,6 +123,20 @@ Server.regdate = function (target, callback) {
 	req.end();
 };
 
+function regdateReply(date, name) {
+	if (date === 0) {
+		return `${Server.nameColor(name, true)} <strong><font color="red">is not registered.</font></strong>`;
+	} else {
+		let d = new Date(date);
+		let MonthNames = ["January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December",
+		];
+		let DayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		return `${Server.nameColor(name, true)} was registered on <strong>${DayNames[d.getUTCDay()]}, ${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}</strong> at <strong>${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()} UTC.</strong>`;
+	}
+}
+Server.regdateReply = regdateReply;
+
 function loadRegdateCache() {
 	try {
 		regdateCache = JSON.parse(FS("config/regdate.json").readIfExistsSync());
@@ -656,25 +670,11 @@ exports.commands = {
 		if (!this.runBroadcast()) return;
 		Server.regdate(target, date => {
 			if (date) {
-				this.sendReplyBox(regdateReply(date));
+				this.sendReplyBox(regdateReply(date, target));
 			} else {
 				this.sendReplyBox(`It appears ${Server.nameColor(target, true)} is unregistered.`);
 			}
 		});
-
-		function regdateReply(date) {
-			if (date === 0) {
-				return `${Server.nameColor(target, true)} <strong><font color="red">is not registered.</font></strong>`;
-			} else {
-				let d = new Date(date);
-				let MonthNames = ["January", "February", "March", "April", "May", "June",
-					"July", "August", "September", "October", "November", "December",
-				];
-				let DayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-				return `${Server.nameColor(target, true)} was registered on <strong>${DayNames[d.getUTCDay()]}, ${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}</strong> at <strong>${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()} UTC.</strong>`;
-			}
-			//room.update();
-		}
 	},
 	regdatehelp: ["/regdate - Gets the regdate (register date) of a username."],
 
