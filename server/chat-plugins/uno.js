@@ -117,7 +117,7 @@ function cardImg(card, fullsize) {
 
 function cardHTML(card, fullsize) {
 	let img = cardImg(card, fullsize);
-	return `<button class="button" style="height: 135px; width: ${fullsize ? '72' : '37'}px; border-radius: 10px 2px 2px 3px; background-image: url('${img}');" name=send value="/uno play ${card.name}" title="${card.name}"></button>`;
+	return `<button style="height: 135px; width: ${fullsize ? '72' : '37'}px; border-radius: 10px 2px 2px 3px; background-image: url('${img}');" name=send value="/uno play ${card.name}" title="${card.name}"></button>`;
 }
 
 /**
