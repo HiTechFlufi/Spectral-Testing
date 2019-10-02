@@ -3,12 +3,6 @@
  * Pokemon Showdown - http://pokemonshowdown.com/
  *
  * This plugin allows rooms to run games of scripted UNO
- *
- * Pokémon Plays UNO! Coded by Lord Haji and HoeenHero
- * UNO Card Images(Card Art) by Ashley The Pikachu
- * Most sprites for Card Art ripped by Kyleboy(https://www.spriters-resource.com/game_boy_gbc/pokemontradingcardgame2/),
- * PokéDoll Sprite by Nemu(https://www.spriters-resource.com/game_boy_gbc/pokemontradingcardgame/sheet/8885/)
- *
  * @license MIT license
  */
 
@@ -320,10 +314,10 @@ class UnoGame extends Rooms.RoomGame {
 	getPlayers(showCards) {
 		let playerList = Object.keys(this.playerTable);
 		if (!showCards) {
-			return playerList.sort().map(id => Server.nameColor(this.players[id].name, false, true));
+			return playerList.sort().map(id => Server.nameColor(this.playersTable[id].name, false, true));
 		}
 		if (this.direction === -1) playerList = playerList.reverse();
-		return playerList.map(id => `${(this.currentPlayerid === id ? '<strong>' : '')}${Server.nameColor(this.players[id].name, false, true)} (${this.playerTable[id].hand.length}) ${(this.currentPlayerid === id ? '</strong>' : "")}`);
+		return playerList.map(id => `${(this.currentPlayerid === id ? '<strong>' : '')}${Server.nameColor(this.playerTable[id].name, false, true)} (${this.playerTable[id].hand.length}) ${(this.currentPlayerid === id ? '</strong>' : "")}`);
 	}
 
 	/**
