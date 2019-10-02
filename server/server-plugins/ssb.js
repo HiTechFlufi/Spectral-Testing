@@ -1017,7 +1017,7 @@ exports.commands = {
 			if (!customMove) return this.errorReply("Must include a move!");
 			if (!customMove.exists) return this.errorReply("Move doesn't exist in the SSBFFA mod!");
 			if (!Server.ssb[userid].bought.cMove) return this.errorReply("They have not bought a custom move!");
-			Server.ssb[userid].selfCustomMove = customMove.name;
+			Server.ssb[userid].selfCustomMove = customMove;
 			writeSSB();
 			return this.sendReply(`Move set for ${userid}!`);
 		},
