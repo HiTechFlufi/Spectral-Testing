@@ -1,3 +1,6 @@
+/config/*
+!/config/formats.js
+!/config/chat-plugins/cards.json
 /logs/*
 /node_modules
 /eslint-cache
@@ -10,6 +13,7 @@ package-lock.json
 # Typescript build artifacts
 .*-dist/
 tools/set-import/importer.js
+tools/set-import/sets.js
 
 # visual studio live share
 .vs
