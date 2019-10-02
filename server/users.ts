@@ -830,7 +830,11 @@ export class User extends Chat.MessageContext {
 
 		// our stuff
 		if (Tells.inbox[userid]) Tells.sendTell(userid, this);
-		Ontime[userid] = Date.now();
+    if (Ontime[this.userid]) {
+			Db.ontime.set(this.userid, Db.ontime.get(this.userid, 0) + (Date.now() - Ontime[this.userid]));
+			delete Ontime[this.userid];
+		}
+    Ontime[userid] = Date.now();
 		Server.showNews(userid, this);
 		Server.checkFriends(userid, this);
 		tracker.check(this);

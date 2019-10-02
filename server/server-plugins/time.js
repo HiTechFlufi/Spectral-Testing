@@ -39,9 +39,9 @@ exports.commands = {
 		if (isConnected && !Ontime[userid]) Ontime[userid] = Date.now();
 
 		if (isConnected) {
-			this.sendReplyBox(`${Server.nameColor(userid, true)}'s total ontime is <strong>${displayTime(convertTime(totalOntime))}</strong>. Current ontime: <strong>${displayTime(convertTime((currentOntime)))}</strong>.`);
+			this.sendReplyBox(`${Server.nameColor(userid, true, true)}'s total ontime is <strong>${displayTime(convertTime(totalOntime))}</strong>. Current ontime: <strong>${displayTime(convertTime((currentOntime)))}</strong>.`);
 		} else {
-			this.sendReplyBox(`${Server.nameColor(userid, true)}'s total ontime is <strong>${displayTime(convertTime(totalOntime))}</strong>. Currently not online.`);
+			this.sendReplyBox(`${Server.nameColor(userid, true, true)}'s total ontime is <strong>${displayTime(convertTime(totalOntime))}</strong>. Currently not online.`);
 		}
 	},
 	ontimehelp: ["/ontime [target] - Checks a user's online time on the server. [Target is optional; if there is no target, this command is used on yourself.]"],
