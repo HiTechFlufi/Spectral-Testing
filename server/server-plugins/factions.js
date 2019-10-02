@@ -340,9 +340,11 @@ exports.commands = {
 			if (desc.length > 100) return this.errorReply("Faction descriptions must be 100 characters or less!");
 			if (tag.length > 4) return this.errorReply("Faction tags must be 4 characters at most!");
 			if (factions[toID(name)]) return this.errorReply("That faction exists already!");
-			for (let faction of factions) {
-				if (faction.tag === tag) return this.errorReply("That faction tag exists already!");
-			}
+      /* TODO: Don't allow factions to have the same tag
+      for (const faction of factions) {
+        if (factions[toID(faction)].tag === tag) return this.errorReply(`There's already a faction with ${tag} as their tag.`);
+      }
+      */
 			let userid = user.userid;
 			if (getFaction(userid)) return this.errorReply("You are already in a faction!");
 
@@ -382,7 +384,10 @@ exports.commands = {
 				},
 			};
 			write();
-			Monitor.adminlog(`Faction ${name} was just created by ${user.name}! If you wish to approve this faction please use /faction approve (${name})`);
+			if (!user.can("broadcast")) {
+        Monitor.adminlog(`Faction ${name} was just created by ${user.name}! If you wish to approve this faction please use /faction approve (${name})`);
+        if (Rooms.get("upperstaff")) Rooms.get("upperstaff").add(`|html|<button name="send" value="/faction accept ${toID(name)}">Approve ${name}!</button> <button name="send" value="/faction decline ${toID(name)}">Decline ${name}!</button>`).update();
+      }
 			return this.sendReply(`Faction ${name} created!`);
 		},
 
@@ -505,12 +510,12 @@ exports.commands = {
 			if (!target && getFaction(user.userid)) target = getFaction(user.userid);
 			let factionId = toID(target);
 			if (!factions[factionId] || factions[factionId] && factions[factionId].private === true) return this.errorReply("There is no faction by that name! If you are not in a faction, please specify one!");
-			let output = (factions[factionId].avatar ? `<img src="${factions[factionId].avatar}" height="80" width="80" align="left">` : ``) + `&nbsp;${factions[factionId].name}</br>`;
-			output += `<br />&nbsp;Faction Vs Faction wins: ${factions[factionId].tourwins}<br /> &nbsp;Usercount: ${factions[factionId].users.length.toLocaleString()}<br />`;
+			let output = (factions[factionId].avatar ? `<img src="${factions[factionId].avatar}" height="80" width="80" align="left">` : ``) + `&nbsp;${factions[factionId].name}<br />`;
+			output += `<br />&nbsp;Faction VS Faction wins: ${factions[factionId].tourwins}<br /> &nbsp;Users: ${factions[factionId].users.length.toLocaleString()}<br />`;
 			output += `&nbsp;Description: ${factions[factionId].desc}<br />`;
 			output += `&nbsp;Owners: ${factions[factionId].ranks["owner"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
-			output += `&nbsp;Nobles: ${factions[factionId].ranks["noble"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
-			output += `&nbsp;Commoners: ${factions[factionId].ranks["commoner"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
+			if (factions[factionId].ranks["noble"].users.length > 0) output += `&nbsp;Nobles: ${factions[factionId].ranks["noble"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
+			if (factions[factionId].ranks["commoner"].users.length > 0) output += `&nbsp;Commoners: ${factions[factionId].ranks["commoner"].users.map(p => { return Server.nameColor(p, true, true); })}<br />`;
 			this.sendReplyBox(output);
 		},
 
