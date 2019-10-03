@@ -292,6 +292,123 @@ class RandomTeams extends Dex.ModdedDex {
 		return team;
 	}
 
+	randomCCMTeam() {
+		let team = [];
+
+		let natures = Object.keys(this.data.Natures);
+		let items = Object.keys(this.data.Items);
+
+		let random6 = this.random6Pokemon();
+
+		for (let i = 0; i < 6; i++) {
+			let species = random6[i];
+			let template = Dex.mod('gen' + this.gen).getTemplate(species);
+
+			// Random legal item
+			let item = '';
+			if (this.gen >= 2) {
+				do {
+					item = this.sample(items);
+				} while (this.getItem(item).gen > this.gen || this.data.Items[item].isNonstandard);
+			}
+
+			// Make sure forme is legal
+			if (template.battleOnly || template.requiredItems && !template.requiredItems.some(req => toID(req) === item)) {
+				template = Dex.mod('gen' + this.gen).getTemplate(template.baseSpecies);
+				species = template.name;
+			}
+
+			// Make sure that a base forme does not hold any forme-modifier items.
+			let itemData = this.getItem(item);
+			if (itemData.forcedForme && species === this.getTemplate(itemData.forcedForme).baseSpecies) {
+				do {
+					item = this.sample(items);
+					itemData = this.getItem(item);
+				} while (itemData.gen > this.gen || itemData.isNonstandard || itemData.forcedForme && species === this.getTemplate(itemData.forcedForme).baseSpecies);
+			}
+
+			// Random legal ability
+			let abilities = Object.values(template.abilities).filter(a => this.getAbility(a).gen <= this.gen);
+			/**@type {string} */
+			// @ts-ignore
+			let ability = this.gen <= 2 ? 'None' : this.sample(abilities);
+
+			// Make every moveset Metronome
+			let moves = ['metronome'];
+
+			// Random EVs
+			let evs = {hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0};
+			let s = ["hp", "atk", "def", "spa", "spd", "spe"];
+			let evpool = 510;
+			do {
+				let x = this.sample(s);
+				// @ts-ignore
+				let y = this.random(Math.min(256 - evs[x], evpool + 1));
+				// @ts-ignore
+				evs[x] += y;
+				evpool -= y;
+			} while (evpool > 0);
+
+			// Random IVs
+			let ivs = {hp: this.random(32), atk: this.random(32), def: this.random(32), spa: this.random(32), spd: this.random(32), spe: this.random(32)};
+
+			// Random nature
+			let nature = this.sample(natures);
+
+			// Level balance--calculate directly from stats rather than using some silly lookup table
+			let mbstmin = 1307; // Sunkern has the lowest modified base stat total, and that total is 807
+
+			let stats = template.baseStats;
+			// If Wishiwashi, use the school-forme's much higher stats
+			if (template.baseSpecies === 'Wishiwashi') stats = Dex.getTemplate('wishiwashischool').baseStats;
+
+			// Modified base stat total assumes 31 IVs, 85 EVs in every stat
+			let mbst = (stats["hp"] * 2 + 31 + 21 + 100) + 10;
+			mbst += (stats["atk"] * 2 + 31 + 21 + 100) + 5;
+			mbst += (stats["def"] * 2 + 31 + 21 + 100) + 5;
+			mbst += (stats["spa"] * 2 + 31 + 21 + 100) + 5;
+			mbst += (stats["spd"] * 2 + 31 + 21 + 100) + 5;
+			mbst += (stats["spe"] * 2 + 31 + 21 + 100) + 5;
+
+			let level = Math.floor(100 * mbstmin / mbst); // Initial level guess will underestimate
+
+			while (level < 100) {
+				mbst = Math.floor((stats["hp"] * 2 + 31 + 21 + 100) * level / 100 + 10);
+				mbst += Math.floor(((stats["atk"] * 2 + 31 + 21 + 100) * level / 100 + 5) * level / 100); // Since damage is roughly proportional to level
+				mbst += Math.floor((stats["def"] * 2 + 31 + 21 + 100) * level / 100 + 5);
+				mbst += Math.floor(((stats["spa"] * 2 + 31 + 21 + 100) * level / 100 + 5) * level / 100);
+				mbst += Math.floor((stats["spd"] * 2 + 31 + 21 + 100) * level / 100 + 5);
+				mbst += Math.floor((stats["spe"] * 2 + 31 + 21 + 100) * level / 100 + 5);
+
+				if (mbst >= mbstmin) break;
+				level++;
+			}
+
+			// Random happiness
+			let happiness = this.random(256);
+
+			// Random shininess
+			let shiny = this.randomChance(1, 1024);
+
+			team.push({
+				name: template.baseSpecies,
+				species: template.species,
+				gender: template.gender,
+				item: item,
+				ability: ability,
+				moves: moves,
+				evs: evs,
+				ivs: ivs,
+				nature: nature,
+				level: level,
+				happiness: happiness,
+				shiny: shiny,
+			});
+		}
+
+		return team;
+	}
+
 	random6Pokemon() {
 		// Pick six random pokemon--no repeats, even among formes
 		// Also need to either normalize for formes or select formes at random
