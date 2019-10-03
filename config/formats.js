@@ -2415,9 +2415,9 @@ let Formats = [
 	},*/
 	{
 		name: "[Gen 7] Scalemons",
-		desc: `Every Pok&eacute;mon's stats, barring HP, are scaled to give them a BST as close to 600 as possible.`,
+		desc: `Every Pok&eacute;mon's stats, barring HP, are scaled to give them a BST as close to 600 as possible. Use /scale to view each Pok&eacute;mon's stats.`,
 		threads: [
-			`&bullet; <a href="https://www.smogon.com/forums/threads/3607934/">Scalemons</a>`,
+			`&bullet; <a href="http://spectralps.boards.net/thread/2/gen-7-scalemons-viability-rankings">Scalemons Viability Rankings</a>`,
 		],
 
 		mod: 'gen7',
