@@ -7,7 +7,7 @@
 "use strict";
 
 function alertDevs(message) {
-	Server.devPM("~Developer Chat", `New task: ${message}`);
+	Server.devPM("~Developer Chat", `${message}`);
 	if (Rooms.get(`development`)) Rooms.get(`development`).add(`|c|~Developer Alert|/raw ${message}`).update();
 }
 
@@ -19,6 +19,7 @@ exports.commands = {
 	tasks: {
 		new: "add",
 		issue: "add",
+		report: "add",
 		add(target, room, user) {
 			if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
 			let [issue, priority, ...description] = target.split(",").map(p => p.trim());
@@ -31,26 +32,34 @@ exports.commands = {
 			if (isNaN(priority) || priority > 6 || priority < 1) return this.errorReply(`The priority should be an integer between 1-6; 1 being the highest priority.`);
 			task.issues[id] = {id, issue, description, employer: user.userid, priority};
 			Db.tasks.set("development", task);
-			alertDevs(`${Server.nameColor(user.name, true, true)} has filed an issue.<br />Issue: ${issue}.<br />Description: ${description}.<br />Priority: ${priority}.`);
+			alertDevs(`New task: ${Server.nameColor(user.name, true, true)} has filed an issue.<br />Issue: ${issue}.<br />Description: ${description}.<br />Priority: ${priority}.`);
 			return this.sendReply(`The task "${issue}" has been added to the ${Config.serverName} Task List.`);
 		},
 
 		remove: "delete",
 		clear: "delete",
 		fixed: "delete",
+		resolve: "delete",
+		solve: "delete",
 		delete(target, room, user) {
 			if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
 			target = toID(target);
 			let task = Db.tasks.get("development", {issues: {}});
 			if (!target) return this.parse(`/taskshelp`);
 			if (!task.issues[target]) return this.errorReply(`The issue "${target}" has not been reported.`);
+			if (task.issues[target].employer !== user.userid) {
+				Economy.writeMoney(user.userid, 5);
+				Economy.logTransaction(`${user.name} has earned 5 ${moneyPlural} for helping resolve "${target}".`);
+				this.sendReply(`Thanks for your helping resolving "${target}", you have earned 5 ${moneyPlural} for your help!`);
+			}
 			delete task.issues[target];
 			Db.tasks.set("development", task);
-			alertDevs(`${Server.nameColor(user.name, true, true)} has completed the issue: "${target}".`);
+			alertDevs(`Task Completed: ${Server.nameColor(user.name, true, true)} has completed the issue: "${target}".`);
 			return this.sendReply(`The task "${target}" has been deleted.`);
 		},
 
 		"": "list",
+		issues: "list",
 		tasks: "list",
 		task: "list",
 		list(target, room, user) {
@@ -78,7 +87,7 @@ exports.commands = {
 			return this.sendReplyBox(display);
 		},
 
-		help(target, room, user) {
+		help() {
 			this.parse(`/taskshelp`);
 		},
 	},
