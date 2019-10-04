@@ -80,7 +80,7 @@ Ability: Venom Shock
 EVs: 252 HP / 252 Atk / 4 SpD
 Moves: Sucker Punch, Strength Sap, Thousand Waves
 Signature Move: Radiation Stench
-	- Poison Type, Physical, 120 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 30% chance to make the target flinch, supresses the opponents ability.
+	- Poison Type, Physical, 120 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 30% chance to make the target flinch, super effective against Steel Types and supresses the opponents ability.
 Adamant Nature
 
 Tactician Loki

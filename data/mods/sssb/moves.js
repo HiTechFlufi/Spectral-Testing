@@ -241,8 +241,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 120,
 		category: "Physical",
-		desc: "Power doubles if the target is poisoned, and has a 30% chance to cause the target to flinch.",
-		shortDesc: "Power doubles if the target is poisoned. 30% chance to flinch.",
+		desc: "Power doubles if the target is poisoned, and has a 30% chance to cause the target to flinch. Super effective against Steel Types.",
+		shortDesc: "Power doubles if the target is poisoned. 30% chance to flinch. Super effective against Steel.",
 		id: "radiationstench",
 		name: "Radiation Stench",
 		pp: 10,
@@ -254,9 +254,15 @@ let BattleMovedex = {
 				return this.chainModify(2);
 			}
 		},
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Steel') return 1;
+		onEffectiveness(typeMod, target, type, move) {
+			if (move.type !== 'Poison') return;
+			if (!target) return; // avoid crashing when called from a chat plugin
+			// ignore effectiveness if the target is Steel type and immune to Poison
+			if (!target.runImmunity('Poison')) {
+				if (target.hasType('Steel')) return 1;
+			}
 		},
+		ignoreImmunity: {'Poison': true},
 		secondary: {
 			chance: 30,
 			volatileStatus: 'flinch',
@@ -353,10 +359,16 @@ let BattleMovedex = {
 			this.add('-anim', source, 'Dragon Rush', target);
 			this.add(`c|+Revival Clair|Good game, too easy.`);
 		},
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Fairy') return 0;
+		onEffectiveness(typeMod, target, type, move) {
+			if (move.type !== 'Dragon') return;
+			if (!target) return; // avoid crashing when called from a chat plugin
+			// ignore effectiveness if the target is Fairy type and immune to Dragon
+			if (!target.runImmunity('Dragon')) {
+				if (target.hasType('Fairy')) return 0;
+			}
 		},
 		flags: {protect: 1, mirror: 1, contact: 1},
+		ignoreImmunity: {'Dragon': true},
 		secondary: {
 			chance: 33,
 			self: {
