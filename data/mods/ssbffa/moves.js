@@ -644,4 +644,33 @@ exports.BattleMovedex = {
 		target: "normal",
 		type: "Water",
 	},
+	
+	//Revival N
+	"idealthief": {
+		id: "idealthief",
+		name: "Ideal Thief",
+		basePower: 90,
+		accuracy: 100,
+		pp: 10,
+		secondary: false,
+		category: "Physical",
+		isNonstandard: true,
+		priority: 0,
+		flags: {
+			protect: 1,
+			mirror: 1,
+			contact: 1,
+		},
+		volatileStatus: 'gastroacid',
+		onTryHit(pokemon) {
+			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'zenmode'];
+			if (bannedAbilities.includes(pokemon.ability)) {
+				return false;
+			}
+		},
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Spectral Thief", target);
+		},
+		target: "normal",
+		type: "Dark",
 };
