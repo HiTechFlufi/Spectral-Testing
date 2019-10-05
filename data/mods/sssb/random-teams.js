@@ -205,6 +205,20 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Timid",
 			},
+			"*HiTechFlufi": {
+				species: "Metang",
+				item: "Titanium Core",
+				ability: "Adaptation",
+				moves: ["Meteor Mash", "Earthquake", "Power Swap"],
+				baseSignatureMove: "crippledencryption",
+				signatureMove: "Crippled Encryption",
+				evs: {
+					hp: 252,
+					def: 96,
+					spd: 156,
+				},
+				nature: "Careful",
+			},
 			// Drivers
 			"%Renfur⚡⚡": {
 				species: "Flygon",

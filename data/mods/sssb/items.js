@@ -191,6 +191,28 @@ let BattleItems = {
 		desc: "The holder weakens supereffective attacks by 1/2 (neutral damage), the user recovers 1/8 of their maximum HP every turn, and if the user's HP is less than 1/4 of max HP the user's moves' priority becomes +1",
 		shortDesc: "Neutralizes supereffective attacks, heals by 1/8 of max HP, and if HP is < 1/4, move's get +1 priority.",
 	},
+
+	// HiTechFlufi
+  "titaniumcore": {
+    id: "titaniumcore",
+    name: "Titanium Core",
+    onModifyDefPriority: 2,
+	 onModifyDef(def, pokemon) {
+		return this.chainModify(2);
+	 },
+	 onModifySpDPriority: 2,
+	 onModifySpD(spd, pokemon) {
+		return this.chainModify(2);
+	 },
+    onBasePowerPriority: 6,
+	 onBasePower(basePower, user, target, move) {
+		if (move.type === 'Steel') {
+		return this.chainModify([0x1333, 0x1000]);
+		}
+	 },
+    desc: "The holder's Defense and Special Defense are doubled, and Steel-type attacks have x1.2 power.",
+    shortDesc: "Def/SpDef is doubled; Steel-type attacks have x1.3 power.",
+	},
 	
 	// Lady Kakizaki
 	"dumplings": {

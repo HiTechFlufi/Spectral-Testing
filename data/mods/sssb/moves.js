@@ -456,7 +456,48 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Normal",
 	},
-	
+
+	// HiTechFlufi
+	"crippledencryption": {
+		id: "crippledencryption",
+		name: "Crippled Encryption",
+		basePower: 0,
+		accuracy: true,
+		desc: "Lowers the target's highest stat by 1, confuses the target, and traps the target for 5 turns.",
+		shortDesc: "Lowers highest stat by 1, confuses, traps for 4-5 turns.",
+		pp: 10,
+		priority: 1,
+		category: "Status",
+		flags: {protect: 1, mirror: 1, reflectable: 1},
+    volatileStatus: 'confusion',
+		secondary: {
+			chance: 100,
+			onHit(target, source, move) {
+				target.addVolatile('trapped', source, move, 'trapper');
+			},
+		},
+    onHit(target, source, move) {
+			let statName = 'atk';
+			let bestStat = 0;
+			/** @type {StatNameExceptHP} */
+			let s;
+			for (s in target.storedStats) {
+				if (target.storedStats[s] > bestStat) {
+					statName = s;
+					bestStat = target.storedStats[s];
+				}
+			}
+			this.boost({[statName]: -1}, target);
+		},
+		onPrepareHit(target, source, move) {
+			this.add('-anim', source, 'Block', target);
+      this.add('-anim', source, 'Tri Attack', target);
+      this.add('-anim', source, 'Hex', target);
+		},
+		target: "normal",
+		type: "Steel",
+	},
+
 	// Renfur⚡⚡
 	"desertdragon": {
 		id: "desertdragon",

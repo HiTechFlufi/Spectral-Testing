@@ -182,3 +182,15 @@ Moves: Calm Mind, Substitute, Extrasensory
 Signature Move: Yandere Blitz
 	- Ice Type, Special, 100 BP, 100% Accuracy, 16 PP. 20% chance to burn, 20% chance to freeze, 50% chance to confuse and heals user by 1/8 of damage dealt.
 Modest Nature
+
+HiTechFlufi
+(Metang)
+@ Titanium Core
+	- Doubles the holder's Defense and SpDefense, and Steel-type attacks have x1.2 power.
+Ability: Adaptation
+	- A varying number of effects take place to help the user's current situation in battle. Status moves have +1 priority.
+EVs: 252 HP / 96 Def / 156 SpD
+Moves: Meteor Mash, Earthquake, Power Swap
+Signature Move: Crippled Encryption
+	- Steel Type, Status, Can't miss, 16 PP. Lower's target's highest stat by 1, confuses, and traps the target for 4-5 turns.
+Careful Nature
