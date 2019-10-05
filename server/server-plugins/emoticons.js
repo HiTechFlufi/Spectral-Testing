@@ -40,6 +40,12 @@ function parseEmoticons(message, room) {
 		let lobby = Rooms.get(`lobby`);
 		if (lobby && lobby.emoteSize) size = lobby.emoteSize;
 		message = Server.parseMessage(message).replace(emoteRegex, function (match) {
+      let getLadder = Db.emoteLadder.get(emoticons[match]);
+      if (!getLadder) {
+        Db.emoteLadder.set(emoticons[match], 1);
+      } else {
+        Db.emoteLadder.set(emoticons[match], getLadder + 1);
+      }
 			return `<img src="${emoticons[match]}" title="${match}" height="${((room && room.emoteSize) ? room.emoteSize : size)}" width="${((room && room.emoteSize) ? room.emoteSize : size)}">`;
 		});
 		return message;
@@ -170,8 +176,28 @@ exports.commands = {
 			this.privateModAction(`${user.name} has changed emoticon size in this room to ${size}.`);
 		},
 
+    uses: "ladder",
+    usage: "ladder",
+    usageladder: "ladder",
+    ladder() {
+	  	if (!this.runBroadcast()) return;
+	  	let keys = Db.emoteLadder.keys().map(name => {
+	  		return {name: name, usage: Db.emoteLadder.get(name).toLocaleString()};
+	  	});
+	  	if (!keys.length) return this.errorReply("Emote ladder is empty.");
+		  keys.sort(function (a, b) { return toID(b.usage) - toID(a.usage); });
+      let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;"><h1 style="font-weight: bold; text-align: center;">Emoticon Ladder~!</h1>`;
+      display += `<center><table border="1" cellspacing ="0" cellpadding="2"><tr style="font-weight: bold"><tr><td>Emote:</td><td>Uses:</td></tr><br />`;
+      for (let i in keys) {
+        display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center"><img src="${keys[i].name}" height="50" width="50"</td>`;
+        display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${keys[i].usage}</td>`;
+      }
+      display += `</table></center></div>`;
+      this.sendReplyBox(display);
+    },
+
 		"": "help",
-		help(target, room, user) {
+		help() {
 			this.parse(`/emoticonshelp`);
 		},
 	},
@@ -195,6 +221,7 @@ exports.commands = {
 		/emoticon ignore - Ignores emoticons in chat messages.
 		/emoticon unignore - Unignores emoticons in chat messages.
 		/emoticon size [size] - Changes the size of emoticons in the current room. Requires @, &, #, ~
+		/emoticon ladder - Checks the ladder of popularity amongst the emoticons on the server.
 		/randemote - Randomly sends an emote from the emoticon list.
 		/emoticon help - Displays this help command.`,
 	],
