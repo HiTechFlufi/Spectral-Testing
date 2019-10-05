@@ -673,4 +673,5 @@ exports.BattleMovedex = {
 		},
 		target: "normal",
 		type: "Dark",
+	},
 };
