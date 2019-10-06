@@ -74,7 +74,7 @@ Modest Nature
 Roughskull
 (Male Skuntank)
 @ Crown of TMS
-	- On switch-in, raises the user's Attack or Special Attack based on the target's weaker Defense.  Also, on switch-in, the user raises its Defense or Special Defense to protect itself from the target's stronger Attack stat.  If this Pokemon is at full HP, the opponent's Attack damage is halved
+	- On switch-in, raises the user's Attack.  Also, on switch-in, the user raises its Defense or Special Defense by 2 to protect itself from the target's stronger Attack stat.  If this Pokemon is at full HP, the opponent's Attack damage is halved
 Ability: Venom Shock
 	- Every move has a 30% chance to either badly poison or paralyze its target.
 EVs: 252 HP / 252 Atk / 4 SpD
