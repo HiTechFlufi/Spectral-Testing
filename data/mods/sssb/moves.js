@@ -239,7 +239,7 @@ let BattleMovedex = {
 	// Roughskull
 	"radiationstench": {
 		accuracy: 100,
-		basePower: 120,
+		basePower: 100,
 		category: "Physical",
 		desc: "Power doubles if the target is poisoned, and has a 30% chance to cause the target to flinch. Super effective against Steel Types.",
 		shortDesc: "Power doubles if the target is poisoned. 30% chance to flinch. Super effective against Steel.",
@@ -259,12 +259,12 @@ let BattleMovedex = {
 			if (!target) return; // avoid crashing when called from a chat plugin
 			// ignore effectiveness if the target is Steel type and immune to Poison
 			if (!target.runImmunity('Poison')) {
-				if (target.hasType('Steel')) return 1;
+				if (target.hasType('Steel')) return 0;
 			}
 		},
 		ignoreImmunity: {'Poison': true},
 		secondary: {
-			chance: 30,
+			chance: 20,
 			volatileStatus: 'flinch',
 		},
 		onPrepareHit(target, source) {
