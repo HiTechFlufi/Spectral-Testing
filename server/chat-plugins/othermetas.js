@@ -356,9 +356,9 @@ const commands = {
 		let spattack = template.baseStats['spa'];
 		let spdefense = template.baseStats['spd'];
 		if (spattack > spdefense) {
-			template.baseStats['spd']; = Dex.clampIntRange(template.baseStats['spa'], 1, 255);
+			template.baseStats['spd'] = Dex.clampIntRange(template.baseStats['spa'], 1, 255);
 		} else if (spdefense > spattack) {
-			template.baseStats['spa']; = Dex.clampIntRange(template.baseStats['spd'], 1, 255);
+			template.baseStats['spa'] = Dex.clampIntRange(template.baseStats['spd'], 1, 255);
 		}
 		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`);
 	},
