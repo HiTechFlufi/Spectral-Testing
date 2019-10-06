@@ -382,7 +382,7 @@ const commands = {
 		template.baseStats[sortedStats[1]] = Dex.clampIntRange(template.baseStats[sortedStats[1]] * 1.75, 1, 255);
 		template.baseStats[sortedStats[2]] = Dex.clampIntRange(template.baseStats[sortedStats[2]] * 1.5, 1, 255);
 		template.baseStats[sortedStats[3]] = Dex.clampIntRange(template.baseStats[sortedStats[3]] * 1.25, 1, 255);
-		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`); }
+		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`);
 	},
 	balancehelp: [`/balance OR /statbalance <pokemon> - Shows the base stats that a Pokemon would have in Stat Balance.`],
 
