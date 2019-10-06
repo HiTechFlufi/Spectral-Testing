@@ -74,13 +74,13 @@ Modest Nature
 Roughskull
 (Male Skuntank)
 @ Crown of TMS
-	- On switch-in, raises the user's Attack.  Also, on switch-in, the user raises its Defense or Special Defense by 2 to protect itself from the target's stronger Attack stat.  If this Pokemon is at full HP, the opponent's Attack damage is halved
+	- On switch-in, raises the user's Attack.  Also, on switch-in, the user raises its Defense or Special Defense by 1 to protect itself from the target's stronger Attack stat.  If this Pokemon is at full HP, the opponent's Attack damage is halved
 Ability: Venom Shock
 	- Every move has a 30% chance to either badly poison or paralyze its target.
 EVs: 252 HP / 252 Atk / 4 SpD
 Moves: Sucker Punch, Strength Sap, Thousand Waves
 Signature Move: Radiation Stench
-	- Poison Type, Physical, 120 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 30% chance to make the target flinch, super effective against Steel Types and supresses the opponents ability.
+	- Poison Type, Physical, 100 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 20% chance to make the target flinch, neutral against Steel Types and supresses the opponents ability.
 Adamant Nature
 
 Tactician Loki
