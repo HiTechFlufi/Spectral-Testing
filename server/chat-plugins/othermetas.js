@@ -366,6 +366,25 @@ const commands = {
 		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`);
 	},
 	natureswapshelp: [`/ns OR /natureswap <pokemon> - Shows the base stats that a Pokemon would have in Nature Swap. Usage: /ns <Nature> <Pokemon>.`],
+	
+	'!balance': true,
+	statbalance: 'balance',
+	balance(target, room, user) { 
+		if (!this.runBroadcast()) return;
+		if (!toID(target)) return this.parse(`/help balance`);
+		let template = Dex.deepClone(Dex.getTemplate(target));
+		if (!template.exists) return this.errorReply(`Error: Pokemon ${target} not found.`);
+		let stats = ['atk', 'def', 'spa', 'spd', 'spe'];
+		let sortedStats = stats.sort(function(a, b) {
+			return template.baseStats[a] - template.baseStats[b]
+		});
+		template.baseStats[sortedStats[0]] = Dex.clampIntRange(template.baseStats[sortedStats[0]] * 2, 1, 255);
+		template.baseStats[sortedStats[1]] = Dex.clampIntRange(template.baseStats[sortedStats[1]] * 1.75, 1, 255);
+		template.baseStats[sortedStats[2]] = Dex.clampIntRange(template.baseStats[sortedStats[2]] * 1.5, 1, 255);
+		template.baseStats[sortedStats[3]] = Dex.clampIntRange(template.baseStats[sortedStats[3]] * 1.25, 1, 255);
+		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`); }
+	},
+	balancehelp: [`/balance OR /statbalance <pokemon> - Shows the base stats that a Pokemon would have in Stat Balance.`],
 
 	'!crossevolve': true,
 	ce: 'crossevolve',
