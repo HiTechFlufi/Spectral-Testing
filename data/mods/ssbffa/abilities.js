@@ -46,6 +46,18 @@ let BattleAbilities = {
 			this.useMove("topsyturvy", pokemon);
 		},
 	},
+	"warriorsdance": {
+		id: "warriorsdance",
+		name: "Warrior's Dance",
+		desc: "Taunts the foe and boosts SpA/Acc/Spe by 1 stage.",
+		shortDesc: "Taunt, +1 SpA/Acc/Spe",
+		onStart(pokemon) {
+			this.useMove("taunt", pokemon);
+			this.boost({spa: 1});
+			this.boost({spe: 1});
+			this.boost({accuracy: 1});
+		},
+	},
 };
 
 exports.BattleAbilities = BattleAbilities;
