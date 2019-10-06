@@ -157,6 +157,7 @@ exports.commands = {
 					}
 				}
 
+				room.addRaw(`${Server.nameColor(user.name, true, true)} bought "${target}" from the room shop.`);
 				return this.sendReply(`You have bought "${target}" for ${cost.toLocaleString()} ${moneyName}${Chat.plural(cost)} from ${room.title}'s Room Shop.`);
 			});
 		},
