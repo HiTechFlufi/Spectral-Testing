@@ -346,6 +346,24 @@ const commands = {
 	},
 	scalemonshelp: [`/scale OR /scalemons <pokemon> - Shows the base stats that a Pokemon would have in Scalemons.`],
 
+	'!unsplit': true,
+	unsplit(target, room, user) {
+		if (!this.runBroadcast()) return;
+		if (!toID(target)) return this.parse(`/help unsplit`);
+		let template = Dex.deepClone(Dex.getTemplate(target));
+		if (!template.exists) return this.errorReply(`Error: Pokemon ${target} not found.`);
+		let stats = ['atk', 'def', 'spa', 'spd', 'spe'];
+		let spattack = template.baseStats['spa'];
+		let spdefense = template.baseStats['spd'];
+		if (spattack > spdefense) {
+			template.baseStats['spd']; = Dex.clampIntRange(template.baseStats['spa'], 1, 255);
+		} else if (spdefense > spattack) {
+			template.baseStats['spa']; = Dex.clampIntRange(template.baseStats['spd'], 1, 255);
+		}
+		this.sendReply(`|raw|${Chat.getDataPokemonHTML(template)}`);
+	},
+	unsplithelp: [`/unsplit <pokemon> - Shows the base stats that a Pokemon would have without the SPC split.`],
+
 	'!natureswap': true,
 	ns: 'natureswap',
 	natureswap(target, room, user) {
