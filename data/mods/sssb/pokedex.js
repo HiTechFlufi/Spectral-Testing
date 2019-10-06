@@ -23,6 +23,9 @@ let BattlePokedex = {
 		inherit: true,
 		baseStats: {hp: 80, atk: 80, def: 80, spa: 100, spd: 80, spe: 100},
 	},
+	liepard: {
+		inherit: true,
+		baseStats: {hp: 80, atk: 88, def: 78, spa: 125, spd: 85, spe: 110},
 };
 
 exports.BattlePokedex = BattlePokedex;
