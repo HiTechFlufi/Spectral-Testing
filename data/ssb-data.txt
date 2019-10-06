@@ -2,7 +2,7 @@ RaginInfernape
 (Shiny Male Infernape)
 @ Life Orb
 Ability: Raging Spirit
-	- This Pokemon cannot fall asleep and any moves with a base power of 75 or less get boosted by 1.5x.
+	- This Pokemon's moves that have 75 or less base power get boosted by 1.5x, the user cannot fall asleep, the user is unaffected by priority moves from the foe, the user uses Topsy Turvy on entry on the foe, and ignore's the foes evasion.
 EVs: 252 Atk / 4 Def / 252 Spe
 Moves: Mach Punch, Knock Off, Ice Punch
 Signature Move: Firey Destruction
@@ -87,8 +87,8 @@ Tactician Loki
 (Shiny Female Liepard)
 @ Thokk
 	- If held by Tactician Loki gives 50% chance to heal by 1/4th HP, 30% chance to increase a random stat by 1, 10% chance to decrease a random stat by 1, 10% chance to cast Focus Energy. If knocked off heals the holder by 50%, if tricked and is held by another pokemon damages pokemon by 1/8th every turn.
-Ability: Chaotic Aura
-	- Status moves receive +1 priority, a random stat is raised every turn by two stages and one random stat is lowered by one stage at the end of every turn.
+Ability: Chaos Heart
+	- Status moves receive +1 priority, a random stat is raised every turn by two stages and one random stat is lowered by one stage at the end of every turn, and when the user switches in the foe's Attack and Special Attack is dropped by 3 stages.
 EVs: 4 Def / 252 SpA / 252 Spe
 Moves: Me First, Spiky Shield, Ice Beam
 Signature Move: Blooming Chaos

@@ -6,8 +6,8 @@ let BattleAbilities = {
 	"ragingspirit": {
 		id: "ragingspirit",
 		name: "Raging Spirit",
-		desc: "Any moves that have 75 or less base power get boosted by 1.5x, cannot fall asleep.",
-		shortDesc: "Moves that have <= 75 BP get 1.5x damage, cannot fall asleep.",
+		desc: "Any moves that have 75 or less base power get boosted by 1.5x, the user cannot fall asleep, the user is unaffected by priority moves from the foe, uses Topsy Turvy on entry on the foe, and ignore's the foes evasion.",
+		shortDesc: "Moves that have <= 75 BP get 1.5x damage, cannot fall asleep, isn't affected by priority moves, uses Topsy Turvy on entry, and ignores evasion.",
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move) {
 			if (basePower <= 75) {
@@ -26,6 +26,19 @@ let BattleAbilities = {
 			if (!effect || !effect.status) return false;
 			this.add('-immune', target, '[from] ability: Raging Spirit');
 			return false;
+		},
+		onFoeTryMove(target, source, effect) {
+			if ((source.side === this.effectData.target.side || effect.id === 'perishsong') && effect.priority > 0.1 && effect.target !== 'foeSide') {
+				this.attrLastMove('[still]');
+				this.add('cant', this.effectData.target, 'ability: Raging Spirit', effect, '[of] ' + target);
+				return false;
+			}
+		},
+		onStart(pokemon) {
+			this.useMove("topsyturvy", pokemon);
+		},
+		onModifyMove(move) {
+			move.ignoreEvasion = true;
 		},
 	},
 
@@ -164,7 +177,7 @@ let BattleAbilities = {
 		},
 	},
 
-	// Tactician Loki and Lady Kakizaki
+	// Lady Kakizaki
 	"chaoticaura": {
 		id: "chaoticaura",
 		name: "Chaotic Aura",
@@ -202,6 +215,59 @@ let BattleAbilities = {
 			if (move && move.category === 'Status') {
 				move.chaoticAuraBoosted = true;
 				return priority + 1;
+			}
+		},
+	},
+
+	// Tactician Loki
+	"chaosheart": {
+		id: "chaoticaura",
+		name: "Chaotic Aura",
+		desc: "Status moves are given +1 priority, and every turn at the end the user raises one stat up by two stages and lowers one stat by one stage.  When the user switches in, the active foe, if any, drops 3 stages of their Attack and Special Attack.",
+		shortDesc: "Status moves are given +1 priority, every turn +2 random stat & -1 random stat, and when switched in foe's Atk and SpA drop 3 stages.",
+		onResidualOrder: 26,
+		onResidualSubOrder: 1,
+		onResidual(pokemon) {
+			let stats = [];
+			let boost = {};
+			for (let statPlus in pokemon.boosts) {
+				// @ts-ignore
+				if (pokemon.boosts[statPlus] < 6) {
+					stats.push(statPlus);
+				}
+			}
+			let randomStat = stats.length ? this.sample(stats) : "";
+			// @ts-ignore
+			if (randomStat) boost[randomStat] = 2;
+
+			stats = [];
+			for (let statMinus in pokemon.boosts) {
+				// @ts-ignore
+				if (pokemon.boosts[statMinus] > -6 && statMinus !== randomStat) {
+					stats.push(statMinus);
+				}
+			}
+			randomStat = stats.length ? this.sample(stats) : "";
+			// @ts-ignore
+			if (randomStat) boost[randomStat] = -1;
+
+			this.boost(boost);
+		},
+		onModifyPriority(priority, pokemon, target, move) {
+			if (move && move.category === 'Status') {
+				move.chaosHeartBoosted = true;
+				return priority + 1;
+			}
+		},
+		onStart(pokemon) {
+			let activated = false;
+			for (const target of pokemon.side.foe.active) {
+				if (!target || !this.isAdjacent(target, pokemon)) continue;
+				if (!activated) {
+					this.add('-ability', pokemon, 'Chaos Heart', 'boost');
+					activated = true;
+				}
+				this.boost({atk: -3, spa: -3}, target, pokemon);
 			}
 		},
 	},
@@ -312,6 +378,7 @@ let BattleAbilities = {
 			if (move.slowpixilateBoosted) return this.chainModify([0x1333, 0x1000]);
 		},
 	},
+
 	// HiTechFlufi
 	"adaptation": {
 		id: "adaptation",
@@ -320,62 +387,54 @@ let BattleAbilities = {
 		shortDesc: "Switch-in effect depending on scenario; Status has +1 priority.",
 		onSwitchInPriority: 8,
 		onSwitchIn(pokemon, target, source) {
-      // Paralyze or Burn
-      for (const source of pokemon.side.foe.active) {
-
-			if (!source || source.fainted) continue;
-			let speed = source.getStat('spe');
-			let attack = source.getStat('atk');
-
-			if (speed >= 300 && attack >= 350) {
-				if (speed > attack) {
+			// Paralyze or Burn
+			for (const source of pokemon.side.foe.active) {
+				if (!source || source.fainted) continue;
+				let speed = source.getStat('spe');
+				let attack = source.getStat('atk');
+				if (speed >= 300 && attack >= 350) {
+					if (speed > attack) {
+						source.trySetStatus('par', source);
+					} else if (attack > speed) {
+						source.trySetStatus('brn', source);
+					} else {
+						source.trySetStatus('par', source);
+					}
+				} else if (speed >= 300) {
 					source.trySetStatus('par', source);
-				} else if (attack > speed) {
+				} else if (attack >= 350) {
 					source.trySetStatus('brn', source);
-				} else {
-					source.trySetStatus('par', source);
 				}
-			} else if (speed >= 300) {
-				source.trySetStatus('par', source);
-			} else if (attack >= 350) {
-				source.trySetStatus('brn', source);
 			}
-		}
-
-      // Stat Lowering
-		for (const target of pokemon.side.foe.active) {
-        
-			if (!target || target.fainted) continue;
-			let spattack = target.getStat('spa');
-			let defense = target.getStat('def');
-			let spdefense = target.getStat('spd');
-
-			if (spdefense >= 300) {
-				this.boost({spd: -1}, target, pokemon);
+			// Stat Lowering
+			for (const target of pokemon.side.foe.active) {
+				if (!target || target.fainted) continue;
+				let spattack = target.getStat('spa');
+				let defense = target.getStat('def');
+				let spdefense = target.getStat('spd');
+				if (spdefense >= 300) {
+					this.boost({spd: -1}, target, pokemon);
+				}
+				if (defense >= 300) {
+					this.boost({def: -1}, target, pokemon);
+				}
+				if (spattack >= 350) {
+					this.boost({spa: -1}, target, pokemon);
+				}
 			}
-
-			if (defense >= 300) {
-				this.boost({def: -1}, target, pokemon);
+			// Healing
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				this.heal(pokemon.maxhp / 3);
 			}
-
-			if (spattack >= 350) {
-				this.boost({spa: -1}, target, pokemon);
+		},
+		// Priority to Status
+		onModifyPriority(priority, pokemon, target, move) {
+			if (move && move.category === 'Status') {
+				move.adaptationBoosted = true;
+				return priority + 1;
 			}
-		}
-
-		// Healing
-		if (pokemon.hp <= pokemon.maxhp / 3) {
-			this.heal(pokemon.maxhp / 3);
-		}      
+		},
 	},
-	// Priority to Status
-	onModifyPriority(priority, pokemon, target, move) {
-		if (move && move.category === 'Status') {
-			move.pranksterBoosted = true;
-			return priority + 1;
-		}
-	},
-},
 };
 
 exports.BattleAbilities = BattleAbilities;
