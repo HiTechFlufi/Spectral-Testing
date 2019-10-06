@@ -351,7 +351,7 @@ exports.commands = {
 					if (room) room.update();
 					return;
 				} else {
-					if (!definitions[0]) Rooms.get("development").add(`Urban Define crash cause: (target) ${target}`).update();
+					if (!definitions[0]) Rooms.get("development").add(`Urban Define crash info: target: ${target} | user: {user.userid}`).update(); // i'm curious as to who keeps causing it
 					if (!definitions[0][`word`] || !definitions[0][`definition`]) {
 						this.sendReplyBox(`No results for <strong>"${target}"</strong>.`);
 						if (room) room.update();
