@@ -48,7 +48,7 @@ let BattleItems = {
 		id: "crownoftms",
 		name: "Crown of TMS",
 		desc: "On switch-in, the user raises its Attack or Special Attack depending on if the opponent's Defense or Special Defense is lower, and raises either Defense or Special Defense the Pokemon's highest Attack stat (Physical or Special).  At full HP, this Pokemon reduces the damage of the first hit by half.",
-		shortDesc: "Raises Atk or SpA based on lower Def, Raises Def or SpD based on higher Atk, halves damage taken if at full HP.",
+		shortDesc: "Raises Atk or SpA based on lower Def, Raises Def or SpD by 2 based on higher Atk, halves damage taken if at full HP.",
 		onStart(pokemon) {
 			let totaldef = 0;
 			let totalspd = 0;
@@ -62,14 +62,14 @@ let BattleItems = {
 				totalspa += target.getStat('spa', false, true);
 			}
 			if (totaldef && totaldef >= totalspd) {
-				this.boost({spa: 1});
+				this.boost({atk: 1});
 			} else if (totalspd) {
 				this.boost({atk: 1});
 			}
 			if (totalatk && totalatk >= totalspa) {
-				this.boost({def: 1});
+				this.boost({def: 2});
 			} else if (totalspd) {
-				this.boost({spd: 1});
+				this.boost({spd: 2});
 			}
 		},
 		onSourceModifyDamage(damage, source, target, move) {
