@@ -176,25 +176,27 @@ exports.commands = {
 			this.privateModAction(`${user.name} has changed emoticon size in this room to ${size}.`);
 		},
 
-    uses: "ladder",
-    usage: "ladder",
-    usageladder: "ladder",
-    ladder() {
-	  	if (!this.runBroadcast()) return;
-	  	let keys = Db.emoteLadder.keys().map(name => {
-	  		return {name: name, usage: Db.emoteLadder.get(name).toLocaleString()};
-	  	});
-	  	if (!keys.length) return this.errorReply("Emote ladder is empty.");
-		  keys.sort(function (a, b) { return toID(b.usage) - toID(a.usage); });
-      let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;"><h1 style="font-weight: bold; text-align: center;">Emoticon Ladder~!</h1>`;
-      display += `<center><table border="1" cellspacing ="0" cellpadding="2"><tr style="font-weight: bold"><tr><td>Emote:</td><td>Uses:</td></tr><br />`;
-      for (let i in keys) {
-        display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center"><img src="${keys[i].name}" height="50" width="50"</td>`;
-        display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${keys[i].usage}</td>`;
-      }
-      display += `</table></center></div>`;
-      this.sendReplyBox(display);
-    },
+		uses: "ladder",
+		usage: "ladder",
+		usageladder: "ladder",
+		ladder(target) {
+			if (!this.runBroadcast()) return;
+			if (!target) target = 50;
+			let keys = Db.emoteLadder.keys().map(name => {
+				return {name: name, usage: Db.emoteLadder.get(name).toLocaleString()};
+			});
+			if (!keys.length) return this.errorReply("Emote ladder is empty.");
+			keys.sort(function (a, b) { return toID(b.usage) - toID(a.usage); });
+			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;"><h1 style="font-weight: bold; text-align: center;">Emoticon Ladder~!</h1>`;
+			display += `<center><table border="1" cellspacing ="0" cellpadding="2"><tr style="font-weight: bold"><tr><td>Emote:</td><td>Uses:</td></tr><br />`;
+			let smallerList = keys.slice(0, target);
+			for (let i in smallerList) {
+				display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center"><img src="${smallerList[i].name}" height="50" width="50"</td>`;
+				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${smallerList[i].usage}</td>`;
+			}
+			display += `</table></center></div>`;
+			this.sendReplyBox(display);
+		},
 
 		"": "help",
 		help() {
