@@ -323,59 +323,59 @@ let BattleAbilities = {
       // Paralyze or Burn
       for (const source of pokemon.side.foe.active) {
 
-        if (!source || source.fainted) continue;
-        let speed = source.getStat('spe');
-        let attack = source.getStat('atk');
+			if (!source || source.fainted) continue;
+			let speed = source.getStat('spe');
+			let attack = source.getStat('atk');
 
-        if (speed >= 300 && attack >= 350) {
-          if (speed > attack) {
-            source.trySetStatus('par', source);
-          } else if (attack > speed) {
-            source.trySetStatus('brn', source);
-          } else {
-            source.trySetStatus('par', source);
-          }
-        } else if (speed >= 300) {
-				  source.trySetStatus('par', source);
-		    } else if (attack >= 350) {
-			    source.trySetStatus('brn', source);
-			  }
-      }
+			if (speed >= 300 && attack >= 350) {
+				if (speed > attack) {
+					source.trySetStatus('par', source);
+				} else if (attack > speed) {
+					source.trySetStatus('brn', source);
+				} else {
+					source.trySetStatus('par', source);
+				}
+			} else if (speed >= 300) {
+				source.trySetStatus('par', source);
+			} else if (attack >= 350) {
+				source.trySetStatus('brn', source);
+			}
+		}
 
       // Stat Lowering
-      for (const target of pokemon.side.foe.active) {
+		for (const target of pokemon.side.foe.active) {
         
-        if (!target || target.fainted) continue;
-        let spattack = target.getStat('spa');
-        let defense = target.getStat('def');
-        let spdefense = target.getStat('spd');
+			if (!target || target.fainted) continue;
+			let spattack = target.getStat('spa');
+			let defense = target.getStat('def');
+			let spdefense = target.getStat('spd');
 
-        if (spdefense >= 300) {
-          this.boost({spd: -1}, target, pokemon);
-        }
-
-        if (defense >= 300) {
-          this.boost({def: -1}, target, pokemon);
-        }
-
-        if (spattack >= 350) {
-          this.boost({spa: -1}, target, pokemon);
-        }
-      }
-
-      // Healing
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				this.heal(pokemon.maxhp / 3);
-			}      
-    },
-    // Priority to Status
-    onModifyPriority(priority, pokemon, target, move) {
-			if (move && move.category === 'Status') {
-				move.pranksterBoosted = true;
-				return priority + 1;
+			if (spdefense >= 300) {
+				this.boost({spd: -1}, target, pokemon);
 			}
-		},
-  },
+
+			if (defense >= 300) {
+				this.boost({def: -1}, target, pokemon);
+			}
+
+			if (spattack >= 350) {
+				this.boost({spa: -1}, target, pokemon);
+			}
+		}
+
+		// Healing
+		if (pokemon.hp <= pokemon.maxhp / 3) {
+			this.heal(pokemon.maxhp / 3);
+		}      
+	},
+	// Priority to Status
+	onModifyPriority(priority, pokemon, target, move) {
+		if (move && move.category === 'Status') {
+			move.pranksterBoosted = true;
+			return priority + 1;
+		}
+	},
+},
 };
 
 exports.BattleAbilities = BattleAbilities;
