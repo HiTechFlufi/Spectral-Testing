@@ -351,7 +351,7 @@ exports.commands = {
 					if (room) room.update();
 					return;
 				} else {
-					if (!definitions[0]) Rooms.get("development").add("Urban Define crash cause: (target) " + tagret);
+					if (!definitions[0]) Rooms.get("development").add(`Urban Define crash cause: (target) ${target}`).update();
 					if (!definitions[0][`word`] || !definitions[0][`definition`]) {
 						this.sendReplyBox(`No results for <strong>"${target}"</strong>.`);
 						if (room) room.update();
@@ -659,6 +659,7 @@ exports.commands = {
 		Server.regdate(target, date => {
 			if (date) {
 				this.sendReplyBox(regdateReply(date));
+				room.update();
 			} else {
 				this.sendReplyBox(`It appears ${Server.nameColor(target, true)} is unregistered.`);
 			}
@@ -674,7 +675,6 @@ exports.commands = {
 				let DayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 				return `${Server.nameColor(target, true)} was registered on <strong>${DayNames[d.getUTCDay()]}, ${MonthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}</strong> at <strong>${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()} UTC.</strong>`;
 			}
-			//room.update();
 		}
 	},
 	regdatehelp: ["/regdate - Gets the regdate (register date) of a username."],
@@ -701,20 +701,6 @@ exports.commands = {
 		let results = ["Signs point to yes.", "Yes.", "Reply hazy, try again.", "Without a doubt.", "My sources say no.", "As I see it, yes.", "You may rely on it.", "Concentrate and ask again.", "Outlook not so good.", "It is decidedly so.", "Better not tell you now.", "Very doubtful.", "Yes - definitely.", "It is certain.", "Cannot predict now.", "Most likely.", "Ask again later.", "My reply is no.", "Outlook good.", "Don't count on it."];
 		return this.sendReplyBox(results[Math.floor(Math.random() * results.length)]);
 	},
-
-	"!digidex": true,
-	dd: "digidex",
-	dg: "digidex",
-	digidex(target, room, user) {
-		if (!this.runBroadcast()) return;
-		if (!target) return this.parse("/help digidex");
-		if (this.broadcasting) {
-			this.parse(`!dt ${target}, digimon`);
-		} else {
-			this.parse(`/dt ${target}, digimon`);
-		}
-	},
-	digidexhelp: ["/digidex [Digimon] - Checks for a Digimon's data from Digimon Showdown."],
 
 	randomsurvey: "randsurvey",
 	randsurvey() {
