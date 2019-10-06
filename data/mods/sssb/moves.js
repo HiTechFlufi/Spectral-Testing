@@ -225,8 +225,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		pp: 10,
 		onPrepareHit(target, source) {
-			this.add('-anim', source, 'Shadow Strike', target);
-			this.add('-anim', source, 'U-Turn', target);
+			this.add('-anim', target, 'Shadow Strike', target);
+			this.add('-anim', target, 'U-Turn', target);
 		},
 		priority: 0,
 		selfSwitch: true,
@@ -280,11 +280,11 @@ let BattleMovedex = {
 	"bloomingchaos": {
 		id: "bloomingchaos",
 		name: "Blooming Chaos",
-		basePower: 80,
+		basePower: 90,
 		accuracy: true,
 		desc: "Casts Heart Swap, then casts Topsy Turvy on opponent, 30% to cause burn to opponent, 30% chance to badly poison opponent, 10% chance to cause Confusion on caster and opponent, 10% chance to cause opponent to fall in love, 10% chance for opponent to flinch, 10% chance to freeze opponent.",
 		shortDesc: "A variety of curses begin.",
-		pp: 20,
+		pp: 16,
 		priority: 2,
 		category: "Special",
 		onHit(target, source) {
@@ -403,7 +403,7 @@ let BattleMovedex = {
 			}
 		},
 		onPrepareHit(target, source) {
-			this.add('-anim', source, 'Boomburst', target);
+			this.add('-anim', source, 'Boomburst', source);
 		},
 		flags: {
 			protect: 1,
