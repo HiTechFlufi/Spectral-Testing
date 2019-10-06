@@ -9,7 +9,7 @@ let BattlePokedex = {
 
 	magearna: {
 		inherit: true,
-		baseStats: {hp: 80, atk: 100, def: 115, spa: 130, spd: 115, spe: 65},
+		baseStats: {hp: 100, atk: 100, def: 115, spa: 130, spd: 115, spe: 65},
 	},
 	skuntank: {
 		inherit: true,
@@ -22,6 +22,10 @@ let BattlePokedex = {
 	flygon: {
 		inherit: true,
 		baseStats: {hp: 80, atk: 80, def: 80, spa: 100, spd: 80, spe: 100},
+	},
+	liepard: {
+		inherit: true,
+		baseStats: {hp: 74, atk: 88, def: 70, spa: 98, spd: 70, spe: 112},
 	},
 };
 
