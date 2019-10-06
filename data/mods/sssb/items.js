@@ -67,9 +67,9 @@ let BattleItems = {
 				this.boost({atk: 1});
 			}
 			if (totalatk && totalatk >= totalspa) {
-				this.boost({def: 2});
+				this.boost({def: 1});
 			} else if (totalspd) {
-				this.boost({spd: 2});
+				this.boost({spd: 1});
 			}
 		},
 		onSourceModifyDamage(damage, source, target, move) {
