@@ -315,6 +315,7 @@ exports.commands = {
 	"!urbandefine": true,
 	u: "urbandefine",
 	ud: "urbandefine",
+	udefine: "urbandefine",
 	urbandefine(target, room) {
 		if (!this.runBroadcast()) return;
 		if (!toID(target)) return this.parse("/help urbandefine");
@@ -350,6 +351,7 @@ exports.commands = {
 					if (room) room.update();
 					return;
 				} else {
+					if (!definitions[0]) Rooms.get("development").add("Urban Define crash cause: (target) " + tagret);
 					if (!definitions[0][`word`] || !definitions[0][`definition`]) {
 						this.sendReplyBox(`No results for <strong>"${target}"</strong>.`);
 						if (room) room.update();
