@@ -218,11 +218,15 @@ let BattleItems = {
 	"ghoulishrag": {
 		id: "ghoulishrag",
 		name: "Ghoulish Rag",
-		// Neutralizes weaknesses
+		// Weaknesses to Resistances (and vice versa)
 		onSourceModifyDamage(damage, source, target, move) {
 			if (target.getMoveHitData(move).typeMod > 0) {
-				this.debug('Ghoulish Rag neutralize');
-				return this.chainModify(0.5);
+				this.debug('Ghoulish Rag resist');
+				return this.chainModify(0.25);
+			}
+			if (target.getMoveHitData(move).typeMod === 2) {
+				this.debug('Ghoulish Rag weaken');
+				return this.chainModify(4);
 			}
 		},
 		// Double defenses
@@ -241,8 +245,8 @@ let BattleItems = {
 				return this.chainModify([0x1333, 0x1000]);
 			}
 		},
-		desc: "The holder takes neutral damage from supereffective attacks, receives 2x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
-		shortDesc: "2x Def/Spd, neutralizes weaknesses, Ghost moves x1.2 power.",
+		desc: "The holder swaps weaknesses and resistances, receives 2x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
+		shortDesc: "2x Def/Spd, swaps weaks/resists, Ghost-type moves have x1.2 power.",
 	},
 
 	// Lady Kakizaki
