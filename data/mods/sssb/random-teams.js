@@ -99,7 +99,7 @@ class RandomSSSBTeams extends RandomTeams {
 			"~Tactician Loki": {
 				species: "Liepard",
 				item: "Thokk",
-				ability: "Chaotic Aura",
+				ability: "Chaos Heart",
 				shiny: true,
 				gender: "F",
 				moves: ["Me First", "Ice Beam", "Spiky Shield"],
