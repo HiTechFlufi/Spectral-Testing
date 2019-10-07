@@ -339,8 +339,8 @@ let BattleAbilities = {
 	"slowpixilate": {
 		id: "slowpixilate",
 		name: "Slow Pixilate",
-		desc: "User becomes Fairy/Poison Type, has halved Attack and Speed for 3 turns and turns Normal attacks into Fairy attacks with 1.2x Power.",
-		shortDesc: "Become Fairy/Poison, half Atk/Spe for 3 turns and Normal moves become Fairy moves with 1.2x BP.",
+		desc: "User becomes Fairy/Poison Type, has halved Attack and Speed for 2 turns and turns Normal attacks into Fairy attacks with 1.2x Power.",
+		shortDesc: "Become Fairy/Poison, half Atk/Spe for 2 turns and Normal moves become Fairy moves with 1.2x BP.",
 		onStart(pokemon) {
 			pokemon.addVolatile('slowpixilate');
 			this.add("-start", pokemon, "typechange", "Fairy/Poison");
@@ -383,8 +383,8 @@ let BattleAbilities = {
 	"adaptation": {
 		id: "adaptation",
 		name: "Adaptation",
-		desc: "A random effect is selected on switch-in depending on the scenario in battle. Status moves have +1 priority.",
-		shortDesc: "Switch-in effect depending on scenario; Status has +1 priority.",
+		desc: "May paralyse or burn foe or reduce foe's SpA/SpD/Spe by 1 stage or heal 1/3 of max HP on switch-in. Status moves have +1 priority.",
+		shortDesc: "Paralyse or burn foe or reduce foe's SpA/SpD/Spe by 1 stage or heal 1/3 of max HP on switch-in; Status has +1 priority.",
 		onSwitchInPriority: 8,
 		onSwitchIn(pokemon, target, source) {
 			// Paralyze or Burn

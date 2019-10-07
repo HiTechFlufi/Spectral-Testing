@@ -188,7 +188,7 @@ HiTechFlufi
 @ Titanium Core
 	- Doubles the holder's Defense and SpDefense, and Steel-type attacks have x1.2 power.
 Ability: Adaptation
-	- A varying number of effects take place to help the user's current situation in battle. Status moves have +1 priority.
+	- May burn or paralyse foe or reduce foe's special attack, special defense or speed by 1 stage or heal 1/3 of max HP on switch-in. Status moves have +1 priority.
 EVs: 252 HP / 96 Def / 156 SpD
 Moves: Meteor Mash, Earthquake, Power Swap
 Signature Move: Crippled Encryption
@@ -203,5 +203,5 @@ Ability: The Lurkening
 EVs: 252 HP / 4 SpD / 252 Def
 Moves: Defog, Nature's Madness, Scald
 Signature Move: The Nappening
- - This move puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
+ - Psychic Type, Status, 100% Accuracy, 16 PP. Puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
 Bold Nature
