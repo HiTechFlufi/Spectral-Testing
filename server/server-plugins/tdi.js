@@ -6,7 +6,7 @@
 
 "use strict";
 
-const timer = 30; // defaults to 30 minutes
+const timer = 60; // defaults to 60 minutes
 
 class TDI {
 	constructor(room) {
@@ -150,7 +150,7 @@ exports.commands = {
 		start(target, room, user) {
 			if (!this.can("ban", null, room)) return false;
 			if (!room.tdi || room.tdi.state !== "signups") return this.errorReply("There is not a Total Drama Island season ready to start.");
-			if (room.tdi.players.length < 2 || room.tdi.players.length > 12 || room.tdi.players.length % 2 !== 0) return this.errorReply(`We must have an even amount of contestants between the range of 2-12 to begin airing.`);
+			if (room.tdi.players.length < 2 || room.tdi.players.length > 16 || room.tdi.players.length % 2 !== 0) return this.errorReply(`We must have an even amount of contestants between the range of 2-16 to begin airing.`);
 			room.tdi.start();
 			this.privateModAction(`(${user.name} has started the season of Total Drama Island early.)`);
 		},
