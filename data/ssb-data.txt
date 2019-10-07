@@ -109,7 +109,7 @@ Jolly Nature
 Auroura
 (Oricorio-Sensu)
 @ Ghoulish Rag
-	- 2x to Defense/SpDefense, neutralizes weaknesses, and Ghost moves have x1.2 power.
+	- 2x to Defense/SpDefense, swaps user's weaknesses and resistances, and Ghost-type moves have x1.2 power.
 Ability: Unholy Preservation
 	- User ignores stat changes, indirect damage, stat drops, and opposing immunities to Ghost type.
 EVs: 252 HP / 4 SpD / 252 Spe
