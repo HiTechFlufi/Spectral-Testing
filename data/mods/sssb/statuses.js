@@ -160,16 +160,32 @@ let BattleStatuses = {
 	shademaura: {
 		noCopy: true,
 		onStart() {
-			this.add(`c|+shademaura ⌐⚡_|Get ready for a sub-optimal performance`);
+			this.add(`c|$shademaura ⌐⚡_|Get ready for a sub-optimal performance`);
 		},
 		onSwitchOut() {
-			this.add(`c|+shademaura ⌐⌐⚡_|Thats good for now`);
+			this.add(`c|$shademaura ⌐⌐⚡_|Thats good for now`);
 		},
 		onFaint() {
-			this.add(`c|+shademaura ⌐⚡_|fuck`);
+			this.add(`c|$shademaura ⌐⚡_|fuck`);
 		},
 		onSourceFaint() {
-			this.add(`c|+shademaura ⌐⚡_|PogChamp`);
+			this.add(`c|$shademaura ⌐⚡_|PogChamp`);
+		},
+	},
+
+	revivalrawk: {
+		noCopy: true,
+		onStart() {
+			this.add(`c|+Revival Rawk|Oh, is it my turn now? Okay... I guess...`);
+		},
+		onSwitchOut() {
+			this.add(`c|+Revival Rawk|/raw I should be back later. No promises. <img src="http://i.imgur.com/rBA9M7A.png" height="50" width="50">`);
+		},
+		onFaint() {
+			this.add(`c|+Revival Rawk|Welp, I guess it's time to go do something else.`);
+		},
+		onSourceFaint() {
+			this.add(`c|+Revival Rawk|Neato Burrito! I scored a KO!`);
 		},
 	},
 

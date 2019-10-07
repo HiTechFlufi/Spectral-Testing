@@ -236,6 +236,22 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Modest",
 			},
+			// Operators
+			"$shademaura ⌐⚡_": {
+				species: "Regigigas",
+				item: "Pixie Plate",
+				ability: "Slow Pixilate",
+				gender: "M",
+				moves: ["Fake Out", "Extreme Speed", "Bonemerang"],
+				baseSignatureMove: "sarcasmovertext",
+				signatureMove: "Sarcasm Over Text",
+				evs: {
+					hp: 4,
+					atk: 252,
+					spe: 252,
+				},
+				nature: "Jolly",
+			},
 			// Voices
 			"+Revival Clair": {
 				species: "Garchomp",
@@ -266,21 +282,6 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Impish",
 			},
-			"+shademaura ⌐⚡_": {
-				species: "Regigigas",
-				item: "Pixie Plate",
-				ability: "Slow Pixilate",
-				gender: "M",
-				moves: ["Fake Out", "Extreme Speed", "Bonemerang"],
-				baseSignatureMove: "sarcasmovertext",
-				signatureMove: "Sarcasm Over Text",
-				evs: {
-					hp: 4,
-					atk: 252,
-					spe: 252,
-				},
-				nature: "Jolly",
-			},
 			"+Lady✨Kakizaki": {
 				species: "Suicune",
 				item: "Dumplings",
@@ -295,6 +296,21 @@ class RandomSSSBTeams extends RandomTeams {
 					spd: 4,
 				},
 				nature: "Modest",
+			},
+			"+Revival Rawk": {
+				species: "Tapu Fini",
+				item: "Leftovers",
+				ability: "The Lurkening",
+				gender: "M",
+				moves: ["Defog", "Nature's Madness", "Scald"],
+				baseSignatureMove: "thenappening",
+				signatureMove: "The Nappening",
+				evs: {
+					hp: 252,
+					def: 252,
+					spd: 4,
+				},
+				nature: "Bold",
 			},
 		};
 		let pool = this.shuffle(Object.keys(sets));

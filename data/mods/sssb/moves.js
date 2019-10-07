@@ -469,14 +469,14 @@ let BattleMovedex = {
 		priority: 1,
 		category: "Status",
 		flags: {protect: 1, mirror: 1, reflectable: 1},
-    volatileStatus: 'confusion',
+		volatileStatus: 'confusion',
 		secondary: {
 			chance: 100,
 			onHit(target, source, move) {
 				target.addVolatile('trapped', source, move, 'trapper');
 			},
 		},
-    onHit(target, source, move) {
+		onHit(target, source, move) {
 			let statName = 'atk';
 			let bestStat = 0;
 			/** @type {StatNameExceptHP} */
@@ -491,8 +491,8 @@ let BattleMovedex = {
 		},
 		onPrepareHit(target, source, move) {
 			this.add('-anim', source, 'Block', target);
-      this.add('-anim', source, 'Tri Attack', target);
-      this.add('-anim', source, 'Hex', target);
+			this.add('-anim', source, 'Tri Attack', target);
+			this.add('-anim', source, 'Hex', target);
 		},
 		target: "normal",
 		type: "Steel",
@@ -550,7 +550,7 @@ let BattleMovedex = {
 		category: "Physical",
 		onPrepareHit(target, source) {
 			this.add('-anim', source, 'Earthquake', target);
-			this.add(`c|+shademaura ⌐⚡_|Oh ur SSB is so good`);
+			this.add(`c|$shademaura ⌐⚡_|Oh ur SSB is so good`);
 		},
 		flags: {protect: 1, mirror: 1},
 		volatileStatus: 'taunt',
@@ -589,6 +589,41 @@ let BattleMovedex = {
 		drain: [1, 8],
 		target: "normal",
 		type: "Ice",
+	},
+
+	// Revival Rawk
+	"thenappening": {
+		id: "thenappening",
+		name: "The Nappening",
+		basePower: 0,
+		accuracy: 100,
+		desc: "User falls asleep to restore HP and remove status. Will wake up on the next turn.  Makes oppponent fall asleep as well (no guaranteed wake up time).",
+		shortDesc: "User sleeps for a turn to restore HP and status. Foe sleeps as well.",
+		pp: 10,
+		priority: 0,
+		category: "Status",
+		onPrepareHit(target, source) {
+			this.add('-anim', source, 'Rest', source);
+			this.add(`-- Revival Rawk is now nap.`);
+		},
+		normal: {
+			status: "slp",
+		},
+		flags: {snatch: 1, heal: 1},
+		onTryMove(pokemon) {
+			if (pokemon.hp < pokemon.maxhp && pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return;
+			this.add('-fail', pokemon);
+			return null;
+		},
+		onHit(target, source, move) {
+			if (!target.setStatus('slp', source, move)) return false;
+			target.statusData.time = 2;
+			target.statusData.startTime = 2;
+			this.heal(target.maxhp); // Aesthetic only as the healing happens after you fall asleep in-game
+		},
+		secondary: null,
+		target: "self",
+		type: "Psychic",
 	},
 };
 
