@@ -213,7 +213,38 @@ let BattleItems = {
     desc: "The holder's Defense and Special Defense are doubled, and Steel-type attacks have x1.2 power.",
     shortDesc: "Def/SpDef is doubled; Steel-type attacks have x1.3 power.",
 	},
-	
+
+	// Auroura
+	"ghoulishrag": {
+		id: "ghoulishrag",
+		name: "Ghoulish Rag",
+		// Neutralizes weaknesses
+		onSourceModifyDamage(damage, source, target, move) {
+			if (target.getMoveHitData(move).typeMod > 0) {
+				this.debug('Ghoulish Rag neutralize');
+				return this.chainModify(0.5);
+			}
+		},
+		// Double defenses
+		onModifyDefPriority: 2,
+		onModifyDef(def, pokemon) {
+			return this.chainModify(2);
+		},
+		onModifySpDPriority: 2,
+		onModifySpD(spd, pokemon) {
+			return this.chainModify(2);
+		},
+		// Ghost-type power boost
+		onBasePowerPriority: 6,
+		onBasePower(basePower, user, target, move) {
+			if (move.type === 'Ghost') {
+				return this.chainModify([0x1333, 0x1000]);
+			}
+		},
+		desc: "The holder takes neutral damage from supereffective attacks, receives 2x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
+		shortDesc: "2x Def/Spd, neutralizes weaknesses, Ghost moves x1.2 power.",
+	},
+
 	// Lady Kakizaki
 	"dumplings": {
 		id: "dumplings",
@@ -232,6 +263,8 @@ let BattleItems = {
 			this.add("-start", pokemon, "typechange", "Water/Ice");
 			pokemon.types = ["Water", "Ice"];
 		},
+		desc: "Holder restores 1/6 max HP at the end of every turn. Holder's type changes to Water/Ice on switch-in.",
+		shortDesc: "Heals 1/6 HP per turn; Changes type to Water/Ice.",
 	},
 };
 

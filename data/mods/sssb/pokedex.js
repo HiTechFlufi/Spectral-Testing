@@ -15,9 +15,9 @@ let BattlePokedex = {
 		inherit: true,
 		baseStats: {hp: 103, atk: 93, def: 97, spa: 71, spd: 90, spe: 90},
 	},
-	castform: {
+	oricoriosensu: {
 		inherit: true,
-		baseStats: {hp: 80, atk: 70, def: 80, spa: 70, spd: 80, spe: 70},
+		baseStats: {hp: 85, atk: 70, def: 80, spa: 108, spd: 80, spe: 123},
 	},
 	flygon: {
 		inherit: true,

@@ -415,32 +415,66 @@ let BattleMovedex = {
 	},
 
 	// Auroura
-	"climatecast": {
-		id: "climatecast",
-		name: "Climate Cast",
-		basePower: 120,
+	"inescapablecurse": {
+		id: "inescapablecurse",
+		name: "Inescapable Curse",
+		basePower: 40,
 		accuracy: 100,
-		desc: "Type changes to match weather condition.",
-		shortDesc: "Type changes to match weather condition.",
-		pp: 20,
-		priority: 1,
+		desc: "Traps, taunts, and curses the target.",
+		shortDesc: "Traps, taunts, and curses the target.",
+		pp: 10,
+		priority: 0,
 		category: "Special",
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
-		onModifyMove(move) {
-			switch (this.field.effectiveWeather()) {
-			case 'sunnyday':
-			case 'desolateland':
-				move.type = 'Fire';
-				break;
-			case 'raindance':
-			case 'primordialsea':
-				move.type = 'Water';
-				break;
-			case 'hail':
-				move.type = 'Ice';
-				break;
-			}
+		secondaries: [
+			{
+				chance: 100,
+				volatileStatus: "curse",
+			}, {
+				chance: 100,
+				volatileStatus: "torment",
+			}, {
+				chance: 100,
+				volatileStatus: "embargo",
+			},
+		],
+		volatileStatus: 'taunt',
+		effect: {
+			duration: 5,
+			onStart(target) {
+				if (target.activeTurns && !this.willMove(target)) {
+					this.effectData.duration++;
+				}
+				this.add('-start', target, 'move: Taunt');
+			},
+			onResidualOrder: 12,
+			onEnd(target) {
+				this.add('-end', target, 'move: Taunt');
+			},
+			onDisableMove(pokemon) {
+				for (const moveSlot of pokemon.moveSlots) {
+					if (this.dex.getMove(moveSlot.id).category === 'Status') {
+						pokemon.disableMove(moveSlot.id);
+					}
+				}
+			},
+			onBeforeMovePriority: 5,
+			onBeforeMove(attacker, defender, move) {
+				if (!move.isZ && move.category === 'Status') {
+					this.add('cant', attacker, 'move: Taunt', move);
+					return false;
+				}
+			},
+			onStart(pokemon, source) {
+				this.add('-start', pokemon, 'Curse', '[of] ' + source);
+			},
+			onResidualOrder: 10,
+			onResidual(pokemon) {
+				this.damage(pokemon.maxhp / 4);
+			},
+		},
+		onHit(target, source, move) {
+			return target.addVolatile('trapped', source, move, 'trapper');
 		},
 		onPrepareHit(target, source, move) {
 			if (move.type === 'Fire') {
@@ -454,7 +488,7 @@ let BattleMovedex = {
 			}
 		},
 		target: "normal",
-		type: "Normal",
+		type: "Ghost",
 	},
 
 	// HiTechFlufi

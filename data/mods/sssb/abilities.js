@@ -463,6 +463,60 @@ let BattleAbilities = {
 			}
 		},
 	},
+
+	// Auroura
+	"unholypreservation": {
+		id: "unholypreservation",
+		name: "Unholy Preservation",
+		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage. Also silently raises Defense and Special Defense by 1.5x.",
+		shortDesc: "User ignores stat changes, non-attack damage, stat drops. Ignores immunities to ghost.",
+		// Ignore stat changes
+		onAnyModifyBoost(boosts, target) {
+			let source = this.effectData.target;
+			if (source === target) return;
+			if (source === this.activePokemon && target === this.activeTarget) {
+				boosts['def'] = 0;
+				boosts['spd'] = 0;
+				boosts['evasion'] = 0;
+			}
+			if (target === this.activePokemon && source === this.activeTarget) {
+				boosts['atk'] = 0;
+				boosts['spa'] = 0;
+				boosts['accuracy'] = 0;
+			}
+		},
+		// Ignore indirect damage
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		// Immunity to stat changes
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			for (let i in boost) {
+				// @ts-ignore
+				if (boost[i] < 0) {
+					// @ts-ignore
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(/** @type {ActiveMove} */(effect)).secondaries) {
+				this.add("-fail", target, "unboost", "[from] ability: Unholy Preservation", "[of] " + target);
+			}
+		},
+		// Ignore Normal-type Ghost immunity
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Ghost'] = true;
+			}
+		},
+	},
 };
 
 exports.BattleAbilities = BattleAbilities;
