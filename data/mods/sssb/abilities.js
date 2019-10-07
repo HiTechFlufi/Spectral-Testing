@@ -351,7 +351,7 @@ let BattleAbilities = {
 			this.add('-end', pokemon, 'Slow Pixilate', '[silent]');
 		},
 		effect: {
-			duration: 3,
+			duration: 2,
 			onStart(target) {
 				this.add('-start', target, 'ability: Slow Pixilate');
 			},

@@ -164,7 +164,7 @@ shademaura ⌐⚡_
 (Male Regigigas)
 @ Pixie Plate
 Ability: Slow Pixilate
-	- Half Atk/Spe for 3 turns, becomes Fairy/Poison Type and turns Normal attacks into Fairy attacks with 1.2x Power.
+	- Half Atk/Spe for 2 turns, becomes Fairy/Poison Type and turns Normal attacks into Fairy attacks with 1.2x Power.
 EVs: 4 HP / 252 Atk / 252 Spe
 Moves: Fake Out, Extreme Speed, Bonemerang
 Signature Move: Sarcasm Over Text
