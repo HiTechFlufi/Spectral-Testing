@@ -194,3 +194,14 @@ Moves: Meteor Mash, Earthquake, Power Swap
 Signature Move: Crippled Encryption
 	- Steel Type, Status, Can't miss, 16 PP. Lower's target's highest stat by 1, confuses, and traps the target for 4-5 turns.
 Careful Nature
+
+Revival Rawk
+(Male Tapu Fini)
+@ Leftovers
+Ability: The Lurkening
+ - This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage. Also silently raises Defense and Special Defense by 1.5x.
+EVs: 252 HP / 4 SpD / 252 Def
+Moves: Defog, Nature's Madness, Scald
+Signature Move: The Nappening
+ - This move puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
+Bold Nature
