@@ -606,23 +606,23 @@ let BattleMovedex = {
 			this.add('-anim', source, 'Rest', source);
 			this.add(`-- Revival Rawk is now nap.`);
 		},
-		normal: {
-			status: "slp",
-		},
+		status: "slp",
 		flags: {snatch: 1, heal: 1},
-		onTryMove(pokemon) {
-			if (pokemon.hp < pokemon.maxhp && pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return;
-			this.add('-fail', pokemon);
-			return null;
-		},
-		onHit(target, source, move) {
-			if (!target.setStatus('slp', source, move)) return false;
-			target.statusData.time = 2;
-			target.statusData.startTime = 2;
-			this.heal(target.maxhp); // Aesthetic only as the healing happens after you fall asleep in-game
+		self: {
+			onTryMove(pokemon) {
+				if (pokemon.hp < pokemon.maxhp && pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return;
+				this.add('-fail', pokemon);
+				return null;
+			},
+			onHit(target, source, move) {
+				if (!target.setStatus('slp', source, move)) return false;
+				target.statusData.time = 2;
+				target.statusData.startTime = 2;
+				this.heal(target.maxhp); // Aesthetic only as the healing happens after you fall asleep in-game
+			},
 		},
 		secondary: null,
-		target: "self",
+		target: "normal",
 		type: "Psychic",
 	},
 };
