@@ -316,7 +316,7 @@ exports.commands = {
 	u: "urbandefine",
 	ud: "urbandefine",
 	udefine: "urbandefine",
-	urbandefine(target, room) {
+	urbandefine(target, room, user) {
 		if (!this.runBroadcast()) return;
 		if (!toID(target)) return this.parse("/help urbandefine");
 		if (target.toString() > 50) return this.errorReply("Phrase can not be longer than 50 characters.");
