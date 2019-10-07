@@ -107,14 +107,15 @@ Signature Move: Dragon Blitz
 Jolly Nature
 
 Auroura
-(Castform)
-@ Environmental Orb
-- 1.3x to all stats; Weather lasts 8 turns instead of 5.
-Ability: Forecast
-EVs: 252 SpA / 4 SpD / 252 Spe
-Moves: Rain Dance, Sunny Day, Hail
-Signature Move: Climate Cast
-- Normal Type, Special, 120 BP, 100% accuracy, 24 PP. Type changes to match weather condition.
+(Oricorio-Sensu)
+@ Ghoulish Rag
+	- 2x to Defense/SpDefense, neutralizes weaknesses, and Ghost moves have x1.2 power.
+Ability: Unholy Preservation
+	- User ignores stat changes, indirect damage, stat drops, and opposing immunities to Ghost type.
+EVs: 252 HP / 4 SpD / 252 Spe
+Moves: Shadow Ball, Roost, Teeter Dance
+Signature Move: Inescapable Curse
+- Ghost Type, Special, 40 BP, 100% accuracy, 16 PP. Traps, taunts, curses, torments, and uses Embargo on the target, 
 Timid Nature
 
 Spectral Bot
