@@ -179,7 +179,7 @@ let BattleStatuses = {
 			this.add(`c|+Revival Rawk|Oh, is it my turn now? Okay... I guess...`);
 		},
 		onSwitchOut() {
-			this.add(`c|/raw +<strong><font color="#7F4DAE">Revival Rawk:</font></strong> I should be back later. No promises. <img src="http://i.imgur.com/rBA9M7A.png" height="50" width="50">`);
+			this.add(`c|+Revival Rawk|/raw I should be back later. No promises. <img src="http://i.imgur.com/rBA9M7A.png" height="50" width="50">`);
 		},
 		onFaint() {
 			this.add(`c|+Revival Rawk|Welp, I guess it's time to go do something else.`);
