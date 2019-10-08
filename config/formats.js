@@ -2128,7 +2128,7 @@ let Formats = [
 
 		mod: 'pet',
 		team: 'randomPetmons',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 		onSwitchIn(pokemon) {
 			this.add("-start", pokemon, 'typechange', `${pokemon.types[0]} ${(pokemon.types[1] ? `/${pokemon.types[1]}` : ``)}`);
 		},
@@ -2140,7 +2140,7 @@ let Formats = [
 		mod: 'bossrush',
 		team: 'randomTMS',
 		gameType: 'doubles',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 	},
 	{
 		name: "[Gen 7] Follow the Leader",
@@ -2176,7 +2176,7 @@ let Formats = [
 			"&bullet; <a href=https://github.com/XpRienzo/DragonHeaven/blob/master/mods/franticfusions/README.md>Frantic Fusions</a> <br> &bullet; A metagame where you are able to fuse two Pokemon. <BR /> &bullet; The resultant Pokemon has the primary type of the base mon. If the base mon is shiny, it will get the secondary type of the second mon, else the primary type of the second mon. It will get the averaged stats.<br />&bullet;You can choose any ability from the original Pokemon, and you also get the primary ability of the second Pokemon (The one you put in the nickname). <br />&bullet; Use !fuse for theorymonning purposes",
 		],
 		mod: 'franticfusions',
-		ruleset: ['Sleep Clause Mod', 'Species Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Pokemon'],
+		ruleset: ['Sleep Clause Mod', 'Species Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Obtainable'],
 		banlist: ['Uber', 'Unreleased', 'Shadow Tag', 'Assist', 'Shedinja', 'Medichamite', 'Kyurem-Black', 'Serperior'],
 		unbanlist: ['Deoxys-Speed', 'Deoxys-Defense', 'Darkrai', 'Genesect', 'Aegislash'],
 		onModifyTemplate(template, pokemon) {
@@ -2379,7 +2379,7 @@ let Formats = [
 			&bullet; <a href="http://chandie.boards.net/thread/6/usm-legendless-viability-rankings">Legendless Viability Ranking</a>`,
 		],
 		mod: 'gen7',
-		ruleset: ['Sleep Clause Mod', 'Pokemon', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+		ruleset: ['Sleep Clause Mod', 'Obtainable', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 		banlist: ["Articuno", "Moltres", "Zapdos", "Mew", "Raikou", "Entei", "Suicune", "Celebi", "Regirock", "Registeel", "Regice", "Latios", "Latias", "Jirachi", "Uxie", "Mesprit", "Azelf", "Heatran", "Regigigas", "Cresselia", "Shaymin", "Manaphy", "Victini", "Cobalion", "Virizion", "Terrakion", "Keldeo", "Keldeo-Resolute", "Tornadus", "Tornadus-Therian", "Thundurus", "Thundurus-Therian", "Landorus-Therian", "Kyurem", "Kyurem-Black", "Meloetta", "Meloetta-Pirouette", "Zygarde", "Diancie", "Hoopa", "Hoopa-Unbound", "Volcanion", "Type:Null", "Silvally", "Tapu Koko", "Tapu Lele", "Tapu Fini", "Tapu Bulu", "Cosmog", "Cosmoem", "Nihilego", "Buzzwole", "Xurkitree", "Celesteela", "Kartana", "Guzzlord", "Magearna", "Necrozma", "Zeraora", "Poipole", "Stakataka", "Blacephalon", "Uber", "Baton Pass", "Shadow Tag"],
 		unbanlist: ["Aegislash", "Metagross-Mega", "Blaziken"],
 	},
@@ -2391,7 +2391,7 @@ let Formats = [
 		teamLength: {
 			battle: 1,
 		},
-		ruleset: ['Pokemon', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+		ruleset: ['Obtainable', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 	},/*
 	{
 		name: "[Gen 7] Slowtown",
@@ -2400,7 +2400,7 @@ let Formats = [
 			`&bullet; <a href="http://exiledps.boards.net/board/22/slowtown">Slowtown</a>`,
 		],
 		mod: "slowtown",
-		ruleset: ['Sleep Clause Mod', 'Pokemon', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+		ruleset: ['Sleep Clause Mod', 'Obtainable', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 		banlist: ['Snorlax', 'Uber'],
 		unbanlist: ['Pheromosa', 'Deoxys-Speed', 'Deoxys-Attack', 'Deoxys', 'Shaymin-Sky', 'Blaziken', 'Gengarite', 'Metagrossite', 'Blazikenite'],
 		onBegin() {
@@ -2426,7 +2426,7 @@ let Formats = [
 		],
 
 		mod: 'gen7',
-		ruleset: ['Pokemon', 'Standard', 'Team Preview'],
+		ruleset: ['Obtainable', 'Standard', 'Team Preview'],
 		banlist: [
 			'Gengar-Mega', 'Mawile-Mega', 'Medicham-Mega', 'Shedinja', 'Arena Trap', 'Shadow Tag', 'Deep Sea Scale',
 			'Deep Sea Tooth', 'Eevium Z', 'Eviolite', 'Light Ball', 'Thick Club', 'Baton Pass',
@@ -2477,7 +2477,7 @@ let Formats = [
 		desc: "Nicknaming your Pokemon after a stat (attack, defense, spattack, spdefense or speed) will double that stat.",
 
 		mod: 'gen7',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'Species Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 		banlist: ['Choice Band', 'Choice Specs', 'Choice Scarf', 'Uber'],
 		onSwitchIn(pokemon, set) {
 			if (pokemon.name === "attack") {
@@ -2502,7 +2502,7 @@ let Formats = [
 		],
 		mod: 'ssbffa',
 		team: 'randomCustomSSB',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'Freeze Clause Mod', 'HP Percentage Mod', 'Cancel Mod', 'Mega Rayquaza Clause'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Freeze Clause Mod', 'HP Percentage Mod', 'Cancel Mod', 'Mega Rayquaza Clause'],
 		onBegin() {
 			this.add("raw|<h2>Free for All!</h2>");
 			this.add("raw|<h3>3</h3>");
@@ -2520,7 +2520,7 @@ let Formats = [
 		desc: "Random Battle with a twist.",
 		mod: 'ssm',
 		team: 'randomFakemons',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 	},
 	{
 		name: "[Gen 7] Swapping Powers",
@@ -2528,7 +2528,7 @@ let Formats = [
 		threads: [
 			`&bullet; <a href="http://exiledps.boards.net/thread/24/welcome-swapping-powers">Swapping Powers Thread</a>`,
 		],
-		ruleset: ['Sleep Clause Mod', 'Pokemon', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+		ruleset: ['Sleep Clause Mod', 'Obtainable', 'Standard', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 		unbanlist: ['Deoxys-Attack', 'Deoxys', 'Deoxys-Defense', 'Deoxys-Speed', 'Aegislash', 'Aegislash-Blade', 'Darmanitan-Zen', 'Marshadow', 'Genesect', 'Shaymin-Sky', 'Landorus', 'Blaziken', 'Pheromosa'],
 		onSwitchInPriority: 8,
 		onSwitchIn(pokemon) {
@@ -2542,7 +2542,7 @@ let Formats = [
 
 		mod: 'bossrush',
 		team: 'randomTMS',
-		ruleset: ['Pokemon', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 	},
 	{
 		name: "[Gen 7] Trademarked",
