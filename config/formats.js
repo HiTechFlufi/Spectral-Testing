@@ -2355,6 +2355,23 @@ let Formats = [
 		},
 	},
 	{
+		name: "[Gen 7] GenZero",
+		threads: [
+			"Ever thought about if you could use any Pokemon in Gen 1?<br> &bullet; All current Pokemon legal in Gen 7 OU are allowed, but using Gen 1 OU's mechanics. <BR /> &bullet; This includes no abilities, natures, items, or special split.<br />&bullet;All Gen 7 OU legal moves are also allowed, but are reverted to their oldest variant. For example, Knock Off is 20 BP and Special, like it was when it was created.<br />&bullet; Moves from Gen 1 are reverted to their BP and effects from Gen 1 as well.",
+		],
+		mod: 'gen0',
+		ruleset: ['Obtainable', 'Standard'],
+		banlist: ['Uber'],
+		onValidateSet(set, teamHas) {
+			let problems = [];
+			if (!set.name || set.name === set.species) return;
+			let template = this.dex.getTemplate(set.species);
+			let types = Object.keys(this.data.TypeChart);
+			if (set.ability) return [`Abilities did not exist in Gen 1. ("${set.species}" cannot have "${set.ability}".)`];
+			if (problems) return problems;
+		},
+	},
+	{
 		name: "[Gen 7] Legendless",
 		desc: `Legendaries have been banished from the tier, what are we gonna do now?`,
 		threads: [
