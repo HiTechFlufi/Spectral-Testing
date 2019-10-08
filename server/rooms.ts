@@ -1687,24 +1687,26 @@ export const Rooms = {
 
 		// @ts-ignore
 		let ttRoom = Server.getTeamTourRoom(p1.id);
-		if (ttRoom.teamTours.haveBattled.indexOf(p1.id) === -1 && ttRoom.teamTours.haveBattled.indexOf(p2.id) === -1) {
-			// @ts-ignore
-			if (Server.findTeamMatchUp(p1.id, p2.id) && ttRoom && ttRoom.teamTours) {
-				for (let u = 0; u < ttRoom.teamTours.teams.length; u++) {
-					if (ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p1.id) !== -1 || ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p2.id) !== -1) ttRoom.teamTours.teams[u].busy = true;
+		if (ttRoom && ttRoom.teamTours) {
+			if (ttRoom.teamTours.haveBattled.indexOf(p1.id) === -1 && ttRoom.teamTours.haveBattled.indexOf(p2.id) === -1) {
+				// @ts-ignore
+				if (Server.findTeamMatchUp(p1.id, p2.id)) {
+					for (let u = 0; u < ttRoom.teamTours.teams.length; u++) {
+						if (ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p1.id) !== -1 || ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p2.id) !== -1) ttRoom.teamTours.teams[u].busy = true;
+					}
+					if (!ttRoom.teamTours.modjoin) inviteOnly.splice(0, inviteOnly.length);
+					// @ts-ignore
+					if (ttRoom.teamTours.teamLock) {
+					// @ts-ignore
+					if (!Server.ttTeamLock) Server.ttTeamLock = {};
+					// @ts-ignore
+					if (!Server.ttTeamLock[p1.id]) Server.ttTeamLock[p1.id] = p1.team;
+					// @ts-ignore
+						if (!Server.ttTeamLock[p2.id]) Server.ttTeamLock[p2.id] = p2.team;
+					}
+					ttRoom.add(`|html|<font color="green"><a href="${room.roomid}">The team tour battle between ${Server.nameColor(p1.name, true, true)} and ${Server.nameColor(p2.name, true, true)} has now begun!</a></font>`).update();
+					room.ttBattle = true;
 				}
-				if (!ttRoom.teamTours.modjoin) inviteOnly.splice(0, inviteOnly.length);
-				// @ts-ignore
-				if (ttRoom.teamTours.teamLock) {
-				// @ts-ignore	
-				if (!Server.ttTeamLock) Server.ttTeamLock = {};
-				// @ts-ignore
-				if (!Server.ttTeamLock[p1.id]) Server.ttTeamLock[p1.id] = p1.team;
-				// @ts-ignore
-					if (!Server.ttTeamLock[p2.id]) Server.ttTeamLock[p2.id] = p2.team;
-				}
-				ttRoom.add(`|html|<font color="green"><a href="${room.roomid}">The team tour battle between ${Server.nameColor(p1.name, true, true)} and ${Server.nameColor(p2.name, true, true)} has now begun!</a></font>`).update();
-				room.ttBattle = true;
 			}
 		}
 
