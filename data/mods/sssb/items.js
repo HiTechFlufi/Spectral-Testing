@@ -135,39 +135,6 @@ let BattleItems = {
 		},
 	},
 
-	// Auroura
-	"environmentalorb": {
-		id: "environmentalorb",
-		name: "Environmental Orb",
-		spritenum: 169,
-		fling: {
-			basePower: 90,
-		},
-		onModifyDefPriority: 2,
-		onModifyDef(def, pokemon) {
-			return this.chainModify(1.3);
-		},
-		onModifySpDPriority: 2,
-		onModifySpD(spd, pokemon) {
-			return this.chainModify(1.3);
-		},
-		onModifyAtkPriority: 2,
-		onModifyAtk(atk, pokemon) {
-			return this.chainModify(1.3);
-		},
-		onModifySpAPriority: 2,
-		onModifySpA(spa, pokemon) {
-			return this.chainModify(1.3);
-		},
-		onModifySpePriority: 2,
-		onModifySpe(spe, pokemon) {
-			return this.chainModify(1.3);
-		},
-		num: 538,
-		gen: 5,
-		desc: "Weather lasts 8 turns instead of 5; x1.3 to all stats.",
-	},
-
 	// Spectral Bot
 	"flowersandsouls": {
 		id: "flowersandsouls",
@@ -217,6 +184,8 @@ let BattleItems = {
 	// Auroura
 	"ghoulishrag": {
 		id: "ghoulishrag",
+		desc: "Holder's weaknesses and resistances are inverted, Defense and Special Defense are doubled and Ghost attacks have 1.2x power.",
+		shortDesc: "Holder has inverted weaknesses/resistances, doubled Def/SpD and 1.2x power to Ghost attacks.",
 		name: "Ghoulish Rag",
 		// Weaknesses to Resistances (and vice versa)
 		onSourceModifyDamage(damage, source, target, move) {

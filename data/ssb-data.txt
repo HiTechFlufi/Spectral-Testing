@@ -6,7 +6,7 @@ Ability: Raging Spirit
 EVs: 252 Atk / 4 Def / 252 Spe
 Moves: Mach Punch, Knock Off, Ice Punch
 Signature Move: Firey Destruction
-	- Fire Type, Physical, 100 BP, never misses, 24 PP, Contact, 100 BP, thaws user. 50% chance to burn the target.
+	- Fire-type, Physical, 100 BP, never misses, 24 PP, Contact, 100 BP, thaws user. 50% chance to burn the target.
 Jolly Nature
 
 Back At My Day
@@ -17,7 +17,7 @@ Ability: Peal of Thunder
 EVs: 248 HP / 104 Def / 156 SpD
 Moves: Oblivion Wing, Earth Power, Secret Sword
 Signature Move: Big Thunder
-	- Electric Type, Special, 120 BP, never misses, 16 PP. 50% chance to target self or foe.
+	- Electric-type, Special, 120 BP, never misses, 16 PP. 50% chance to target self or foe.
 Bold Nature
 
 flufi
@@ -29,7 +29,7 @@ Ability: Heart of Steel
 EVs: 252 Atk / 4 SpD / 252 Spe
 Moves: Cross Chop, Psycho Cut, Blaze Kick
 Signature Move: 16 Years
-	- Dark Type, Physical, 180 BP, never misses, 8 PP. Fails if user has more than 1 HP, user faints.
+	- Dark-type, Physical, 180 BP, never misses, 8 PP. Fails if user has more than 1 HP, user faints.
 Jolly Nature
 
 Chandie
@@ -40,11 +40,11 @@ Ability: Shade Seeker
 EVs: 252 Atk / 4 SpD / 252 Spe 
 Moves: Close Combat, Spectral Thief, Ice Punch
 Move Change: Spectral Thief
-	- Ghost Type, Physical, 90BP, never misses, 16 PP. Resets all of the target's stat stages to 0.  No longer steals boosts.
+	- Ghost-type, Physical, 90BP, never misses, 16 PP. Resets all of the target's stat stages to 0.  No longer steals boosts.
 Signature Move: Sharp Shadow
-	- Ghost Type, Physical, 70 BP, never misses, 32 PP. User switches out after damaging the target.
+	- Ghost-type, Physical, 70 BP, never misses, 32 PP. User switches out after damaging the target.
 Z-Move: Embrace the Void
-	- Ghost Type, Physical, 120 BP, never misses, 1 PP. Sets up Magic Room, switches out the opposing Pokémon.
+	- Ghost-type, Physical, 120 BP, never misses, 1 PP. Sets up Magic Room, switches out the opposing Pokémon.
 Adamant Nature
 
 Horrific17
@@ -56,9 +56,9 @@ Ability: Reverse Card
 EVs: 252 Atk / 4 Def / 252 Spe
 Moves: Wild Charge, Play Rough, Extreme Speed
 Signature Move: Meteor Charge
-	- Fire Type, Physical, 100 BP, 100% Accuracy, Contact, 8 PP, thaws user. Damages the user by 1/3rd of their maximum HP in recoil and sets Sunny Day.
+	- Fire-type, Physical, 100 BP, 100% Accuracy, Contact, 8 PP, thaws user. Damages the user by 1/3rd of their maximum HP in recoil and sets Sunny Day.
 Z-Move: Eternal Flames
-	- Fire Type, Physical, 150 BP, never misses, 1 PP. Burns and traps the target.
+	- Fire-type, Physical, 150 BP, never misses, 1 PP. Burns and traps the target.
 Jolly Nature
 
 AlfaStorm
@@ -68,7 +68,7 @@ Ability: Dark Aura
 EVs: 4 Def / 252 SpA / 252 Spe
 Moves: Oblivion Wing, Ice Beam, Earth Power
 Signature Move: Doom Strike
-	- Dark Type, Special, 90 BP, 100% Accuracy, 16 PP. User switches out after damaging the target.
+	- Dark-type, Special, 90 BP, 100% Accuracy, 16 PP. User switches out after damaging the target.
 Modest Nature
 
 Roughskull
@@ -80,7 +80,7 @@ Ability: Venom Shock
 EVs: 252 HP / 252 Atk / 4 SpD
 Moves: Sucker Punch, Strength Sap, Thousand Waves
 Signature Move: Radiation Stench
-	- Poison Type, Physical, 100 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 20% chance to make the target flinch, neutral against Steel Types and supresses the opponents ability.
+	- Poison-type, Physical, 100 BP, 100% accuracy, 16 PP. Doubles the damage if the target is (badly) poisoned, 20% chance to make the target flinch, neutral against Steel-types and nullifies the target's Ability.
 Adamant Nature
 
 Tactician Loki
@@ -92,60 +92,60 @@ Ability: Chaos Heart
 EVs: 4 Def / 252 SpA / 252 Spe
 Moves: Me First, Spiky Shield, Ice Beam
 Signature Move: Blooming Chaos
-	- Dark Type, Special, 80 BP, never misses, 32 PP, 2 Priority. Casts Heart Swap, then casts Topsy Turvy on opponent, 30% to cause burn to opponent, 30% chance to badly poison opponent, 10% chance to confuse opponent, 10% chance to cause opponent to fall in love, 10% chance for opponent to flinch, 10% chance to freeze opponent.
+	- Dark-type, Special, 90 BP, never misses, 32 PP, 2 Priority. Casts Heart Swap, then casts Topsy Turvy on opponent, 30% to cause burn to opponent, 30% chance to badly poison opponent, 10% chance to confuse opponent, 10% chance to cause opponent to fall in love, 10% chance for opponent to flinch, 10% chance to freeze opponent.
 Timid Nature
 
 Revival Clair
 (Female Garchomp)
 @ Focus Sash
 Ability: Tough Skin
-	- Reduces Ice type attacks by 0.25x.
+	- Takes 1/4 of damage from Ice attacks.
 EVs: 252 Atk / 4 SpD / 252 Spe
 Moves: Outrage, Earthquake, Stone Edge
 Signature Move: Dragon Blitz
-	- Dragon Type, Physical, 80 BP, 100% Accuracy, 8 PP, 2 Priority, Contact. Does neutral damage to Fairy Type and has 33% chance to raise Attack by 1 stage.
+	- Dragon-type, Physical, 80 BP, 100% Accuracy, 8 PP, 2 Priority, Contact. Does neutral damage to Fairy Type and has 33% chance to raise Attack by 1 stage.
 Jolly Nature
 
 Auroura
 (Oricorio-Sensu)
 @ Ghoulish Rag
-	- 2x to Defense/SpDefense, swaps user's weaknesses and resistances, and Ghost-type moves have x1.2 power.
+	- 2x to Defense/SpDefense, swaps user's weaknesses and resistances, and Ghost attacks have x1.2 power.
 Ability: Unholy Preservation
-	- User ignores stat changes, indirect damage, stat drops, and opposing immunities to Ghost type.
+	- User ignores stat changes, indirect damage, stat drops, and opposing immunities to Ghost-type.
 EVs: 252 HP / 4 SpD / 252 Spe
 Moves: Shadow Ball, Roost, Teeter Dance
 Signature Move: Inescapable Curse
-- Ghost Type, Special, 40 BP, 100% accuracy, 16 PP. Traps, taunts, curses, torments, and uses Embargo on the target, 
+- Ghost-type, Special, 40 BP, 100% accuracy, 16 PP. Traps, taunts, curses, torments, and uses Embargo on the target, 
 Timid Nature
 
 Spectral Bot
 (Magearna)
 @ Flowers and Souls
-	- Holders of the item receive 1/2 damage from super effective attacks, recover 1/8 of its health after each turn, and all its move get priority at 25% and less.
+	- User receives 1/2 damage from super-effective attacks, recovers 1/8 of its health after each turn, and all of its moves get priority at 25% and less.
 Ability: Spectral's Thief
-	- Every turn before the user makes their move, this Pokemon checks if the opponent has any positive boosts. If so, the user steals said boosts from the target.
+	- Every turn before the user makes their move, this Pokemon checks if the opponent has any positive stat boosts. If so, the user steals said stat boosts from the target.
 EVs: 252 Atk / 4 SpD / 252 Spe
 Moves: Sunsteel Strike, Play Rough, Drain Punch
 Signature Move: Angelic Spectral
-	- Ghost Type, Physical, 110 BP, 100% Accuracy, 16 PP, 1 Priority. Changes forme to Marshadow and vice versa if used again.
+	- Ghost-type, Physical, 110 BP, 100% Accuracy, 16 PP, 1 Priority. Changes forme to Marshadow and vice versa if used again.
 Jolly Nature
 
 Volco
 (Male Volcanion)
 @ Leftovers
 Ability: Emergency Actions
-	- Raises the user's Speed by 1.5x.
+	- Don't tell anyone that he has 1.5x Speed.
 EVs: 76 HP / 212 SpA / 220 Spe
 Moves: Ice Beam/Earth Power, Giga Drain, Steam Eruption
 Signature Move: Volcanic Flares
-	- Fire Type, Special, 130 BP, 95% Accuracy, 16 PP. 30% chance of burning or boosting SpD by 1 stage.
+	- Fire-type, Special, 130 BP, 95% Accuracy, 16 PP. 30% chance of burning or boosting SpD by 1 stage.
 Modest Nature
 
 Revival xFloatz
 (Male Scizor-Mega)
 @ Leftovers
 Ability: XFZ
-	- +1 priority to Status.
+	- This Pokemon's Status moves have priority raised by 1.
 EVs: 252 HP, 40 Def, 216 SpD
 Moves: Rest, Toxic, Cosmic Power, Iron Head
 Impish Nature
@@ -154,55 +154,55 @@ Renfur⚡⚡
 (Male Shiny Flygon)
 @ Focus Sash
 Ability: Desert Spirit
-	- Becomes Bug/Dragon Type and when at 25% hp or lower, Dragon/Bug Type moves gain +1 priority.
+	- Becomes Bug/Dragon-type and when at 25% hp or lower, Dragon/Bug-type moves gain +1 priority.
 EVs: 252 SpA, 4 SpD, 252 Spe
 Moves: Earth Power, Flamethrower, Draco Meteor
 Signature Move: Desert Dragon
-	- Bug Type, Special, 90 BP, 100% Accuracy, 16 PP, Sound. User switches out after damaging the target and doubles allies' speed for 4 turns.
+	- Bug-type, Special, 90 BP, 100% Accuracy, 16 PP, Sound. Hits adjacent Pokemon, user switches out after damaging the target and doubles allies' speed for 4 turns.
 Modest Nature
 
 shademaura ⌐⚡_
 (Male Regigigas)
 @ Pixie Plate
 Ability: Slow Pixilate
-	- Half Atk/Spe for 2 turns, becomes Fairy/Poison Type and turns Normal attacks into Fairy attacks with 1.2x Power.
+	- Half Atk/Spe for 2 turns, becomes Fairy/Poison-type and turns Normal attacks into Fairy attacks with 1.2x Power.
 EVs: 4 HP / 252 Atk / 252 Spe
 Moves: Fake Out, Extreme Speed, Bonemerang
 Signature Move: Sarcasm Over Text
-	- Poison Type, Physical, 100 BP, 100% Accuracy, 8 PP. Always taunts.
+	- Poison-type, Physical, 100 BP, 100% Accuracy, 8 PP. Always taunts.
 Jolly Nature
 
 Lady✨Kakizaki
 (Female Suicune)
 @ Dumplings
-	- Restore 1/6 of max HP per turn and become Water/Ice Type.
+	- Restore 1/6 of max HP per turn and become Water/Ice-type.
 Ability: Chaotic Aura
 	- Status moves receive +1 priority, a random stat is raised every turn by two stages and a random stat is lowered every turn by one stage.
 EVs: 252 HP / 252 SpA / 4 SpD
 Moves: Calm Mind, Substitute, Extrasensory
 Signature Move: Yandere Blitz
-	- Ice Type, Special, 100 BP, 100% Accuracy, 16 PP. 20% chance to burn, 20% chance to freeze, 50% chance to confuse and heals user by 1/8 of damage dealt.
+	- Ice-type, Special, 100 BP, 100% Accuracy, 16 PP. 20% chance to burn, 20% chance to freeze, 50% chance to confuse and heals user by 1/8 of damage dealt.
 Modest Nature
 
 HiTechFlufi
 (Metang)
 @ Titanium Core
-	- Doubles the holder's Defense and SpDefense, and Steel-type attacks have x1.2 power.
+	- Doubles the holder's Defense and SpDefense, and Steel attacks have x1.2 power.
 Ability: Adaptation
 	- May burn or paralyse foe or reduce foe's special attack, special defense or speed by 1 stage or heal 1/3 of max HP on switch-in. Status moves have +1 priority.
 EVs: 252 HP / 96 Def / 156 SpD
 Moves: Meteor Mash, Earthquake, Power Swap
 Signature Move: Crippled Encryption
-	- Steel Type, Status, Can't miss, 16 PP. Lower's target's highest stat by 1, confuses, and traps the target for 4-5 turns.
+	- Steel-type, Status, Can't miss, 16 PP. Lower's target's highest stat by 1, confuses, and traps the target for 4-5 turns.
 Careful Nature
 
 Revival Rawk
 (Male Tapu Fini)
 @ Leftovers
 Ability: The Lurkening
- - This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage. Also silently raises Defense and Special Defense by 1.5x.
+ - This Pokemon ignores other Pokemon's stat stages when taking or dealing damage and don't tell anyone that he has 1.5x Defense and Special Defense.
 EVs: 252 HP / 4 SpD / 252 Def
 Moves: Defog, Nature's Madness, Scald
 Signature Move: The Nappening
- - Psychic Type, Status, 100% Accuracy, 16 PP. Puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
+ - Psychic-type, Status, 100% Accuracy, 16 PP. Puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
 Bold Nature

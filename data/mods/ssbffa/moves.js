@@ -623,7 +623,7 @@ exports.BattleMovedex = {
 		id: "exiledfromallothers",
 		name: "Exiled From All Others",
 		basePower: 150,
-		accuracy: 100,
+		accuracy: true,
 		pp: 1,
 		noPPBoosts: true,
 		secondary: false,
@@ -632,7 +632,6 @@ exports.BattleMovedex = {
 		isZ: "playniumz",
 		priority: 1,
 		flags: {
-			protect: 1,
 		},
 		onHit(target, source, move) {
 			this.add('c|@Insist|Exiled from all others, we shall become greater than ever before.');
@@ -673,5 +672,66 @@ exports.BattleMovedex = {
 		},
 		target: "normal",
 		type: "Dark",
+	},
+	
+	//Shade Churup
+	"dragonstrike": {
+		id: "dragonstrike",
+		name: "Dragon Strike",
+		basePower: 120,
+		accuracy: 85,
+		pp: 5,
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					spa: 2,
+				},
+			},
+		},
+		category: "Physical",
+		isNonstandard: true,
+		priority: 0,
+		flags: {
+			protect: 1,
+			mirror: 1,
+			contact: 1,
+		},
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Outrage", target);
+		},
+		target: "normal",
+		type: "Dragon",
+		zMovePower: 200,
+	},
+	
+	//Shade Churup
+	"dragonicsmash": {
+		id: "dragonicsmash",
+		name: "dragonicsmash",
+		basePower: 200,
+		accuracy: true,
+		pp: 1,
+		noPPBoosts: true,
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 2,
+				},
+			},
+		},
+		category: "Physical",
+		isNonstandard: true,
+		isZ: "dragoniumz",
+		priority: 0,
+		flags: {
+			contact: 1,
+		},
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Clangorous Soulblaze", target);
+		},
+		target: "normal",
+		type: "Dragon",
 	},
 };
