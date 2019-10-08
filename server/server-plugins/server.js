@@ -1281,6 +1281,7 @@ exports.commands = {
 		}
 		let tarPoke = Object.keys(Pokedex)[rand];
 		let pokeData = Pokedex[tarPoke];
+		if (!pokeData) Rooms.get('development').add(`Randp Crash Info: Randomly Generated Pokemon: ${tarPoke} | User: ${user.name}`);
 		let pokeId = pokeData.species.toLowerCase();
 		pokeId = pokeId.replace(/^basculinbluestriped$/i, "basculin-bluestriped").replace(/^pichuspikyeared$/i, "pichu-spikyeared").replace(/^floetteeternalflower$/i, "floette-eternalflower");
 		if (pokeId === "pikachu-cosplay") pokeId = ["pikachu-belle", "pikachu-phd", "pikachu-libre", "pikachu-popstar", "pikachu-rockstar"][~~(Math.random() * 6)];
