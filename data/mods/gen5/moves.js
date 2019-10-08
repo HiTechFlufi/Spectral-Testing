@@ -65,6 +65,35 @@ let BattleMovedex = {
 		inherit: true,
 		basePower: 90,
 	},
+	autotomize: {
+		inherit: true,
+		volatileStatus: 'autotomize',
+		onHit(pokemon) {
+		},
+		effect: {
+			noCopy: true, // doesn't get copied by Baton Pass
+			onStart(pokemon) {
+				if (pokemon.template.weighthg > 1) {
+					this.effectData.multiplier = 1;
+					this.add('-start', pokemon, 'Autotomize');
+				}
+			},
+			onRestart(pokemon) {
+				if (pokemon.template.weighthg - (this.effectData.multiplier * 1000) > 1) {
+					this.effectData.multiplier++;
+					this.add('-start', pokemon, 'Autotomize');
+				}
+			},
+			onModifyWeightPriority: 2,
+			onModifyWeight(weighthg, pokemon) {
+				if (this.effectData.multiplier) {
+					weighthg -= this.effectData.multiplier * 1000;
+					if (weighthg < 1) weighthg = 1;
+					return weighthg;
+				}
+			},
+		},
+	},
 	barrier: {
 		inherit: true,
 		pp: 30,
@@ -152,7 +181,7 @@ let BattleMovedex = {
 		shortDesc: "Changes user's type to match a known move.",
 		onHit(target) {
 			let possibleTypes = target.moveSlots.map(moveSlot => {
-				let move = this.getMove(moveSlot.id);
+				let move = this.dex.getMove(moveSlot.id);
 				if (move.id !== 'conversion' && !target.hasType(move.type)) {
 					return move.type;
 				}
@@ -201,7 +230,7 @@ let BattleMovedex = {
 			let sideConditions = ['reflect', 'lightscreen', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock'];
 			for (const condition of sideConditions) {
 				if (pokemon.side.removeSideCondition(condition)) {
-					this.add('-sideend', pokemon.side, this.getEffect(condition).name, '[from] move: Defog', '[of] ' + pokemon);
+					this.add('-sideend', pokemon.side, this.dex.getEffect(condition).name, '[from] move: Defog', '[of] ' + pokemon);
 				}
 			}
 		},
@@ -805,7 +834,7 @@ let BattleMovedex = {
 			onTryHit(target, source, effect) {
 				// Quick Guard only blocks moves with a natural positive priority
 				// (e.g. it doesn't block 0 priority moves boosted by Prankster)
-				if (effect && (effect.id === 'feint' || this.getMove(effect.id).priority <= 0)) {
+				if (effect && (effect.id === 'feint' || this.dex.getMove(effect.id).priority <= 0)) {
 					return;
 				}
 				this.add('-activate', target, 'Quick Guard');
@@ -941,7 +970,7 @@ let BattleMovedex = {
 			if (targetAbility === sourceAbility) {
 				return false;
 			}
-			this.add('-activate', source, 'move: Skill Swap', this.getAbility(targetAbility), this.getAbility(sourceAbility), '[of] ' + target);
+			this.add('-activate', source, 'move: Skill Swap', this.dex.getAbility(targetAbility), this.dex.getAbility(sourceAbility), '[of] ' + target);
 			source.setAbility(targetAbility);
 			target.setAbility(sourceAbility);
 		},

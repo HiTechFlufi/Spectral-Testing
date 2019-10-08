@@ -43,13 +43,13 @@ exports.commands = {
 			if (parts.length < 2) return this.parse("/playlist help");
 			let link = parts[0].trim();
 			let title = parts[1].trim();
-			if (!playlists[user.userid]) playlists[user.userid] = [];
-			if (playlists[user.userid].length > MAXIMUM_SONGS) return this.errorReply("You already have exceeded the maximum amount of songs a user may have in their playlist.");
-			for (let i = 0; i < playlists[user.userid].length; i++) {
-				if (playlists[user.userid][i][0] === link) return this.errorReply("You already have this song in your playlist.");
+			if (!playlists[user.id]) playlists[user.id] = [];
+			if (playlists[user.id].length > MAXIMUM_SONGS) return this.errorReply("You already have exceeded the maximum amount of songs a user may have in their playlist.");
+			for (let i = 0; i < playlists[user.id].length; i++) {
+				if (playlists[user.id][i][0] === link) return this.errorReply("You already have this song in your playlist.");
 				continue;
 			}
-			playlists[user.userid].push([link, title]);
+			playlists[user.id].push([link, title]);
 			save();
 			return this.sendReply("This song has been added to your playlist!");
 		},
@@ -58,10 +58,10 @@ exports.commands = {
 		delete(target, room, user) {
 			let title = toID(target);
 			if (!title) return this.parse("/playlist help");
-			if (!playlists[user.userid]) playlists[user.userid] = [];
-			for (let i = 0; i < playlists[user.userid].length; i++) {
-				if (playlists[user.userid][i].titleId === title) {
-					playlists[user.userid].splice(playlists[user.userid].indexOf(playlists[user.userid][i]), 1);
+			if (!playlists[user.id]) playlists[user.id] = [];
+			for (let i = 0; i < playlists[user.id].length; i++) {
+				if (playlists[user.id][i].titleId === title) {
+					playlists[user.id].splice(playlists[user.id].indexOf(playlists[user.id][i]), 1);
 					save();
 					return this.sendReply("This song has been removed from your playlist.");
 				} else {
@@ -75,11 +75,11 @@ exports.commands = {
 		clearall: "reset",
 		reset(target, room, user) {
 			if (!target) {
-				playlists[user.userid] = [];
+				playlists[user.id] = [];
 				save();
 				return this.sendReply(`You have reset your playlist.`);
 			} else {
-				if (!this.can("lock") && toID(target) !== user.userid) return false;
+				if (!this.can("lock") && toID(target) !== user.id) return false;
 				playlists[toID(target)] = [];
 				save();
 				return this.sendReply(`You have reset ${target}'s playlist.`);
@@ -99,7 +99,7 @@ exports.commands = {
 		},
 
 		back(target, room, user) {
-			if (!target) return this.sendReply(`|uhtmlchange|${user.userid}playlist|${playlistGenerator(user.userid)}`);
+			if (!target) return this.sendReply(`|uhtmlchange|${user.id}playlist|${playlistGenerator(user.id)}`);
 			return this.sendReply(`|uhtmlchange|${toID(target)}playlist|${playlistGenerator(toID(target))}`);
 		},
 
@@ -107,7 +107,7 @@ exports.commands = {
 		playlist: "list",
 		list(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!target) target = user.userid;
+			if (!target) target = user.id;
 			return this.sendReply(`|uhtml|${toID(target)}playlist|${playlistGenerator(toID(target))}`);
 		},
 

@@ -39,26 +39,26 @@ class Lottery {
 	}
 
 	joinLottery(user) {
-		if (this.players.includes(user.userid)) return user.sendTo(this.room, "You have already joined the lottery.");
-		Economy.readMoney(user.userid, money => {
+		if (this.players.includes(user.id)) return user.sendTo(this.room, "You have already joined the lottery.");
+		Economy.readMoney(user.id, money => {
 			if (money < this.costToJoin) {
 				user.sendTo(this.room, `You do not have enough ${moneyPlural} to join.`);
 				return;
 			}
-			Economy.writeMoney(user.userid, -this.costToJoin, () => {
-				Economy.readMoney(user.userid, money => {
+			Economy.writeMoney(user.id, -this.costToJoin, () => {
+				Economy.readMoney(user.id, money => {
 					Economy.logTransaction(`${user.name} entered a Lottery drawing for ${this.costToJoin} ${moneyPlural}.`);
 				});
 			});
-			this.players.push(user.userid);
+			this.players.push(user.id);
 			user.sendTo(this.room, "You have joined the lottery.");
 		});
 	}
 
 	leaveLottery(user) {
-		if (!this.players.includes(user.userid)) return user.sendTo(this.room, `You are not currently in the Lottery drawing in this room..`);
-		Economy.writeMoney(user.userid, this.costToJoin, () => {
-			this.players.splice(this.players.indexOf(user.userid), 1);
+		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You are not currently in the Lottery drawing in this room..`);
+		Economy.writeMoney(user.id, this.costToJoin, () => {
+			this.players.splice(this.players.indexOf(user.id), 1);
 			user.sendTo(this.room, `You have left the lottery and have been refunded ${this.costToJoin} ${moneyPlural}.`);
 			Economy.logTransaction(`${user.name} has left the Lottery drawing, and has been refunded their ${this.costToJoin} ${moneyPlural}.`);
 		});

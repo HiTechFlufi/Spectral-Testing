@@ -42,6 +42,8 @@ export class Tools {
 			text = text.id;
 		} else if (text && text.userid) {
 			text = text.userid;
+		} else if (text && text.roomid) {
+			text = text.roomid;
 		}
 		if (typeof text !== 'string' && typeof text !== 'number') return '';
 		return ('' + text).toLowerCase().replace(/[^a-z0-9]+/g, '') as ID;
@@ -158,8 +160,10 @@ export type ComplexTeamBan = ComplexBan;
  * - '-[thing]' or '-[category]:[thing]' ban a thing
  * - '+[thing]' or '+[category]:[thing]' allow a thing (override a ban)
  * [category] is one of: item, move, ability, species, basespecies
+ *
+ * The value is the name of the parent rule (blank for the active format).
  */
-export class RuleTable extends Map {
+export class RuleTable extends Map<string, string> {
 	complexBans: ComplexBan[];
 	complexTeamBans: ComplexTeamBan[];
 	// tslint:disable-next-line:ban-types
@@ -174,14 +178,23 @@ export class RuleTable extends Map {
 		this.timer = null;
 	}
 
-	check(thing: string, setHas: {[id: string]: true} | null = null): string {
+	isBanned(thing: string) {
+		if (this.has(`+${thing}`)) return false;
+		return this.has(`-${thing}`);
+	}
+
+	check(thing: string, setHas: {[id: string]: true} | null = null) {
+		if (this.has(`+${thing}`)) return '';
 		if (setHas) setHas[thing] = true;
 		return this.getReason(`-${thing}`);
 	}
 
-	getReason(key: string): string {
+	getReason(key: string): string | null {
 		const source = this.get(key);
-		if (source === undefined) return '';
+		if (source === undefined) return null;
+		if (key === '-nonexistent' || key.startsWith('obtainable')) {
+			return 'not obtainable';
+		}
 		return source ? `banned by ${source}` : `banned`;
 	}
 
@@ -550,8 +563,10 @@ export class Template extends BasicEffect implements Readonly<BasicEffect & Temp
 	readonly baseStats: StatsTable;
 	/** Max HP. Overrides usual HP calculations (for Shedinja). */
 	readonly maxHP?: number;
-	/** Weight (in kg). */
+	/** Weight (in kg). Not valid for OMs; use weighthg / 10 instead. */
 	readonly weightkg: number;
+	/** Weight (in integer multiples of 0.1kg). */
+	readonly weighthg: number;
 	/** Height (in m). */
 	readonly heightm: number;
 	/** Color. */
@@ -643,6 +658,7 @@ export class Template extends BasicEffect implements Readonly<BasicEffect & Temp
 		this.requiredItems = this.requiredItems || (this.requiredItem ? [this.requiredItem] : undefined);
 		this.baseStats = data.baseStats!;
 		this.weightkg = data.weightkg!;
+		this.weighthg = this.weightkg * 10;
 		this.heightm = data.heightm!;
 		this.color = data.color || '';
 		this.unreleasedHidden = !!data.unreleasedHidden;

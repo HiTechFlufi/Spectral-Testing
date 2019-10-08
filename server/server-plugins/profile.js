@@ -23,7 +23,7 @@ const serverIp = Config.serverIp;
 
 function isDev(user) {
 	if (!user) return;
-	if (typeof user === "object") user = user.userid;
+	if (typeof user === "object") user = user.id;
 	let dev = Db.devs.get(toID(user));
 	if (dev === 1) return true;
 	return false;
@@ -32,7 +32,7 @@ Server.isDev = isDev;
 
 function isVIP(user) {
 	if (!user) return;
-	if (typeof user === "object") user = user.userid;
+	if (typeof user === "object") user = user.id;
 	let vip = Db.vips.get(toID(user));
 	if (vip === 1) return true;
 	return false;
@@ -212,7 +212,7 @@ exports.commands = {
 				}
 				if (fc.length < 12) return this.errorReply("Your Switch friend code needs to be 12 digits long.");
 				fc = `${fc.slice(0, 4)}-${fc.slice(4, 8)}-${fc.slice(8, 12)}`;
-				Db.switchfc.set(user.userid, fc);
+				Db.switchfc.set(user.id, fc);
 				return this.sendReply(`Your Switch friend code: ${fc} has been saved to the server.`);
 			},
 
@@ -221,8 +221,8 @@ exports.commands = {
 				if (room.battle) return this.errorReply("Please use this command outside of battle rooms.");
 				if (!user.autoconfirmed) return this.errorReply("You must be autoconfirmed to use this command.");
 				if (!target) {
-					if (!Db.switchfc.has(user.userid)) return this.errorReply("Your friend code isn't set.");
-					Db.switchfc.remove(user.userid);
+					if (!Db.switchfc.has(user.id)) return this.errorReply("Your friend code isn't set.");
+					Db.switchfc.remove(user.id);
 					return this.sendReply("Your Switch friend code has been deleted from the server.");
 				} else {
 					if (!this.can("profile")) return false;
@@ -253,7 +253,7 @@ exports.commands = {
 				}
 				if (fc.length < 12) return this.errorReply("Your friend code needs to be 12 digits long.");
 				fc = `${fc.slice(0, 4)}-${fc.slice(4, 8)}-${fc.slice(8, 12)}`;
-				Db.friendcode.set(user.userid, fc);
+				Db.friendcode.set(user.id, fc);
 				return this.sendReply(`Your friend code: ${fc} has been saved to the server.`);
 			},
 
@@ -262,8 +262,8 @@ exports.commands = {
 				if (room.battle) return this.errorReply("Please use this command outside of battle rooms.");
 				if (!user.autoconfirmed) return this.errorReply("You must be autoconfirmed to use this command.");
 				if (!target) {
-					if (!Db.friendcode.has(user.userid)) return this.errorReply("Your friend code isn't set.");
-					Db.friendcode.remove(user.userid);
+					if (!Db.friendcode.has(user.id)) return this.errorReply("Your friend code isn't set.");
+					Db.friendcode.remove(user.id);
 					return this.sendReply("Your friend code has been deleted from the server.");
 				} else {
 					if (!this.can("profile")) return false;
@@ -292,21 +292,21 @@ exports.commands = {
 		add: "set",
 		set(target, room, user) {
 			if (!target) return this.parse("/help type");
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			let type = Dex.getType(target);
 			if (!type.exists) return this.errorReply("Not a type. Check your spelling?");
 			profile.type = toID(type);
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply(`Your favorite type has been set to "${target}".`);
 		},
 
 		del: "delete",
 		remove: "delete",
 		delete(target, room, user) {
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.type) return this.errorReply(`Your profile type hasn't been set yet.`);
 			delete profile.type;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply("Your favorite type has been deleted from your profile.");
 		},
 
@@ -326,11 +326,11 @@ exports.commands = {
 		set: "add",
 		add(target, room, user) {
 			if (!target) return this.parse("/pcolor help");
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			let color = target.trim();
 			if (color.charAt(0) !== "#") return this.errorReply(`The color needs to be a hex starting with "#".`);
 			profile.color = color;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			this.sendReply(`You have set your profile color to "${color}".`);
 		},
 
@@ -448,21 +448,21 @@ exports.commands = {
 		add: "set",
 		set(target, room, user) {
 			if (!target) return this.parse("/pokemonhelp");
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			let pkmn = Dex.getTemplate(target);
 			if (!pkmn.exists) return this.errorReply("Not a Pokemon. Check your spelling?");
 			profile.pokemon = pkmn.species;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply(`You have successfully set your favorite Pokemon as "${pkmn.species}".`);
 		},
 
 		del: "delete",
 		remove: "delete",
 		delete(target, room, user) {
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.pokemon) return this.errorReply("Your favorite Pokemon hasn't been set.");
 			delete profile.pokemon;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply("Your favorite Pokemon has been deleted from your profile.");
 		},
 
@@ -481,12 +481,12 @@ exports.commands = {
 	nature: {
 		add: "set",
 		set(target, room, user) {
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!target) return this.parse("/naturehelp");
 			let nature = Dex.getNature(target);
 			if (!nature.exists) return this.errorReply("This is not a nature. Check your spelling?");
 			profile.nature = nature.name;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply("You have successfully set your nature onto your profile.");
 		},
 
@@ -494,10 +494,10 @@ exports.commands = {
 		take: "delete",
 		remove: "delete",
 		delete(target, room, user) {
-			let profile = Db.profile.get(user.userid, {data: {title: {}, music: {}}});
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.nature) return this.errorReply("Your nature has not been set.");
 			delete profile.nature;
-			Db.profile.set(user.userid, profile);
+			Db.profile.set(user.id, profile);
 			return this.sendReply("Your nature has been deleted from your profile.");
 		},
 
@@ -515,7 +515,7 @@ exports.commands = {
 	"!lastactive": true,
 	checkactivity: "lastactive",
 	lastactive(target, room, user) {
-		if (!target) target = user.userid;
+		if (!target) target = user.id;
 		if (target.length > 18) return this.errorReply("Usernames cannot exceed 18 characters.");
 		if (!this.runBroadcast()) return;
 		let targetUser = Users.get(toID(target));
@@ -528,18 +528,18 @@ exports.commands = {
 	"!profile": true,
 	profile(target, room, user) {
 		target = toID(target);
-		if (!target) target = user.userid;
+		if (!target) target = user.id;
 		if (target.length > 18) return this.errorReply("Usernames cannot exceed 18 characters.");
 		if (!this.runBroadcast()) return;
 		let targetUser = Users.get(target);
 		let online = (targetUser ? targetUser.connected : false);
 		let username = (targetUser ? targetUser.name : target);
-		let userid = (targetUser ? targetUser.userid : toID(target));
+		let userid = (targetUser ? targetUser.id : toID(target));
 		let profile = Db.profile.get(userid, {data: {title: {}, music: {}}});
 		let avatar;
 		if (targetUser) {
-			if (Config.customavatars[targetUser.userid]) {
-				avatar = `http://${serverIp}:${Config.port}/avatars/${Config.customavatars[targetUser.userid]}`;
+			if (Config.customavatars[targetUser.id]) {
+				avatar = `http://${serverIp}:${Config.port}/avatars/${Config.customavatars[targetUser.id]}`;
 			} else if (isNaN(targetUser.avatar)) {
 				avatar = `http://play.pokemonshowdown.com/sprites/trainers/${targetUser.avatar}.png`;
 			} else {

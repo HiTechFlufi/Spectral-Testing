@@ -161,7 +161,7 @@ exports.commands = {
 
 		showcase(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!target) target = user.userid;
+			if (!target) target = user.id;
 			const cards = Db.cards.get(toID(target), []);
 			if (!cards.length) return this.errorReply(`${target} has no cards.`);
 			let cardsShown = 0;
@@ -192,22 +192,22 @@ exports.commands = {
 			let targetUser = Users.get(toID(targets[0]));
 			if (!targetUser) return this.errorReply(`The user "${targets[0]}" was not found.`);
 			if (!targetUser.registered) return this.errorReply(`Guests cannot be given cards.`);
-			if (targetUser.userid === user.userid) return this.errorReply(`You cannot transfer cards to yourself.`);
+			if (targetUser.id === user.id) return this.errorReply(`You cannot transfer cards to yourself.`);
 			let card = toID(targets[1]);
 			if (!Server.cards[card]) return this.errorReply(`That card does not exist.`);
 
-			let canTransfer = hasCard(user.userid, card);
+			let canTransfer = hasCard(user.id, card);
 			if (!canTransfer) return user.popup(`You do not have that card.`);
 
 			if (cmd !== "confirmtransfercard") {
 				return this.popupReply(`|html|<center>` +
-					`<button class = "card-td button" name = "send" value = "/psgo confirmtransfercard ${targetUser.userid}, ${card}"` +
+					`<button class = "card-td button" name = "send" value = "/psgo confirmtransfercard ${targetUser.id}, ${card}"` +
 					`style = "outline: none; width: 200px; font-size: 11pt; padding: 10px; border-radius: 14px ; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.4) inset; transition: all 0.2s;">` +
 					`Confirm transfer to <br />${Server.nameColor(targetUser.name, true)}</button></center>`
 				);
 			}
 
-			if (takeCard(user.userid, card)) {
+			if (takeCard(user.id, card)) {
 				giveCard(targetUser, card);
 			} else {
 				// should never happen but just in case...
@@ -270,7 +270,7 @@ exports.commands = {
 					});
 					if (invalidSearch) {
 						menu += `No cards were found. (Your search was invalid)</div>`;
-						return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.userid}|` : `|uhtml|cs${user.userid}|`}${menu}`);
+						return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.id}|` : `|uhtml|cs${user.id}|`}${menu}`);
 					}
 					menu += `<div style="max-height: 300px; overflow-y: scroll;">`;
 					let foundCard = 0;
@@ -297,7 +297,7 @@ exports.commands = {
 				let card = Server.cards[toID(target)];
 				if (!card) {
 					menu += `The card "${toID(target)}" does not exist.</div>`;
-					return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.userid}|` : `|uhtml|cs${user.userid}|`}${menu}`);
+					return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.id}|` : `|uhtml|cs${user.id}|`}${menu}`);
 				}
 				menu += `<div style="width: 49%; display: inline-block;">`;
 				menu += `<img src="${card.image}" title="${card.id}" width="254" height="342">`;
@@ -306,7 +306,7 @@ exports.commands = {
 				menu += `<font style="font-size: 3em; font-weight: bold;">${card.name}</font><h5>(ID: ${card.id})</h5><font style="font-size: 2em; font-weight: bold; ${colors[card.rarity] ? `color: ${colors[card.rarity]};` : ``}">${card.rarity}</font><br /><strong>Species</strong>: ${card.species}<br /><strong>Type</strong>: ${card.type}<br />`;
 				menu += `<strong>Pack</strong>: ${card.pack}<br /><strong>Card Type</strong>: ${card.cardType}</div></div>`;
 			}
-			return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.userid}|` : `|uhtml|cs${user.userid}|`}${menu}`);
+			return user.sendTo(room, `${change ? `|uhtmlchange|cs${user.id}|` : `|uhtml|cs${user.id}|`}${menu}`);
 		},
 		cardsearchhelp: ["/psgo cardsearch - sends a display to search for a list of cards."],
 
@@ -357,7 +357,7 @@ exports.commands = {
 			let card = Server.cards[toID(targets[1])];
 			if (!card) return this.errorReply(`The card "${targets[1]}" does not exist.`);
 
-			giveCard(targetUser.userid, card.id);
+			giveCard(targetUser.id, card.id);
 			if (targetUser.connected) targetUser.popup(`You have received ${card.name}.`);
 			return this.sendReply(`${targetUser.name} has received the card ${card.id}.`);
 		},
@@ -372,16 +372,16 @@ exports.commands = {
 			for (let u in targets) targets[u] = targets[u].trim();
 			let targetUser = Users.get(toID(targets[0]));
 			if (!targetUser) targetUser = {name: target[0], userid: toID(target[0]), connected: false};
-			if (!Db.cards.get(targetUser.userid, []).length) return this.errorReply(`${targetUser.name} has no cards.`);
+			if (!Db.cards.get(targetUser.id, []).length) return this.errorReply(`${targetUser.name} has no cards.`);
 			if (cmd !== "take") {
 				if (cmd !== "confirmtakeall") return this.sendReply(`WARNING: Are you sure you want to take ALL of ${targetUser.name}'s cards? If so use /psgo confirmtakeall ${targetUser.name}`);
-				Db.cards.set(targetUser.userid, []);
+				Db.cards.set(targetUser.id, []);
 				if (targetUser.connected) targetUser.popup(`You have lost all your cards.`);
 				return this.sendReply(`All of ${targetUser.name}'s cards have been removed.`);
 			}
 			let card = Server.cards[toID(targets[1])];
 			if (!card) return this.errorReply(`The card "${targets[1]}" does not exist.`);
-			let success = takeCard(targetUser.userid, card.id);
+			let success = takeCard(targetUser.id, card.id);
 			if (success) {
 				if (targetUser.connected) targetUser.popup(`The card ${card.id} has been taken from you.`);
 				return this.sendReply(`The card ${card.id} has been taken from ${targetUser.name}.`);
@@ -399,14 +399,14 @@ exports.commands = {
 				if (!toID(target)) return this.parse(`/help psgo shop buy`);
 				target = toPackName(target);
 				if (packs.indexOf(target) === -1) return this.parse(`/psgo shop`);
-				let userMoney = Economy.readMoney(user.userid);
+				let userMoney = Economy.readMoney(user.id);
 				if (userMoney < 5) return this.errorReply(`You need at least 5 ${moneyPlural} to buy a pack!`);
-				Economy.writeMoney(user.userid, -5, () => {
-					Economy.readMoney(user.userid, amount => {
+				Economy.writeMoney(user.id, -5, () => {
+					Economy.readMoney(user.id, amount => {
 						Economy.logTransaction(`${user.name} has purchased a ${target} pack for 5 ${moneyPlural}. They now have ${amount} ${(userMoney === 1 ? moneyName : moneyPlural)}`);
 					});
 				});
-				Db.userpacks.set(user.userid, Db.userpacks.get(user.userid, []).concat([target]));
+				Db.userpacks.set(user.id, Db.userpacks.get(user.id, []).concat([target]));
 				return this.parse(`/psgo packs pending`);
 			},
 			buyhelp: [`/psgo shop buy [pack] - Cost 5 ${global.moneyPlural} per pack.`],
@@ -438,7 +438,7 @@ exports.commands = {
 				if (!targetUser) return this.errorReply(`The user "${targets[0]}" was not found.`);
 				let pack = toPackName(targets[1]);
 				if (!packs.includes(pack)) return this.errorReply(`The pack ${pack} does not exist!`);
-				Db.userpacks.set(targetUser.userid, Db.userpacks.get(targetUser.userid, []).concat([pack]));
+				Db.userpacks.set(targetUser.id, Db.userpacks.get(targetUser.id, []).concat([pack]));
 				if (targetUser.connected) targetUser.popup(`You have received a ${pack} pack.`);
 
 				return this.sendReply(`A ${pack} pack has been given to ${targetUser.name}`);
@@ -456,17 +456,17 @@ exports.commands = {
 				let targetUser = Users.get(toID(targets[0]));
 				if (!targetUser) targetUser = {name: target[0], userid: toID(target[0]), connected: false};
 				let pack = toPackName(targets[1]);
-				if (!Db.userpacks.get(targetUser.userid, []).length) return this.errorReply(`${targetUser.name} has no packs.`);
+				if (!Db.userpacks.get(targetUser.id, []).length) return this.errorReply(`${targetUser.name} has no packs.`);
 				if (!toID(pack) && cmd !== "take") {
 					if (cmd !== "confirmtakeall") return this.sendReply(`WARNING: Are you sure you want to take ALL of ${targetUser.name}'s packs? If so use /psgo packs confirmtakeall ${targetUser.name}`);
-					Db.userpacks.set(targetUser.userid, []);
+					Db.userpacks.set(targetUser.id, []);
 					if (targetUser.connected) targetUser.popup(`You have lost all of your packs.`);
 					return this.sendReply(`${targetUser.name}'s packs have been removed.`);
 				}
 				if (!packs[pack]) return this.errorReply(`${pack} is not a valid pack.`);
-				let index = Db.userpacks.get(targetUser.userid, []).indexOf(pack);
+				let index = Db.userpacks.get(targetUser.id, []).indexOf(pack);
 				if (index === -1) return this.sendReply(`${targetUser.name} does not have any ${pack} packs.`);
-				let array = Db.userpacks.get(targetUser.userid, []);
+				let array = Db.userpacks.get(targetUser.id, []);
 				if (cmd === "takeall") {
 					for (let i = 0; i < array.length; i++) {
 						if (array[i] === pack) {
@@ -477,9 +477,9 @@ exports.commands = {
 				} else {
 					array.splice(index, 1);
 				}
-				Db.userpacks.set(targetUser.userid, array);
+				Db.userpacks.set(targetUser.id, array);
 				if (targetUser.connected) targetUser.popup(`You have lost ${(cmd === "takeall" ? `all your ${pack} packs.` : `1 ${pack} pack.`)}`);
-				return this.sendReply(`${cmd === "takeall" ? `All ${pack} packs` : `One ${pack} pack`} has been taken from ${targetUser.userid}.`);
+				return this.sendReply(`${cmd === "takeall" ? `All ${pack} packs` : `One ${pack} pack`} has been taken from ${targetUser.id}.`);
 			},
 			takehelp: [
 				`/psgo packs take [user], [pack] - Takes a pack from a user. Requires &, ~.
@@ -490,18 +490,18 @@ exports.commands = {
 				if (!this.runBroadcast()) return;
 				if (!target) return this.parse(`/help psgo packs open`);
 				target = toPackName(target);
-				if (!Db.userpacks.has(user.userid)) return this.errorReply(`You do not have any packs.`);
-				let index = Db.userpacks.get(user.userid, []).indexOf(target);
+				if (!Db.userpacks.has(user.id)) return this.errorReply(`You do not have any packs.`);
+				let index = Db.userpacks.get(user.id, []).indexOf(target);
 				if (index === -1) return this.errorReply(`You do not have the pack ${target}.`);
-				let array = Db.userpacks.get(user.userid, []);
+				let array = Db.userpacks.get(user.id, []);
 				array.splice(index, 1);
-				Db.userpacks.set(user.userid, array);
+				Db.userpacks.set(user.id, array);
 				let cards = makePack(target);
 				let results = [];
 				for (let u in cards) {
 					results.push(`<button class="button" name="send" value="/psgo card ${cards[u].id}"><img src="${cards[u].image}" title="${cards[u].id} height="100" width="80"/></button>`);
 				}
-				Db.cards.set(user.userid, Db.cards.get(user.userid, []).concat(cards));
+				Db.cards.set(user.id, Db.cards.get(user.id, []).concat(cards));
 				return this.sendReplyBox(`You have received the following cards from the ${target} pack:<br />${results.join("")}`);
 			},
 			openhelp: ["/psgo packs open [pack name] - Open a pack you own."],
@@ -510,9 +510,9 @@ exports.commands = {
 			pending: "holding",
 			stored: "holding",
 			holding(target, room, user) {
-				if (!Db.userpacks.get(user.userid, []).length) return this.errorReply(`You do not have any packs!`);
+				if (!Db.userpacks.get(user.id, []).length) return this.errorReply(`You do not have any packs!`);
 				let usedPacks = {};
-				let userPacks = Db.userpacks.get(user.userid, []);
+				let userPacks = Db.userpacks.get(user.id, []);
 				for (let i = 0; i < userPacks.length; i++) {
 					if (!usedPacks[userPacks[i]]) {
 						usedPacks[userPacks[i]] = 1;

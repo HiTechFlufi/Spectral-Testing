@@ -109,7 +109,7 @@ exports.commands = {
 			if (name.length < 1 || name.length > 25) return this.errorReply(`Your channel name must be between 1-25 characters.`);
 			if (desc.length < 1 || desc.length > 300) return this.errorReply(`Your channel description must be between 1-300 characters.`);
 			if (channels[toID(name)]) return this.errorReply(`${name} already is a DewTube channel.`);
-			if (getChannel(user.userid)) return this.errorReply(`You already have a DewTube channel.`);
+			if (getChannel(user.id)) return this.errorReply(`You already have a DewTube channel.`);
 			channels[toID(name)] = {
 				id: toID(name),
 				name: name,
@@ -117,7 +117,7 @@ exports.commands = {
 				views: 0,
 				videos: 0,
 				subscribers: 0,
-				owner: user.userid,
+				owner: user.id,
 				vidProgress: "notStarted",
 				lastRecorded: null,
 				lastCollabed: null,
@@ -148,7 +148,7 @@ exports.commands = {
 		removechannel(target, room, user) {
 			target = toID(target);
 			if (!target || !channels[target]) return this.errorReply(`The channel "${target}" appears to not exist.`);
-			if (!this.can("ban") && channels[target].owner !== user.userid) return this.errorReply(`You must be the channel owner or a Global Moderator (or higher) to delete a channel.`);
+			if (!this.can("ban") && channels[target].owner !== user.id) return this.errorReply(`You must be the channel owner or a Global Moderator (or higher) to delete a channel.`);
 			delete channels[target];
 			write();
 			return this.sendReply(`Channel "${target}" has been deleted.`);
@@ -159,7 +159,7 @@ exports.commands = {
 		channel: "dashboard",
 		dashboard(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!target) target = toID(getChannel(user.userid));
+			if (!target) target = toID(getChannel(user.id));
 			let channelId = toID(target);
 			if (!channels[channelId]) return this.errorReply(`This is not a DewTube channel.`);
 			let vidProgress = channels[channelId].vidProgress;
@@ -184,7 +184,7 @@ exports.commands = {
 		aboutme: "desc",
 		description: "desc",
 		desc(target, room, user) {
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!target || target.length > 300) return this.errorReply("Needs a target; no more than 300 characters.");
 			channels[channelId].aboutme = target;
@@ -228,10 +228,10 @@ exports.commands = {
 		film: "record",
 		rec: "record",
 		record(target, room, user) {
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
 			let [title, thumbnail] = target.split(",").map(p => p.trim());
 			if (!title) return this.errorReply(`Please title the video you are filming.`);
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (Date.now() - channels[channelId].lastRecorded < RECORD_COOLDOWN) return this.errorReply(`You are on record cooldown.`);
 			let videoProgress = channels[channelId].vidProgress;
 			if (videoProgress !== "notStarted") return this.errorReply(`You already have a video recorded.`);
@@ -259,8 +259,8 @@ exports.commands = {
 
 		editvideo: "edit",
 		edit(target, room, user) {
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
-			let channelId = toID(getChannel(user.userid));
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			let channelId = toID(getChannel(user.id));
 			let videoProgress = channels[channelId].vidProgress;
 			if (videoProgress !== "recorded") return this.errorReply(`You haven't recorded any new footage yet.`);
 			channels[channelId].vidProgress = "edited";
@@ -271,8 +271,8 @@ exports.commands = {
 		pub: "publish",
 		upload: "publish",
 		publish(target, room, user) {
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
-			let channelId = toID(getChannel(user.userid));
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			let channelId = toID(getChannel(user.id));
 			let videoProgress = channels[channelId].vidProgress;
 			if (videoProgress === "notStarted") return this.errorReply(`Please record a video before uploading.`);
 			let subCount = channels[channelId].subscribers;
@@ -426,7 +426,7 @@ exports.commands = {
 						if (adRevenue > 20) adRevenue = 20;
 						channels[channelId].uploadedVideos[title] = Object.assign({name: title, monetized: true, adRevenue: adRevenue, thumbnail: channels[channelId].lastThumbnail, views: generateEditedViews, likes: generateEditedLikes, dislikes: generateEditedDislikes, subscribers: generateEditedSubs, unsubs: generateEditedUnsubs, videoProgress: "Edited", recorded: Date.now(), comments: genComments});
 					}
-					Economy.writeMoney(user.userid, adRevenue);
+					Economy.writeMoney(user.id, adRevenue);
 					Economy.logTransaction(`${user.name} has got ${adRevenue} ${moneyName}${Chat.plural(adRevenue)} from posting a video.`);
 					this.sendReplyBox(`<i>Your video meets community guidelines and was approved for monetization. You have profited ${adRevenue} ${moneyName}${Chat.plural(adRevenue)}!</i>`);
 				}
@@ -443,7 +443,7 @@ exports.commands = {
 			if (channels[channelId].notifications) {
 				let notification = Date.now() - channels[channelId].lastRecorded + RECORD_COOLDOWN;
 				setTimeout(() => {
-					if (Users.get(user.userid)) {
+					if (Users.get(user.id)) {
 						user.send(`|pm|~DewTube Manager|~|Hey ${user.name}, just wanted to let you know you can upload again!`);
 					}
 				}, notification);
@@ -455,8 +455,8 @@ exports.commands = {
 		unmonetize: "monetization",
 		monetize: "monetization",
 		monetization(target, room, user) {
-			let channelId = toID(getChannel(user.userid));
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			let channelId = toID(getChannel(user.id));
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
 			if (channels[channelId].subscribers < 1000) return this.errorReply(`Due to recent DewTube partnership guidelines you must have 1,000 subscribers to apply for monetization.`);
 			if (channels[channelId].isMonetized) {
 				channels[channelId].isMonetized = false;
@@ -474,8 +474,8 @@ exports.commands = {
 		toggle: "notify",
 		togglenotifications: "notify",
 		notify(target, room, user) {
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
-			let channelId = toID(getChannel(user.userid));
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			let channelId = toID(getChannel(user.id));
 			if (channels[channelId].notifications) {
 				channels[channelId].notifications = false;
 				this.sendReply(`You have successfully deactivated video notifications.`);
@@ -488,10 +488,10 @@ exports.commands = {
 		dramaalert: "drama",
 		expose: "drama",
 		drama(target, room, user) {
-			if (!getChannel(user.userid)) return this.errorReply(`You do not have a DewTube channel yet.`);
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
 			if (!target) return this.errorReply(`Pick who you want to start drama with.`);
 			let targetId = toID(target);
-			let usersChannel = toID(getChannel(user.userid));
+			let usersChannel = toID(getChannel(user.id));
 			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
 			let targetChannel = channels[targetId].name;
 			if (channels[targetId] === channels[usersChannel]) return this.errorReply(`You cannot have drama with yourself.`);
@@ -551,7 +551,7 @@ exports.commands = {
 			if (channels[usersChannel].notifications) {
 				let notification = Date.now() - channels[usersChannel].lastDrama + DRAMA_COOLDOWN;
 				setTimeout(() => {
-					if (Users.get(user.userid)) {
+					if (Users.get(user.id)) {
 						user.send(`|pm|~DewTube Manager|~|Hey ${user.name}, just wanted to let you know you can start drama again now!`);
 					}
 				}, notification);
@@ -561,7 +561,7 @@ exports.commands = {
 		disabledrama: "toggledrama",
 		enabledrama: "toggledrama",
 		toggledrama(target, room, user) {
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!channels[channelId].allowingDrama) {
 				channels[channelId].allowingDrama = true;
@@ -575,7 +575,7 @@ exports.commands = {
 		collab: "collaborate",
 		collaborate(target, room, user) {
 			if (!target) return this.parse(`/dewtubehelp`);
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			let targetId = toID(target);
 			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
@@ -602,7 +602,7 @@ exports.commands = {
 		collabaccept: "acceptcollab",
 		acceptcollab(target, room, user) {
 			if (!target) return this.parse(`/dewtubehelp`);
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			let targetId = toID(target);
 			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
@@ -712,7 +712,7 @@ exports.commands = {
 			if (channels[channelId].notifications) {
 				let notification = Date.now() - channels[channelId].lastCollabed + COLLAB_COOLDOWN;
 				setTimeout(() => {
-					if (Users.get(user.userid)) {
+					if (Users.get(user.id)) {
 						user.send(`|pm|~DewTube Manager|~|Hey ${user.name}, just wanted to let you know you can collaborate with DewTubers again!`);
 					}
 				}, notification);
@@ -735,7 +735,7 @@ exports.commands = {
 		deny: "denycollab",
 		denycollab(target, room, user) {
 			if (!target) return this.parse(`/dewtubehelp`);
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			let targetId = toID(target);
 			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
@@ -754,7 +754,7 @@ exports.commands = {
 		cancel: "cancelcollab",
 		cancelcollab(target, room, user) {
 			if (!target) return this.parse(`/dewtubehelp`);
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			let targetId = toID(target);
 			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
@@ -770,7 +770,7 @@ exports.commands = {
 		profilepicture: "pfp",
 		profilepic: "pfp",
 		pfp(target, room, user) {
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!target) return this.parse(`/dewtubehelp`);
 			if (![".png", ".gif", ".jpg"].includes(target.slice(-4))) return this.errorReply(`Your profile picture image must end in an extension like .png, .gif, or .jpg.`);
@@ -783,7 +783,7 @@ exports.commands = {
 		bg: "banner",
 		background: "banner",
 		banner(target, room, user) {
-			let channelId = toID(getChannel(user.userid));
+			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!target) return this.parse(`/dewtubehelp`);
 			if (![".png", ".gif", ".jpg"].includes(target.slice(-4))) return this.errorReply(`Your banner image must end in an extension like .png, .gif, or .jpg.`);
@@ -795,7 +795,7 @@ exports.commands = {
 		vids: "videos",
 		videos(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!target) target = toID(getChannel(user.userid));
+			if (!target) target = toID(getChannel(user.id));
 			let channelId = toID(target);
 			if (!channels[channelId]) return this.errorReply(`This is not a DewTube channel.`);
 			let videos = channels[channelId].uploadedVideos;

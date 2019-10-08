@@ -36,19 +36,19 @@ class GuessWho {
 	}
 
 	guess(user, guess) {
-		if (user.userid === this.questionee) return user.sendTo(this.room, `You are currently the questionee, so you cannot guess your Pokemon.`);
-		if (!this.players.includes(user.userid)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
+		if (user.id === this.questionee) return user.sendTo(this.room, `You are currently the questionee, so you cannot guess your Pokemon.`);
+		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
 		if (this.guesses === 10 && this.hints.length < 1) return false;
 		if (this.guesses === 7 && this.hints.length < 2) return false;
 		if (this.guesses === 3 && this.hints.length < 3) return false;
 		if (guess.species === this.answer.species) {
 			this.room.add(`|html|${Server.nameColor(user.name, true)} guessed <strong>${guess.species}</strong>, which was the correct answer! ${Server.nameColor(user.name, true)} has also won 5 ${moneyPlural}! ${Server.nameColor(user.name, true)} has also won 5 EXP!`);
-			Economy.writeMoney(user.userid, prizeMoney);
+			Economy.writeMoney(user.id, prizeMoney);
 			Economy.logTransaction(`${user.name} has won ${prizeMoney} ${moneyPlural} from playing a session of Guess Who.`);
-			Server.ExpControl.addExp(user.userid, this.room, 5);
+			Server.ExpControl.addExp(user.id, this.room, 5);
 			this.end();
 		} else {
-			this.guessed[toID(guess.species)] = user.userid;
+			this.guessed[toID(guess.species)] = user.id;
 			this.guessedPokemon.push(guess.species);
 			this.guesses--;
 			this.room.add(`|html|${Server.nameColor(user.name, true)} guessed <strong>${guess.species}</strong>, but that was not the correct answer. <strong>${this.guesses} guesses are left.</strong>`);
@@ -78,14 +78,14 @@ class GuessWho {
 	}
 
 	joinGuessWho(user) {
-		if (this.players.includes(user.userid)) return user.sendTo(this.room, "You have already joined the session of Guess Who in this room.");
-		this.players.push(user.userid);
+		if (this.players.includes(user.id)) return user.sendTo(this.room, "You have already joined the session of Guess Who in this room.");
+		this.players.push(user.id);
 		user.sendTo(this.room, "You have joined the ongoing session of Guess Who in this room.");
 	}
 
 	leaveGuessWho(user) {
-		if (!this.players.includes(user.userid)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
-		this.players.splice(this.players.indexOf(user.userid), 1);
+		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
+		this.players.splice(this.players.indexOf(user.id), 1);
 		user.sendTo(this.room, `You have successfully left the ongoing session of Guess Who.`);
 	}
 
@@ -189,7 +189,7 @@ exports.commands = {
 
 		showanswer(target, room, user) {
 			if (!room.guesswho) return this.errorReply("There is no session of Guess Who going on in this room.");
-			if (room.guesswho.questionee !== user.userid) return this.errorReply("You must be the questionee to use this.");
+			if (room.guesswho.questionee !== user.id) return this.errorReply("You must be the questionee to use this.");
 			this.sendReplyBox(`Attention: You must give hints about this Pokemon! Try not to give away too much, because if your Pok&eacute;mon hasn't been guessed after ${guesses} amount of times you win!<br /><strong>Your Pok&eacute;mon is ${room.guesswho.answer.species}</strong>!`);
 		},
 
@@ -205,7 +205,7 @@ exports.commands = {
 		givehint: "gh",
 		gh(target, room, user) {
 			if (!room.guesswho) return this.errorReply(`There is no ongoing session of Guess Who going on right now.`);
-			if (room.guesswho.questionee !== user.userid) return this.errorReply(`Only the questionee may provide hints.`);
+			if (room.guesswho.questionee !== user.id) return this.errorReply(`Only the questionee may provide hints.`);
 			if (!target) return this.errorReply(`You must provide a hint.`);
 			if (target in room.guesswho.hints) return this.errorReply(`You have already gave "${target}" as a hint.`);
 

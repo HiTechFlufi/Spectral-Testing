@@ -88,7 +88,7 @@ exports.commands = {
 				data = data.split("\n");
 				for (let u in data) {
 					if (data[u].length < 1) continue;
-					let message = parseMessage(data[u], user.userid);
+					let message = parseMessage(data[u], user.id);
 					if (message.length < 1) continue;
 					output += `${message}<br />`;
 				}
@@ -128,7 +128,7 @@ exports.commands = {
 				let line = stdout[i].split(":");
 				line.splice(0, 2);
 				line = line.join(":");
-				let message = parseMessage(line, user.userid);
+				let message = parseMessage(line, user.id);
 				if (message.length < 1) continue;
 				output += `<font color="#970097">${file}</font><font color="#00AAAA">:</font><font color="#008700">${lineNumber}</font><font color="#00AAAA">:</font>${message}<br />`;
 			}

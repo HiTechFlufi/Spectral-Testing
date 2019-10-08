@@ -42,7 +42,7 @@ Server.messageSeniorStaff = function (message, pmName, from) {
 	pmName = (pmName ? pmName : `~${Config.serverName} Server [Upper Staff PM]`);
 	from = (from ? ` (PM from ${from})` : ``);
 	Users.users.forEach(curUser => {
-		if (Config.special.indexOf(curUser.userid) !== -1 || curUser.group === "~" || curUser.group === "&") {
+		if (Config.special.indexOf(curUser.id) !== -1 || curUser.group === "~" || curUser.group === "&") {
 			curUser.send(`|pm|${pmName}|${curUser.getIdentity()}|${message}${from}`);
 		}
 	});
@@ -58,7 +58,7 @@ function devPM(user, message) {
 	let developers = Db.devs.keys();
 	for (const name of developers) {
 		const u = Users.get(name);
-		if (!(u && u.connected) || (u.userid !== name)) continue;
+		if (!(u && u.connected) || (u.id !== name)) continue;
 		u.send(`|pm|${user}|${u.group}${u.name}|/raw ${message}\n<small style="font-style="italic">You can message DEV chat by using /devmsg [msg].</small>`);
 	}
 }
@@ -117,7 +117,7 @@ Server.giveDailyReward = function (user) {
 	for (let ip in user.ips) {
 		Db.DailyBonus.set(ip, [reward, Date.now()]);
 	}
-	Economy.writeMoney(user.userid, reward);
+	Economy.writeMoney(user.id, reward);
 	user.send(`|popup||wide||html|<center><u><strong><font size="3">${Config.serverName} Daily Bonus</font></strong></u><br />You have been awarded ${reward} ${reward === 1 ? moneyName : moneyPlural}.<br />${showDailyRewardAni(reward)}<br />Because you have connected to the server for the ${(reward === 1 ? "first time" : `past ${reward} days`)}.</center>`);
 };
 

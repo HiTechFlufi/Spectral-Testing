@@ -59,8 +59,8 @@ exports.commands = {
 	friends: {
 		init(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (friends[user.userid]) return this.errorReply(`You have already initialized your friends list.`);
-			friends[user.userid] = {
+			if (friends[user.id]) return this.errorReply(`You have already initialized your friends list.`);
+			friends[user.id] = {
 				friendsList: [],
 				pendingRequests: [],
 				notifications: true,
@@ -80,17 +80,17 @@ exports.commands = {
 			let targetUser = Users.get(target);
 			if (!targetUser || !targetUser.connected) return this.errorReply(`${target} is not online.`);
 			// If the user has not initalized their friends list, parse /friends init
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (user.userid === targetUser.userid) return this.errorReply(`Like I can relate and all... but apparently being your own friend is invalid.`);
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (user.id === targetUser.id) return this.errorReply(`Like I can relate and all... but apparently being your own friend is invalid.`);
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (friends[targetUser.userid] && friends[targetUser.userid].disabledFriends) return this.errorReply(`${targetUser.name} has disabled adding friends.`);
-			if (friends[user.userid].disabledFriends) return this.errorReply(`You must enable friend requests before attempting to add others.`);
-			if (friends[targetUser.userid] && friends[targetUser.userid].pendingRequests.includes(user.userid)) return this.parse(`/friends accept ${targetUser.userid}`);
-			if (friends[user.userid].pendingRequests.includes(targetUser.userid)) return this.errorReply(`${targetUser.name} already has a pending request from you.`);
-			if (friends[user.userid].friendsList.includes(targetUser.userid)) return this.errorReply(`${targetUser.name} is already registered on your friends list.`);
-			friends[user.userid].pendingRequests.push(targetUser.userid);
+			if (friends[targetUser.id] && friends[targetUser.id].disabledFriends) return this.errorReply(`${targetUser.name} has disabled adding friends.`);
+			if (friends[user.id].disabledFriends) return this.errorReply(`You must enable friend requests before attempting to add others.`);
+			if (friends[targetUser.id] && friends[targetUser.id].pendingRequests.includes(user.id)) return this.parse(`/friends accept ${targetUser.id}`);
+			if (friends[user.id].pendingRequests.includes(targetUser.id)) return this.errorReply(`${targetUser.name} already has a pending request from you.`);
+			if (friends[user.id].friendsList.includes(targetUser.id)) return this.errorReply(`${targetUser.name} is already registered on your friends list.`);
+			friends[user.id].pendingRequests.push(targetUser.id);
 			write();
-			let message = `/html has sent you a friend request. <br /><button name="send" value="/friends accept ${user.userid}">Click to accept</button> | <button name="send" value="/friends decline ${user.userid}">Click to decline</button>`;
+			let message = `/html has sent you a friend request. <br /><button name="send" value="/friends accept ${user.id}">Click to accept</button> | <button name="send" value="/friends decline ${user.id}">Click to decline</button>`;
 			targetUser.send(`|pm|${user.getIdentity()}|${targetUser.getIdentity()}|${message}`);
 			return this.sendReply(`You have sent ${targetUser.name} a friend request.`);
 		},
@@ -100,14 +100,14 @@ exports.commands = {
 		remove(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
 			if (!target) return this.parse(`/help friends`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
+			if (!friends[user.id]) this.parse(`/friends init`);
 			let targetId = toID(target);
-			if (!friends[user.userid].friendsList.includes(targetId)) return this.errorReply(`${target} is not registered as your friend.`);
-			friends[user.userid].friendsList.splice(friends[user.userid].friendsList.indexOf(targetId), 1);
-			friends[targetId].friendsList.splice(friends[targetId].friendsList.indexOf(user.userid), 1);
+			if (!friends[user.id].friendsList.includes(targetId)) return this.errorReply(`${target} is not registered as your friend.`);
+			friends[user.id].friendsList.splice(friends[user.id].friendsList.indexOf(targetId), 1);
+			friends[targetId].friendsList.splice(friends[targetId].friendsList.indexOf(user.id), 1);
 			// Check if the user or the target has each other on their ignore list and if so remove it
-			if (friends[user.userid].ignoreList.includes(targetId)) friends[user.userid].ignoreList.splice(friends[user.userid].ignoreList.indexOf(targetId), 1);
-			if (friends[targetId].ignoreList.includes(user.userid)) friends[targetId].ignoreList.splice(friends[targetId].ignoreList.indexOf(user.userid), 1);
+			if (friends[user.id].ignoreList.includes(targetId)) friends[user.id].ignoreList.splice(friends[user.id].ignoreList.indexOf(targetId), 1);
+			if (friends[targetId].ignoreList.includes(user.id)) friends[targetId].ignoreList.splice(friends[targetId].ignoreList.indexOf(user.id), 1);
 			write();
 			return this.sendReply(`You have successfully removed ${target} as a friend.`);
 		},
@@ -119,11 +119,11 @@ exports.commands = {
 			let targetId = toID(target);
 			let targetUser = Users.get(target);
 			// If the user has not initalized their friends list, parse /friends init
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (!friends[targetId].pendingRequests.includes(user.userid)) return this.errorReply(`${target} has not sent you a friend request.`);
-			friends[targetId].friendsList.push(user.userid);
-			friends[user.userid].friendsList.push(targetId);
-			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.userid), 1);
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (!friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
+			friends[targetId].friendsList.push(user.id);
+			friends[user.id].friendsList.push(targetId);
+			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.id), 1);
 			write();
 			if (targetUser && targetUser.connected) targetUser.send(`|pm|${user.getIdentity()}|${targetUser.getIdentity()}|/raw ${Server.nameColor(user.name, true, true)} has accepted your friend request.`);
 			return this.sendReply(`You have successfully accepted ${target}'s friend request.`);
@@ -136,9 +136,9 @@ exports.commands = {
 			let targetId = toID(target);
 			let targetUser = Users.get(target);
 			// If the user has not initalized their friends list, parse /friends init
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (!friends[targetId].pendingRequests.includes(user.userid)) return this.errorReply(`${target} has not sent you a friend request.`);
-			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.userid), 1);
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (!friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
+			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.id), 1);
 			write();
 			if (targetUser && targetUser.connected) targetUser.send(`|pm|${user.getIdentity()}|${targetUser.getIdentity()}|/raw ${Server.nameColor(user.name, true, true)} has declined your friend request.`);
 			return this.sendReply(`You have successfully denied ${target}'s friend request.`);
@@ -148,13 +148,13 @@ exports.commands = {
 		disablefriends: "togglefriends",
 		togglefriends(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (friends[user.userid].disabledFriends) {
-				friends[user.userid].disabledFriends = false;
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (friends[user.id].disabledFriends) {
+				friends[user.id].disabledFriends = false;
 				write();
 				return this.sendReply(`You have successfully enabled friend requests.`);
 			} else {
-				friends[user.userid].disabledFriends = true;
+				friends[user.id].disabledFriends = true;
 				write();
 				return this.sendReply(`You have successfully disabled friend requests.`);
 			}
@@ -164,13 +164,13 @@ exports.commands = {
 		notifications: "notify",
 		notify(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (!friends[user.userid].notifications) {
-				friends[user.userid].notifications = true;
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (!friends[user.id].notifications) {
+				friends[user.id].notifications = true;
 				write();
 				return this.sendReply(`You have successfully set your friend notifications on.`);
 			} else {
-				friends[user.userid].notifications = false;
+				friends[user.id].notifications = false;
 				write();
 				return this.sendReply(`You have successfully disabled friend notifications.`);
 			}
@@ -180,13 +180,13 @@ exports.commands = {
 		unprivatize: "privatize",
 		privatize(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (!friends[user.userid].private) {
-				friends[user.userid].private = true;
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (!friends[user.id].private) {
+				friends[user.id].private = true;
 				write();
 				return this.sendReply(`You have successfully made your friends list private.`);
 			} else {
-				friends[user.userid].private = false;
+				friends[user.id].private = false;
 				write();
 				return this.sendReply(`You have successfully made your friends list publicly visible.`);
 			}
@@ -195,19 +195,19 @@ exports.commands = {
 		unignore: "ignore",
 		ignore(target, room, user, connection, cmd) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
+			if (!friends[user.id]) this.parse(`/friends init`);
 			if (!target) return this.parse(`/friends help`);
 			let targetId = toID(target);
-			if (!friends[user.userid].friendsList.includes(targetId)) return this.errorReply(`${target} is not registered as your friend.`);
-			if (!friends[user.userid].notifications) return this.errorReply(`There is no reason to ignore users when your notifications are off.`);
-			if (friends[user.userid].ignoreList.includes(targetId) && cmd === "ignore") return this.errorReply(`${target} is already ignored.`);
-			if (!friends[user.userid].ignoreList.includes(targetId) && cmd === "unignore") return this.errorReply(`You are not ignoring ${target}.`);
+			if (!friends[user.id].friendsList.includes(targetId)) return this.errorReply(`${target} is not registered as your friend.`);
+			if (!friends[user.id].notifications) return this.errorReply(`There is no reason to ignore users when your notifications are off.`);
+			if (friends[user.id].ignoreList.includes(targetId) && cmd === "ignore") return this.errorReply(`${target} is already ignored.`);
+			if (!friends[user.id].ignoreList.includes(targetId) && cmd === "unignore") return this.errorReply(`You are not ignoring ${target}.`);
 			if (cmd === "ignore") {
-				friends[user.userid].ignoreList.push(targetId);
+				friends[user.id].ignoreList.push(targetId);
 				write();
 				return this.sendReply(`${target} has been successfully added to your ignore list.`);
 			} else {
-				friends[user.userid].ignoreList.splice(friends[user.userid].ignoreList.indexOf(targetId), 1);
+				friends[user.id].ignoreList.splice(friends[user.id].ignoreList.indexOf(targetId), 1);
 				write();
 				return this.sendReply(`${target} has been successfully removed from your ignore list.`);
 			}
@@ -217,9 +217,9 @@ exports.commands = {
 		ignoredusers: "ignorelist",
 		ignorelist(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (friends[user.userid].ignoreList.length < 1) return this.errorReply(`You currently are not ignoring anyone.`);
-			return this.sendReplyBox(`You are currently ignoring the following: ${Chat.toListString(friends[user.userid].ignoreList)}.`);
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (friends[user.id].ignoreList.length < 1) return this.errorReply(`You currently are not ignoring anyone.`);
+			return this.sendReplyBox(`You are currently ignoring the following: ${Chat.toListString(friends[user.id].ignoreList)}.`);
 		},
 
 		cancelreq: "cancel",
@@ -227,11 +227,11 @@ exports.commands = {
 		cancelrequest: "cancel",
 		cancel(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
+			if (!friends[user.id]) this.parse(`/friends init`);
 			target = toID(target);
-			if (friends[user.userid].pendingRequests.length < 1) return this.errorReply(`You currently have no pending requests.`);
-			if (!friends[user.userid].pendingRequests.includes(target)) return this.errorReply(`You do not have a pending request for this user.`);
-			friends[user.userid].pendingRequests.splice(friends[user.userid].pendingRequests.indexOf(target), 1);
+			if (friends[user.id].pendingRequests.length < 1) return this.errorReply(`You currently have no pending requests.`);
+			if (!friends[user.id].pendingRequests.includes(target)) return this.errorReply(`You do not have a pending request for this user.`);
+			friends[user.id].pendingRequests.splice(friends[user.id].pendingRequests.indexOf(target), 1);
 			write();
 			return this.sendReply(`You have successfully cancelled your friend request for ${target}.`);
 		},
@@ -240,9 +240,9 @@ exports.commands = {
 		pendingrequests: "pending",
 		pending(target, room, user) {
 			if (user.locked || !user.autoconfirmed) return this.errorReply(`To prevent spamming you must be on an autoconfirmed account and unlocked to send friend requests.`);
-			if (!friends[user.userid]) this.parse(`/friends init`);
-			if (friends[user.userid].pendingRequests.length < 1) return this.errorReply(`You currently have no pending requests.`);
-			return this.sendReplyBox(`The following are your pending requests: ${Chat.toListString(friends[user.userid].pendingRequests)}.`);
+			if (!friends[user.id]) this.parse(`/friends init`);
+			if (friends[user.id].pendingRequests.length < 1) return this.errorReply(`You currently have no pending requests.`);
+			return this.sendReplyBox(`The following are your pending requests: ${Chat.toListString(friends[user.id].pendingRequests)}.`);
 		},
 
 		"!list": true,
@@ -252,17 +252,17 @@ exports.commands = {
 		display: "list",
 		list(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!target || target.length > 18) target = user.userid;
+			if (!target || target.length > 18) target = user.id;
 			let friendsId = toID(target);
 			if (!friends[friendsId]) return this.errorReply(`${target} has not initialized their friends list yet.`);
-			if (friends[friendsId].private && friendsId !== user.userid) return this.errorReply(`${target} has privatized their friends list.`);
+			if (friends[friendsId].private && friendsId !== user.id) return this.errorReply(`${target} has privatized their friends list.`);
 			if (friends[friendsId].friendsList.length < 1) return this.sendReplyBox(`<center>${Server.nameColor(target, true, true)} currently doesn't have any friends.</center>`);
 			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;"><h2 style="text-align: center">${Server.nameColor(target, true, true)}'${friendsId.endsWith("s") ? `` : `s`} Friends List (${friends[friendsId].friendsList.length.toLocaleString()} Friend${friends[friendsId].friendsList.length > 1 ? "s" : ""}):</h2><table border="1" cellspacing ="0" cellpadding="${this.broadcasting ? 3 : 2}"><tr style="font-weight: bold"><td>Friend:</td><td>Last Seen:</td>`;
-			if (!this.broadcasting && friendsId === user.userid) display += `<td>Unfriend:</td>`;
+			if (!this.broadcasting && friendsId === user.id) display += `<td>Unfriend:</td>`;
 			display += `</tr>`;
 			let sortedFriends = friends[friendsId].friendsList.sort(function (a, b) {
-				if (Users.get(a) && Users.get(a).connected) Db.seen.set(Users.get(a).userid, Date.now());
-				if (Users.get(b) && Users.get(b).connected) Db.seen.set(Users.get(b).userid, Date.now());
+				if (Users.get(a) && Users.get(a).connected) Db.seen.set(Users.get(a).id, Date.now());
+				if (Users.get(b) && Users.get(b).connected) Db.seen.set(Users.get(b).id, Date.now());
 				a = Db.seen.get(a);
 				b = Db.seen.get(b);
 				if (!a) a = 0;
@@ -270,18 +270,18 @@ exports.commands = {
 				return b - a;
 			});
 			sortedFriends.forEach(friend => {
-				if (friends[friend].private && this.broadcasting && friendsId !== user.userid) {
+				if (friends[friend].private && this.broadcasting && friendsId !== user.id) {
 					return;
 				} else {
 					display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center"><button class="button" name="parseCommand" value="/user ${friend}">${Server.nameColor(friend, true, true)}</button></td><td style="border: 2px solid #000000; width: 20%; text-align: center">${getLastSeen(friend)}</td>`;
-					if (!this.broadcasting && friendsId === user.userid) {
+					if (!this.broadcasting && friendsId === user.id) {
 						display += `<td style="border: 2px solid #000000; width: 20%; text-align: center"><button class="button" name="send" value="/friends unfriend ${friend}">${friend}</button></td>`;
 					}
 				}
 			});
 			display += `</tr></table>`;
-			if (!this.broadcasting && friendsId === user.userid) {
-				display += `<center><button class="button" name="send" value="/friends notifications">${(friends[user.userid].notifications ? `Disable Friend Notifications` : `Enable Friend Notifications`)}</center>`;
+			if (!this.broadcasting && friendsId === user.id) {
+				display += `<center><button class="button" name="send" value="/friends notifications">${(friends[user.id].notifications ? `Disable Friend Notifications` : `Enable Friend Notifications`)}</center>`;
 			}
 			display += `</div>`;
 			return this.sendReplyBox(display);

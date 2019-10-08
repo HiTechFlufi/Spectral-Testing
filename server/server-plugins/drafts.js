@@ -353,7 +353,7 @@ exports.commands = {
 		if (!Dex.data.Pokedex[pkmn]) {
 			return this.errorReply("Not a Pokemon.");
 		} else {
-			drafts[room].Nom(pkmn, user.userid, this);
+			drafts[room].Nom(pkmn, user.id, this);
 		}
 	},
 };

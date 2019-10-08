@@ -15,13 +15,13 @@ exports.commands = {
 			if (!target) return this.parse(`/help roomshop toggle`);
 			if (!this.can("roomshop")) return false;
 			if (this.meansYes(toID(target))) {
-				if (Db.roomshop.has(room.id)) return this.errorReply(`${room.title} already has a Room Shop.`);
-				Db.roomshop.set(room.id);
+				if (Db.roomshop.has(room.roomid)) return this.errorReply(`${room.title} already has a Room Shop.`);
+				Db.roomshop.set(room.roomid);
 				this.privateModAction(`${room.title}'s Room Shop has been enabled.`);
 				if (room.founder) this.parse(`/roomshop bank set ${room.founder}`);
 			} else if (this.meansNo(toID(target))) {
-				if (!Db.roomshop.has(room.id)) return this.errorReply(`${room.title} does not have a Room Shop yet.`);
-				Db.roomshop.remove(room.id);
+				if (!Db.roomshop.has(room.roomid)) return this.errorReply(`${room.title} does not have a Room Shop yet.`);
+				Db.roomshop.remove(room.roomid);
 				this.privateModAction(`${room.title}'s Room Shop has been disabled.`);
 			} else {
 				this.parse(`/help roomshop toggle`);
@@ -34,28 +34,28 @@ exports.commands = {
 				if (!this.can("roomshop", null, room)) return false;
 				target = toID(target);
 				if (!target) return this.parse(`/roomshophelp`);
-				let roomshop = Db.roomshop.get(room.id, {items: {}});
+				let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 				if (!roomshop) return this.errorReply(`${room.title} does not have a Room Shop yet.`);
 				if (roomshop.bank) return this.errorReply(`${room.title} already has a Bank.`);
 				roomshop.bank = target;
-				Db.roomshop.set(room.id, roomshop);
+				Db.roomshop.set(room.roomid, roomshop);
 				this.privateModAction(`${room.title}'s Room Shop Bank has been set as "${target}" by ${user.name}.`);
 			},
 
 			remove(target, room, user) {
 				if (!this.can("roomshop", null, room)) return false;
-				let roomshop = Db.roomshop.get(room.id, {items: {}});
+				let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 				if (!roomshop) return this.errorReply(`${room.title} does not have a Room Shop yet.`);
 				if (!roomshop.bank) return this.errorReply(`${room.title} has no bank set yet.`);
 				delete roomshop.bank;
-				Db.roomshop.set(room.id, roomshop);
+				Db.roomshop.set(room.roomid, roomshop);
 				this.privateModAction(`${room.title}'s Room Shop Bank has been removed by ${user.name}.`);
 			},
 
 			account: "holder",
 			holder(target, room) {
 				if (!this.runBroadcast()) return;
-				let roomshop = Db.roomshop.get(room.id, {items: {}});
+				let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 				if (!roomshop) return this.errorReply(`${room.title} does not have a Room Shop.`);
 				if (!roomshop.bank) return this.errorReply(`${room.title} hasn't set a bank yet.`);
 				return this.sendReplyBox(`<strong>${room.title}'s Bank:</strong> ${Server.nameColor(roomshop.bank, true)}`);
@@ -65,7 +65,7 @@ exports.commands = {
 			money: "atm",
 			atm(target, room) {
 				if (!this.runBroadcast()) return;
-				let roomshop = Db.roomshop.get(room.id, {items: {}});
+				let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 				if (!roomshop) return this.errorReply(`${room.title} does not have a Room Shop.`);
 				if (!roomshop.bank) return this.errorReply(`${room.title} hasn't set a bank yet.`);
 				if (this.broadcasting) {
@@ -79,7 +79,7 @@ exports.commands = {
 		additem: "add",
 		add(target, room, user) {
 			if (!this.can("roomshop", null, room)) return false;
-			let roomshop = Db.roomshop.get(room.id, {items: {}});
+			let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 			if (Object.keys(roomshop.items).length > 12) return this.errorReply(`${room.title} has already reached the maximum amount of items allowed.`);
 			let [item, price, ...desc] = target.split(",").map(p => p.trim());
 			if (!(item && price && desc)) return this.parse("/roomshophelp");
@@ -88,7 +88,7 @@ exports.commands = {
 			if (isNaN(price) || price < 1) return this.errorReply(`The price for the item must be an integer above 0.`);
 			if (desc.length < 1 || desc.length > 50) return this.errorReply(`The description for an item must be between 1-50 characters long.`);
 			roomshop.items[toID(item)] = {id: toID(item), name: item, price: price, desc: desc.join(", ")};
-			Db.roomshop.set(room.id, roomshop);
+			Db.roomshop.set(room.roomid, roomshop);
 			room.addRaw(`"${item}" was added to the Room Shop by ${Server.nameColor(user.name, true, true)}.`);
 			this.privateModAction(`${user.name} has added "${item}" into the Room Shop.`);
 		},
@@ -99,7 +99,7 @@ exports.commands = {
 		remove(target, room, user) {
 			if (!this.can("roomshop", null, room)) return false;
 			if (!target) return this.parse(`/roomshophelp`);
-			let roomshop = Db.roomshop.get(room.id, {items: {}});
+			let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 			if (!roomshop.items[toID(target)]) return this.errorReply(`The item "${target}" does not exist.`);
 			delete roomshop.items[toID(target)];
 			Db.roomshop.set(roomshop);
@@ -111,7 +111,7 @@ exports.commands = {
 		shop: "display",
 		display(target, room) {
 			if (!this.runBroadcast()) return;
-			let roomshop = Db.roomshop.get(room.id, {items: {}});
+			let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 			if (!roomshop) return this.errorReply(`${room.title} does not have a Room Shop.`);
 			if (Object.keys(roomshop.items).length < 1) return this.errorReply(`${room.title}'s Room Shop currently has no items.`);
 			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;"><center><h1>${room.title}'s Room Shop</h1><table border="1" cellspacing ="0" cellpadding="3"><tr><td>Item</td><td>Description</td><td>Cost</td></tr>`;
@@ -128,20 +128,20 @@ exports.commands = {
 
 		purchase: "buy",
 		buy(target, room, user) {
-			if (!Db.roomshop.has(room.id)) return this.errorReply("Room Shop is not enabled here.");
-			let roomshop = Db.roomshop.get(room.id, {items: {}});
+			if (!Db.roomshop.has(room.roomid)) return this.errorReply("Room Shop is not enabled here.");
+			let roomshop = Db.roomshop.get(room.roomid, {items: {}});
 			if (!roomshop.bank) return this.errorReply(`${room.title} hasn't set a bank yet.`);
 			if (!roomshop.items[toID(target)]) return this.errorReply(`The item "${target}" does not exist.`);
-			if (roomshop.bank === user.userid) return this.errorReply("Bank cannot purchase from the Room Shop.");
+			if (roomshop.bank === user.id) return this.errorReply("Bank cannot purchase from the Room Shop.");
 			let bank = roomshop.bank;
 			let cost = roomshop.items[toID(target)].price;
 			// Take payments and record payments from the user
-			Economy.readMoney(user.userid, money => {
+			Economy.readMoney(user.id, money => {
 				if (money < cost) {
 					this.errorReply(`You do not have enough ${moneyName} to purchase ${target}.`);
 					return;
 				}
-				Economy.writeMoney(user.userid, -cost, () => {
+				Economy.writeMoney(user.id, -cost, () => {
 					Economy.logTransaction(`${user.name} bought "${target}" from ${room.title}'s roomshop for ${cost.toLocaleString()} ${moneyName}${Chat.plural(cost)}.`);
 				});
 				Economy.writeMoney(bank, cost, () => {
@@ -149,7 +149,7 @@ exports.commands = {
 				});
 
 				if (FS("logs/roomshops").readdirSync()) FS("logs/roomshops").mkdirpSync();
-				FS(`logs/roomshops/roomshop_${room.id}.txt`).append(`[${new Date().toUTCString()}] ${user.name} has bought "${target}" from the Room Shop.\n`);
+				FS(`logs/roomshops/roomshop_${room.roomid}.txt`).append(`[${new Date().toUTCString()}] ${user.name} has bought "${target}" from the Room Shop.\n`);
 
 				for (let u in room.users) {
 					if (room.auth[u] === "#") {
@@ -166,7 +166,7 @@ exports.commands = {
 		log: "transactions",
 		transactions(target, room, user) {
 			if (!this.can("roomshop", null, room)) return false;
-			if (!Db.roomshop.has(room.id)) return this.errorReply(`Roomshop is not enabled here.`);
+			if (!Db.roomshop.has(room.roomid)) return this.errorReply(`Roomshop is not enabled here.`);
 			target = toID(target);
 
 			let numLines = 15;
@@ -178,7 +178,7 @@ exports.commands = {
 			}
 
 			let topMsg = `Displaying the last ${numLines} lines of transactions:\n`;
-			let file = `logs/roomshops/roomshop_${room.id}.txt`;
+			let file = `logs/roomshops/roomshop_${room.roomid}.txt`;
 			if (!FS(file).readIfExistsSync()) return user.popup(`No transactions.`);
 
 			FS(file).read().then(data => {

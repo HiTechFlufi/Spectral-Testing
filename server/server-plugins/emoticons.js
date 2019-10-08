@@ -148,21 +148,21 @@ exports.commands = {
 		},
 
 		ignore(target, room, user) {
-			if (Server.ignoreEmotes[user.userid]) return this.errorReply(`You are already ignoring emoticons.`);
-			Server.ignoreEmotes[user.userid] = true;
+			if (Server.ignoreEmotes[user.id]) return this.errorReply(`You are already ignoring emoticons.`);
+			Server.ignoreEmotes[user.id] = true;
 			FS(`config/ignoreemotes.json`).writeSync(JSON.stringify(Server.ignoreEmotes));
 			this.sendReply(`You are now ignoring emoticons.`);
 		},
 
 		unignore(target, room, user) {
-			if (!Server.ignoreEmotes[user.userid]) return this.errorReply(`You aren't ignoring emoticons.`);
-			delete Server.ignoreEmotes[user.userid];
+			if (!Server.ignoreEmotes[user.id]) return this.errorReply(`You aren't ignoring emoticons.`);
+			delete Server.ignoreEmotes[user.id];
 			FS(`config/ignoreemotes.json`).writeSync(JSON.stringify(Server.ignoreEmotes));
 			this.sendReply(`You are no longer ignoring emoticons.`);
 		},
 
 		size(target, room, user) {
-			if (room.id === `lobby` && !this.can(`emotes`) || room.id !== `lobby` && !this.can(`emotes`, null, room)) return false;
+			if (room.roomid === `lobby` && !this.can(`emotes`) || room.roomid !== `lobby` && !this.can(`emotes`, null, room)) return false;
 			if (!target) return this.sendReply(`Usage: /emoticons size [number]`);
 
 			let size = Math.round(Number(target));

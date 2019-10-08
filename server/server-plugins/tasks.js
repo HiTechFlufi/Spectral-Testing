@@ -21,7 +21,7 @@ exports.commands = {
 		issue: "add",
 		report: "add",
 		add(target, room, user) {
-			if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
+			if (!Server.isDev(user.id) && !this.can("bypassall")) return false;
 			let [issue, priority, ...description] = target.split(",").map(p => p.trim());
 			if (!(issue && priority && description)) return this.parse("/taskshelp");
 			let task = Db.tasks.get("development", {issues: {}});
@@ -30,7 +30,7 @@ exports.commands = {
 			if (issue.length < 1 || issue.length > 30) return this.errorReply(`The issue title should not exceed 30 characters long. Feel free to continue in the description.`);
 			if (description.length < 1 || description.length > 100) return this.errorReply(`The description should not exceed 100 characters long.`);
 			if (isNaN(priority) || priority > 6 || priority < 1) return this.errorReply(`The priority should be an integer between 1-6; 1 being the highest priority.`);
-			task.issues[id] = {id, issue, description, employer: user.userid, priority};
+			task.issues[id] = {id, issue, description, employer: user.id, priority};
 			Db.tasks.set("development", task);
 			alertDevs(`New task: ${Server.nameColor(user.name, true, true)} has filed an issue.<br />Issue: ${issue}.<br />Description: ${description}.<br />Priority: ${priority}.`);
 			return this.sendReply(`The task "${issue}" has been added to the ${Config.serverName} Task List.`);
@@ -42,13 +42,13 @@ exports.commands = {
 		resolve: "delete",
 		solve: "delete",
 		delete(target, room, user) {
-			if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
+			if (!Server.isDev(user.id) && !this.can("bypassall")) return false;
 			target = toID(target);
 			let task = Db.tasks.get("development", {issues: {}});
 			if (!target) return this.parse(`/taskshelp`);
 			if (!task.issues[target]) return this.errorReply(`The issue "${target}" has not been reported.`);
-			if (task.issues[target].employer !== user.userid) {
-				Economy.writeMoney(user.userid, 5);
+			if (task.issues[target].employer !== user.id) {
+				Economy.writeMoney(user.id, 5);
 				Economy.logTransaction(`${user.name} has earned 5 ${moneyPlural} for helping resolve "${target}".`);
 				this.sendReply(`Thanks for your helping resolving "${target}", you have earned 5 ${moneyPlural} for your help!`);
 			}
@@ -63,9 +63,9 @@ exports.commands = {
 		tasks: "list",
 		task: "list",
 		list(target, room, user) {
-			if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
+			if (!Server.isDev(user.id) && !this.can("bypassall")) return false;
 			if (!this.runBroadcast()) return;
-			if (this.broadcasting && room.id !== "development") return this.errorReply(`You may only broadcast this command in Development.`);
+			if (this.broadcasting && room.roomid !== "development") return this.errorReply(`You may only broadcast this command in Development.`);
 			let taskList = Db.tasks.get("development", {issues: {}});
 			if (Object.keys(taskList.issues).length < 1) return this.errorReply(`There are currently no issues on ${Config.serverName}.`);
 			let display = `<center><h1>${Config.serverName}'s Tasks List:</h1><table border="1" cellspacing ="0" cellpadding="4"><tr style="font-weight: bold"><td>Employer</td><td>Issue Title</td><td>Issue Description</td><td>Issue Priority</td>${(!this.broadcasting ? `<td>Resolved?}</td>` : ``)}</tr>`;

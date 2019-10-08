@@ -28,7 +28,7 @@ function generateNews(user) {
 }
 
 function hasSubscribed(user) {
-	if (typeof user === "object") user = user.userid;
+	if (typeof user === "object") user = user.id;
 	if (Db.NewsSubscribers.has(toID(user))) return true;
 	return false;
 }
@@ -66,7 +66,7 @@ exports.commands = {
 		view(target, room, user) {
 			if (!this.runBroadcast()) return;
 			let output = `<center><strong>${Config.serverName} News:</strong></center>`;
-			output += generateNews().join("<hr />") + showSubButton(user.userid);
+			output += generateNews().join("<hr />") + showSubButton(user.id);
 			if (this.broadcasting) return this.sendReplyBox(`<div class ="infobox-limited" ${output}</div>`);
 			return user.send(`|popup||wide||html|${output}`);
 		},
@@ -107,16 +107,16 @@ exports.commands = {
 
 		subscribe(target, room, user) {
 			if (!user.named) return this.errorReply("You must choose a name before subscribing.");
-			if (hasSubscribed(user.userid)) return this.errorReply(`You are already subscribed to the ${Config.serverName} News.`);
-			Db.NewsSubscribers.set(user.userid, true);
+			if (hasSubscribed(user.id)) return this.errorReply(`You are already subscribed to the ${Config.serverName} News.`);
+			Db.NewsSubscribers.set(user.id, true);
 			this.sendReply(`You have subscribed to the ${Config.serverName} News.`);
 			this.popupReply(`|wide||html|You will receive the ${Config.serverName} News automatically once you connect to ${Config.serverName} next time.<br><hr><button class="button" name = "send" value = "/news">Go Back</button>`);
 		},
 
 		unsubscribe(target, room, user) {
 			if (!user.named) return this.errorReply("You must choose a name before unsubscribing.");
-			if (!hasSubscribed(user.userid)) return this.errorReply(`You have not subscribed to ${Config.serverName} News.`);
-			Db.NewsSubscribers.remove(user.userid);
+			if (!hasSubscribed(user.id)) return this.errorReply(`You have not subscribed to ${Config.serverName} News.`);
+			Db.NewsSubscribers.remove(user.id);
 			this.sendReply(`You have unsubscribed to the ${Config.serverName} News.`);
 			this.popupReply(`|wide||html|You will no longer automatically receive the ${Config.serverName} News.<br /><hr /><button class="button" name="send" value="/news">Go Back</button>`);
 		},

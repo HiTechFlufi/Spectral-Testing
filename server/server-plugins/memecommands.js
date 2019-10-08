@@ -191,11 +191,11 @@ exports.commands = {
 		if (!this.can("mute", null, room)) return false;
 		let targetUser = Users.get(target);
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
-		if (!room.users[targetUser.userid]) return this.errorReply(`User "${targetUser.name}" is not in this room.`);
+		if (!room.users[targetUser.id]) return this.errorReply(`User "${targetUser.name}" is not in this room.`);
 		room.addRaw(`${Server.nameColor(user.name, true, true)} has given the hammer to ${Server.nameColor(target, true, true)}!`);
 		targetUser.popup(`|html|<strong><font color="red"><font size="4">The Hammer has been dropped!</font></strong>`);
-		if (user.userid === "insist" || user.userid === "mewth") this.parse(`/forcelogout ${targetUser}`);
-		targetUser.leaveRoom(room.id);
+		if (user.id === "insist" || user.id === "mewth") this.parse(`/forcelogout ${targetUser}`);
+		targetUser.leaveRoom(room.roomid);
 	},
 
 	"!rekt": true,
@@ -425,7 +425,7 @@ exports.commands = {
 
 	bop(target, room, user) {
 		if (!target) return this.errorReply(`/bop needs a target.`);
-		if (!this.can("mute", null, room) && user.userid !== "noviex") return false;
+		if (!this.can("mute", null, room) && user.id !== "noviex") return false;
 		let targetUser = Users.get(target);
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
 		room.addRaw(`${Server.nameColor(user.name, true, true)} has bopped ${Server.nameColor(target, true, true)} in the face!`);
@@ -439,7 +439,7 @@ exports.commands = {
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
 		room.addRaw(`${Server.nameColor(target, true, true)} was disintegrated by ${Server.nameColor(user.name, true, true)}!`);
 		targetUser.popup("Get burned!");
-		if (user.userid === "insist" || user.userid === "mewth") this.parse(`/forcelogout ${targetUser}`);
+		if (user.id === "insist" || user.id === "mewth") this.parse(`/forcelogout ${targetUser}`);
 	},
 
 	l: "loss",
@@ -449,7 +449,7 @@ exports.commands = {
 		let targetUser = Users.get(target);
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
 		room.addRaw(`${Server.nameColor(target, true, true)} took an L!`);
-		if (user.userid === "insist" || user.userid === "mewth") this.parse(`/forcelogout ${targetUser}`);
+		if (user.id === "insist" || user.id === "mewth") this.parse(`/forcelogout ${targetUser}`);
 	},
 
 	shoot: "blast",
@@ -459,13 +459,13 @@ exports.commands = {
 		let targetUser = Users.get(target);
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
 		room.addRaw(`${Server.nameColor(target, true, true)} was shot by ${Server.nameColor(user.name, true, true)}!`);
-		if (user.userid === "insist" || user.userid === "mewth") this.parse(`/forcelogout ${targetUser}`);
+		if (user.id === "insist" || user.id === "mewth") this.parse(`/forcelogout ${targetUser}`);
 	},
 
 	cyn: "pix",
 	pix(target, room, user) {
 		if (!target) return this.errorReply(`/pix needs a target.`);
-		if (!this.can("mute", null, room) && user.userid !== "littlemisspixiepix") return false;
+		if (!this.can("mute", null, room) && user.id !== "littlemisspixiepix") return false;
 		let targetUser = Users.get(target);
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${targetUser}" was not found.`);
 		room.addRaw(`${Server.nameColor(user.name, true, true)} has pixed ${Server.nameColor(target, true, true)} in the pixing pix! Pix that's gotta hurt!`);

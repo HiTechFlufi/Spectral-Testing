@@ -32,18 +32,18 @@ class TDI {
 
 	join(user) {
 		if (this.state !== "signups") return user.sendTo(this.room, `Sorry, the season of Total Drama Island going on in this room is already airing.`);
-		if (this.players.includes(user.userid)) return user.sendTo(this.room, `You have already joined this season of Total Drama Island.`);
-		this.players.push(user.userid);
+		if (this.players.includes(user.id)) return user.sendTo(this.room, `You have already joined this season of Total Drama Island.`);
+		this.players.push(user.id);
 		this.room.add(`|html|${Server.nameColor(user.name, true)} has joined the cast of this season of Total Drama Island.`);
 	}
 
 	leave(user) {
-		if (!this.players.includes(user.userid)) return user.sendTo(this.room, `You have not joined this season of Total Drama Island yet.`);
+		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You have not joined this season of Total Drama Island yet.`);
 		if (this.state !== "signups") {
 			this.eliminate(user);
 		} else {
 			this.room.add(`|html|${Server.nameColor(user.name, true)} has left this season of Total Drama Island.`);
-			this.players.splice(this.players.indexOf(user.userid), 1);
+			this.players.splice(this.players.indexOf(user.id), 1);
 		}
 	}
 
@@ -125,7 +125,7 @@ exports.commands = {
 		new(target, room, user) {
 			if (!this.can("ban", null, room)) return false;
 			if (!this.canTalk()) return this.errorReply("You cannot use this while unable to speak.");
-			if (room.id !== "totaldramaisland") return this.errorReply("This command only works in Total Drama Island.");
+			if (room.roomid !== "totaldramaisland") return this.errorReply("This command only works in Total Drama Island.");
 			if (room.tdi) return this.errorReply("There is an ongoing season of Total Drama Island in here.");
 			room.tdi = new TDI(room);
 		},

@@ -66,17 +66,17 @@ class Panagram {
 			this.end();
 		} else {
 			this.room.add(`|html|${Server.nameColor(user.name, true)} guessed <strong>${guess.species}</strong>, but was not the correct answer...`);
-			this.guessed[toID(guess.species)] = user.userid;
+			this.guessed[toID(guess.species)] = user.id;
 		}
 	}
 
 	end(forced) {
 		if (forced) this.room.add(`|html|The game of panagram has been forcibly ended. The answer was <strong>${this.answer.species}</strong>.`);
 		if (this.sessions > 1 && !forced) {
-			pGames[this.room.id] = new Panagram(this.room, this.sessions - 1);
+			pGames[this.room.roomid] = new Panagram(this.room, this.sessions - 1);
 			this.room.update();
 		} else {
-			delete pGames[this.room.id];
+			delete pGames[this.room.roomid];
 		}
 	}
 }
@@ -100,39 +100,39 @@ exports.commands = {
 
 	panagrams: 'panagram',
 	panagram(target, room, user, connection, cmd) {
-		if (pGames[room.id]) return this.errorReply("There is currently a game of panagram going on in this room.");
+		if (pGames[room.roomid]) return this.errorReply("There is currently a game of panagram going on in this room.");
 		if (!this.can('declare', null, room)) return this.errorReply("You must be ranked # or higher to start a game of panagram in this room.");
-		if (room.id !== 'casino') return this.sendReply('|html|You can only start a game of Panagram in the <button name = "send" value = "/join casino">Casino</button>');
+		if (room.roomid !== 'casino') return this.sendReply('|html|You can only start a game of Panagram in the <button name = "send" value = "/join casino">Casino</button>');
 		if (!target || isNaN(target)) return this.errorReply("Usage: /panagram [number of sessions]");
 		if (target < 4) return this.errorReply("The minimum number of sessions you can have at a time is 4.");
 		if (~target.indexOf('.')) return this.errorReply("The number of sessions cannot be a decimal value.");
 		this.privateModAction(`${user.name} has started a game of panagrams set for ${target} sessions.`);
-		Rooms.get(`lobby`).add(`|raw|<div class="broadcast-purple"><center>A session of <strong>Panagrams</strong> in <button name="joinRoom" value="${room.id}">"${room.title}"</button> has commenced for "${target}" games!</center></div>`);
+		Rooms.get(`lobby`).add(`|raw|<div class="broadcast-purple"><center>A session of <strong>Panagrams</strong> in <button name="joinRoom" value="${room.roomid}">"${room.title}"</button> has commenced for "${target}" games!</center></div>`);
 		Rooms.get(`lobby`).update();
-		pGames[room.id] = new Panagram(room, Number(target));
+		pGames[room.roomid] = new Panagram(room, Number(target));
 	},
 
 	ph: 'panagramhint',
 	panagramhint(target, room, user) {
-		if (!pGames[room.id]) return this.errorReply("There is no game of panagram going on in this room.");
+		if (!pGames[room.roomid]) return this.errorReply("There is no game of panagram going on in this room.");
 		if (!this.runBroadcast()) return;
 
-		this.sendReplyBox(`Panagram Hint:<br />${pGames[room.id].hint}`);
+		this.sendReplyBox(`Panagram Hint:<br />${pGames[room.roomid].hint}`);
 	},
 
 	guesspanagram: 'gp',
 	guessp: 'gp',
 	gp(target, room, user, connection, cmd) {
-		if (!pGames[room.id]) return this.errorReply("There is no game of panagram going on in this room.");
+		if (!pGames[room.roomid]) return this.errorReply("There is no game of panagram going on in this room.");
 		if (!this.canTalk()) return;
 
 		if (!target) return this.sendReply(`|html|/${cmd} <em>Pokémon Name</em> - Guesses a Pokémon in a game of Panagram.`);
 		if (!Dex.data.Pokedex[toID(target)]) return this.sendReply(`"${target}"" is not a valid Pokémon.`);
 		let guess = Dex.data.Pokedex[toID(target)];
 		if (guess.num < 1 || guess.forme) return this.sendReply(`${guess.species} is either an alternate form or doesn't exist in the games. They cannot be guessed.`);
-		if (toID(guess.species) in pGames[room.id].guessed) return this.sendReply('That Pokémon has already been guessed!');
+		if (toID(guess.species) in pGames[room.roomid].guessed) return this.sendReply('That Pokémon has already been guessed!');
 
-		pGames[room.id].guess(user, guess);
+		pGames[room.roomid].guess(user, guess);
 	},
 
 	pskip: 'panagramend',
@@ -140,11 +140,11 @@ exports.commands = {
 	endp: 'panagramend',
 	panagramsend: 'panagramend',
 	panagramend(target, room, user, connection, cmd) {
-		if (!pGames[room.id]) return this.errorReply("There is no game of panagram going on in this room.");
+		if (!pGames[room.roomid]) return this.errorReply("There is no game of panagram going on in this room.");
 		if (!this.can('ban', null, room)) return this.sendReply("You must be ranked @ or higher to end a game of panagram in this room.");
 
-		let skipCmd = ((cmd === 'panagramskip' || cmd === 'pskip') && pGames[room.id].sessions > 1);
-		if (skipCmd) room.add(`|html|The current session of panagram has been ended by ${Server.nameColor(user.name, true)}. The answer was <strong>${pGames[room.id].answer.species}</strong>.`);
-		pGames[room.id].end(!skipCmd);
+		let skipCmd = ((cmd === 'panagramskip' || cmd === 'pskip') && pGames[room.roomid].sessions > 1);
+		if (skipCmd) room.add(`|html|The current session of panagram has been ended by ${Server.nameColor(user.name, true)}. The answer was <strong>${pGames[room.roomid].answer.species}</strong>.`);
+		pGames[room.roomid].end(!skipCmd);
 	},
 };

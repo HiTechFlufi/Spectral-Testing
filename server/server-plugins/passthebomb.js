@@ -40,11 +40,11 @@ class PassTheBomb {
 	join(user, self) {
 		if (this.round > 0) return self.sendReply(`You cannot join a game of Pass The Bomb after it has been started.`);
 		if (!user.named) return self.errorReply(`You must choose a name before joining a game of Pass The Bomb.`);
-		if (this.players.has(user.userid)) return self.sendReply(`You have already joined this game of Pass The Bomb.`);
+		if (this.players.has(user.id)) return self.sendReply(`You have already joined this game of Pass The Bomb.`);
 		let players = Array.from(this.players).map(playerinfo => playerinfo[1]);
 		let joined = players.filter(player => player.ip === user.latestIp);
 		if (joined.length) return self.errorReply(`You have already joined this game of Pass The Bomb under the name "${joined[0].name}". Use that name/alt instead.`);
-		this.players.set(user.userid, {"name": user.name, "ip": user.latestIp, "status": "alive", "warnings": 0});
+		this.players.set(user.id, {"name": user.name, "ip": user.latestIp, "status": "alive", "warnings": 0});
 		self.sendReply(`You have joined the game of Pass The Bomb.`);
 		this.updateJoins();
 	}
@@ -103,7 +103,7 @@ class PassTheBomb {
 	}
 
 	pass(user, target, self) {
-		let getUser = this.players.get(user.userid);
+		let getUser = this.players.get(user.id);
 		if (!getUser) return self.sendReply("You aren't a player in this game of Pass The Bomb.");
 		if (!this.round) return self.sendReply("The game hasn't started yet!");
 		if (getUser.status === "dead") return self.sendReply("You've already been killed!");
@@ -112,13 +112,13 @@ class PassTheBomb {
 		let targetUser = Users.getExact(targetId) ? Users.get(targetId).name : target;
 		if (!this.players.has(targetId)) return self.sendReply(`${targetUser} is not a player!`);
 		if (this.players.get(targetId).status === "dead") return self.sendReply(`${this.players.get(targetId).name} has already been killed!`);
-		if (targetId === user.userid) return self.sendReply(`You're already in possession of the bomb! You can't pass it to yourself!`);
-		if (!this.canPass || this.holder !== user.userid) {
+		if (targetId === user.id) return self.sendReply(`You're already in possession of the bomb! You can't pass it to yourself!`);
+		if (!this.canPass || this.holder !== user.id) {
 			if (getUser.warnings < 2) {
-				this.players.get(user.userid).warnings++;
+				this.players.get(user.id).warnings++;
 				return self.sendReply("You're not in posession of the bomb yet!");
 			}
-			this.removeUser(user.userid);
+			this.removeUser(user.id);
 			self.sendReply("You have been disqualified for spamming /passbomb.");
 			self.privateModAction(`(${user.name} was disqualified for spamming /passbomb.)`);
 			return;
@@ -225,7 +225,7 @@ exports.commands = {
 		l: "leave",
 		leave(target, room, user) {
 			if (!room.passthebomb) return this.errorReply("There is no game of Pass The Bomb going on in this room.");
-			room.passthebomb.leave(user.userid, this);
+			room.passthebomb.leave(user.id, this);
 		},
 
 		start: "proceed",

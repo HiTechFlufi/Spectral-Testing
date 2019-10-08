@@ -33,7 +33,7 @@ function writeProposals() {
 
 function isCouncilMember(user) {
 	if (!user) return;
-	if (typeof user === "object") user = user.userid;
+	if (typeof user === "object") user = user.id;
 	let council = Db.councilmember.get(toID(user));
 	if (council === 1) return true; // Denies them as Council Member if they are suspended
 	return false;
@@ -67,8 +67,8 @@ exports.commands = {
 		invite: "give",
 		add: "give",
 		give(target, room, user) {
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended from the ${committee.name} Council.`);
-			if (!committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`You must be a Committee Owner or VIP to add users to ${committee.name}.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended from the ${committee.name} Council.`);
+			if (!committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`You must be a Committee Owner or VIP to add users to ${committee.name}.`);
 			if (!target) return this.parse("/committeehelp");
 			let councilMember = toID(target);
 			if (councilMember.length > 18) return this.errorReply("Usernames cannot exceed 18 characters.");
@@ -82,8 +82,8 @@ exports.commands = {
 		remove: "take",
 		delete: "take",
 		take(target, room, user) {
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended from the ${committee.name} Council.`);
-			if (!committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`You must be a Committee Owner or VIP to remove users from the ${committee.name} Council.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended from the ${committee.name} Council.`);
+			if (!committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`You must be a Committee Owner or VIP to remove users from the ${committee.name} Council.`);
 			if (!target) return this.parse(`/committeehelp`);
 			let councilMember = toID(target);
 			if (councilMember.length > 18) return this.errorReply("Usernames cannot exceed 18 characters.");
@@ -107,14 +107,14 @@ exports.commands = {
 		alert: "message",
 		pm: "message",
 		message(target, room, user) {
-			if (!committee.owners.includes(user.userid)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
+			if (!committee.owners.includes(user.id)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
 			if (!target) return this.parse("/committeehelp");
 			alertCouncilMembers(target);
 		},
 
 		requestchanges: "propose",
 		propose(target, room, user) {
-			if (!isCouncilMember(user.userid)) return this.errorReply(`You are not in the ${committee.name} Council, or have been suspended.`);
+			if (!isCouncilMember(user.id)) return this.errorReply(`You are not in the ${committee.name} Council, or have been suspended.`);
 			if (!this.canTalk()) return false;
 			let [idea, ...changes] = target.split(",").map(p => { return p.trim(); });
 			if (proposals[toID(idea)]) return this.errorReply(`There is already a suggestion titled "${idea}".`);
@@ -124,7 +124,7 @@ exports.commands = {
 			proposals[toID(idea)] = {
 				idea: idea,
 				id: toID(idea),
-				creator: user.userid,
+				creator: user.id,
 				desc: changes.join(", "),
 			};
 			writeProposals();
@@ -135,15 +135,15 @@ exports.commands = {
 		edit: "editproposal",
 		modifyproposal: "editproposal",
 		editproposal(target, room, user) {
-			if (!isCouncilMember(user.userid)) return this.errorReply(`You are not in the ${committee.name} Council, or have been suspended.`);
+			if (!isCouncilMember(user.id)) return this.errorReply(`You are not in the ${committee.name} Council, or have been suspended.`);
 			if (!this.canTalk()) return false;
 			let [proposal, ...newDesc] = target.split(",").map(p => p.trim());
 			if (!newDesc) return this.parse("/committeehelp");
 			let proposalid = toID(proposal);
 			if (!proposals[proposalid]) return this.errorReply(`This proposal doesn't exist!`);
 			if (proposal.length > 500) return this.errorReply("Please keep your changes to a maximum of 500 characters.");
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended and cannot edit proposals.`);
-			if (user.userid !== proposals[proposalid].creator && !committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`Only the creator of this proposal (${proposals[proposalid].creator}) can edit this proposal.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended and cannot edit proposals.`);
+			if (user.id !== proposals[proposalid].creator && !committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`Only the creator of this proposal (${proposals[proposalid].creator}) can edit this proposal.`);
 			proposals[proposalid].desc = newDesc.join(", ");
 			writeProposals();
 			this.sendReplyBox(`You have successfully modified the proposal <strong>${proposals[proposalid].idea}'${proposals[proposalid].idea.endsWith(`s`) ? `` : `s`}</strong> description to:<br />${proposals[proposalid].desc}`);
@@ -180,8 +180,8 @@ exports.commands = {
 			if (!target) return this.parse(`/committeehelp`);
 			let proposalid = toID(target);
 			if (!proposals[proposalid]) return this.errorReply(`This proposal doesn't exist!`);
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended and cannot delete proposals.`);
-			if (user.userid !== proposals[proposalid].creator && !committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`This command is reserved for ${committee.name} Council Owners.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended and cannot delete proposals.`);
+			if (user.id !== proposals[proposalid].creator && !committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`This command is reserved for ${committee.name} Council Owners.`);
 			delete proposals[proposalid];
 			writeProposals();
 			this.sendReply(`Proposal "${target}" has been deleted.`);
@@ -203,9 +203,9 @@ exports.commands = {
 			if (!isCouncilMember(targetUser)) return this.errorReply(`"${target}"" is either not in the ${committee.name} Council, or they have already been suspended.`);
 			if (committee.owners.includes(targetUser)) return this.errorReply(`You cannot suspend a ${committee.name} Council Owner.`);
 			// Only allow VIPs to suspend users if they are currently in the council
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended and cannot edit suspend anyone.`);
-			if (committee.vips.includes(user.userid) && committee.vips.includes(targetUser)) return this.errorReply(`You cannot suspend fellow VIPs.`);
-			if (!committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended and cannot edit suspend anyone.`);
+			if (committee.vips.includes(user.id) && committee.vips.includes(targetUser)) return this.errorReply(`You cannot suspend fellow VIPs.`);
+			if (!committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
 			this.sendReply(`You have successfully suspended "${target}" from participating in ${committee.name} Committee proposals.`);
 			Db.councilmember.set(targetUser, 2);
 		},
@@ -216,9 +216,9 @@ exports.commands = {
 			let targetUser = toID(target);
 			if (isCouncilMember(targetUser)) return this.errorReply(`"${target}" is either not in the ${committee.name} Council, or they have already been unsuspended.`);
 			// Only allow VIPs to unsuspend users if they are currently in the council
-			if (committee.vips.includes(user.userid) && !Db.councilmember.has(user.userid)) return this.errorReply(`Sorry, you have been suspended and cannot unsuspend users.`);
-			if (committee.vips.includes(user.userid) && committee.vips.includes(targetUser)) return this.errorReply(`You cannot suspend fellow VIPs.`);
-			if (!committee.owners.includes(user.userid) && !committee.vips.includes(user.userid)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
+			if (committee.vips.includes(user.id) && !Db.councilmember.has(user.id)) return this.errorReply(`Sorry, you have been suspended and cannot unsuspend users.`);
+			if (committee.vips.includes(user.id) && committee.vips.includes(targetUser)) return this.errorReply(`You cannot suspend fellow VIPs.`);
+			if (!committee.owners.includes(user.id) && !committee.vips.includes(user.id)) return this.errorReply(`This command is reserved for the ${committee.name} Council Owners.`);
 			this.sendReply(`You have successfully unsuspended "${target}" from participating in ${committee.name} Committee proposals.`);
 			Db.councilmember.set(targetUser, 1);
 		},

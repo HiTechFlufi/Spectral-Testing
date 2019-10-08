@@ -11,7 +11,14 @@
 /** @typedef {Poll} PollType */
 
 class Poll {
+	/**
+	 * @param {ChatRoom | GameRoom} room
+	 * @param {QuestionData} questionData
+	 * @param {string[]} options
+	 * @param {string} name
+	 */
 	constructor(room, questionData, options, name) {
+		// this.activityId = 'poll';
 		if (room.pollNumber) {
 			room.pollNumber++;
 		} else {
@@ -48,9 +55,9 @@ class Poll {
 	 */
 	vote(user, option, number) {
 		let ip = user.latestIp;
-		let userid = user.userid;
+		let userid = user.id;
 		if (userid in this.pollArray[number].voters || ip in this.pollArray[number].voterIps) {
-			return user.sendTo(this.room, "You have already voted for this poll.");
+			return user.sendTo(this.room, `You have already voted for this poll.`);
 		}
 		this.pollArray[number].voters[userid] = option;
 		this.pollArray[number].voterIps[ip] = option;
@@ -66,7 +73,7 @@ class Poll {
 	 */
 	blankvote(user, number) {
 		let ip = user.latestIp;
-		let userid = user.userid;
+		let userid = user.id;
 
 		if (!(userid in this.pollArray[number].voters) || !(ip in this.pollArray[number].voterIps)) {
 			this.pollArray[number].voters[userid] = 0;
@@ -147,10 +154,10 @@ class Poll {
 		// Update the poll results for everyone that has voted
 		for (let i in this.room.users) {
 			let user = this.room.users[i];
-			if (user.userid in this.pollArray[num].voters) {
-				user.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[num].pollNum + '|' + results[this.pollArray[num].voters[user.userid]]);
+			if (user.id in this.pollArray[num].voters) {
+				user.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[num].pollNum}|${results[this.pollArray[num].voters[user.id]]}`);
 			} else if (user.latestIp in this.pollArray[num].voterIps) {
-				user.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[num].pollNum + '|' + results[this.pollArray[num].voterIps[user.latestIp]]);
+				user.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[num].pollNum}|${results[this.pollArray[num].voterIps[user.latestIp]]}`);
 			}
 		}
 	}
@@ -161,12 +168,12 @@ class Poll {
 	 */
 	updateTo(user, num, connection) {
 		if (!connection) connection = user;
-		if (user.userid in this.pollArray[num].voters) {
-			connection.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[num].pollNum + '|' + this.generateResults(false, this.pollArray[num].voters[user.userid], num));
+		if (user.id in this.pollArray[num].voters) {
+			connection.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[num].pollNum}|${this.generateResults(false, this.pollArray[num].voters[user.id], num)}`);
 		} else if (user.latestIp in this.pollArray[num].voterIps) {
-			connection.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[num].pollNum + '|' + this.generateResults(false, this.pollArray[num].voterIps[user.latestIp], num));
+			connection.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[num].pollNum}|${this.generateResults(false, this.pollArray[num].voterIps[user.latestIp], num)}`);
 		} else {
-			connection.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[num].pollNum + '|' + this.generateVotes(num));
+			connection.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[num].pollNum}|${this.generateVotes(num)}`);
 		}
 	}
 
@@ -175,7 +182,7 @@ class Poll {
 	 */
 	updateFor(user) {
 		for (let u in this.pollArray) {
-			if (user.userid in this.pollArray[u].voters) user.sendTo(this.room, '|uhtmlchange|poll' + this.pollArray[u].pollNum + '|' + this.generateResults(false, this.pollArray[u].voters[user.userid], u));
+			if (user.id in this.pollArray[u].voters) user.sendTo(this.room, `|uhtmlchange|poll${this.pollArray[u].pollNum}|${this.generateResults(false, this.pollArray[u].voters[user.id], u)}`);
 		}
 	}
 
@@ -191,12 +198,12 @@ class Poll {
 
 			for (let i in this.room.users) {
 				let thisUser = this.room.users[i];
-				if (thisUser.userid in this.pollArray[u].voters) {
-					thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + results[this.pollArray[u].voters[thisUser.userid]]);
+				if (thisUser.id in this.pollArray[u].voters) {
+					thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${results[this.pollArray[u].voters[thisUser.id]]}`);
 				} else if (thisUser.latestIp in this.pollArray[u].voterIps) {
-					thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + results[this.pollArray[u].voterIps[thisUser.latestIp]]);
+					thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${results[this.pollArray[u].voterIps[thisUser.latestIp]]}`);
 				} else {
-					thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + votes);
+					thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${votes}`);
 				}
 			}
 		}
@@ -209,12 +216,12 @@ class Poll {
 	displayTo(user, connection) {
 		if (!connection) connection = user;
 		for (let u in this.pollArray) {
-			if (user.userid in this.pollArray[u].voters) {
-				connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + this.generateResults(false, this.pollArray[u].voters[user.userid], u));
+			if (user.id in this.pollArray[u].voters) {
+				connection.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${this.generateResults(false, this.pollArray[u].voters[user.id], u)}`);
 			} else if (user.latestIp in this.pollArray[u].voterIps) {
-				connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + this.generateResults(false, this.pollArray[u].voterIps[user.latestIp], u));
+				connection.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${this.generateResults(false, this.pollArray[u].voterIps[user.latestIp], u)}`);
 			} else {
-				connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[u].pollNum + '|' + this.generateVotes(u));
+				connection.sendTo(this.room, `|uhtml|poll${this.pollArray[u].pollNum}|${this.generateVotes(u)}`);
 			}
 		}
 	}
@@ -233,12 +240,12 @@ class Poll {
 
 		for (let i in this.room.users) {
 			let thisUser = this.room.users[i];
-			if (thisUser.userid in this.pollArray[num].voters) {
-				thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + results[this.pollArray[num].voters[thisUser.userid]]);
+			if (thisUser.id in this.pollArray[num].voters) {
+				thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${results[this.pollArray[num].voters[thisUser.id]]}`);
 			} else if (thisUser.latestIp in this.pollArray[num].voterIps) {
-				thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + results[this.pollArray[num].voterIps[thisUser.latestIp]]);
+				thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${results[this.pollArray[num].voterIps[thisUser.latestIp]]}`);
 			} else {
-				thisUser.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + votes);
+				thisUser.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${votes}`);
 			}
 		}
 	}
@@ -250,12 +257,12 @@ class Poll {
 	 */
 	displaySpecificTo(user, connection, num) {
 		if (!connection) connection = user;
-		if (user.userid in this.pollArray[num].voters) {
-			connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + this.generateResults(false, this.pollArray[num].voters[user.userid], num));
+		if (user.id in this.pollArray[num].voters) {
+			connection.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${this.generateResults(false, this.pollArray[num].voters[user.id], num)}`);
 		} else if (user.latestIp in this.pollArray[num].voterIps) {
-			connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + this.generateResults(false, this.pollArray[num].voterIps[user.latestIp], num));
+			connection.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${this.generateResults(false, this.pollArray[num].voterIps[user.latestIp], num)}`);
 		} else {
-			connection.sendTo(this.room, '|uhtml|poll' + this.pollArray[num].pollNum + '|' + this.generateVotes(num));
+			connection.sendTo(this.room, `|uhtml|poll${this.pollArray[num].pollNum}|${this.generateVotes(num)}`);
 		}
 	}
 
@@ -356,6 +363,7 @@ const commands = {
 				room.poll.display();
 			}
 
+
 			this.roomlog(`${user.name} used ${message}`);
 			this.modlog('POLL');
 			return this.privateModAction(`(A poll was started by ${user.name}.)`);
@@ -452,7 +460,8 @@ const commands = {
 
 		show: 'display',
 		display(target, room, user, connection) {
-			if (!room.poll) return this.errorReply("There is no poll running in this room.");
+			if (!room.poll ) return this.errorReply("There is no poll running in this room.");
+			//const poll = /** @type {Poll} */(room.minorActivity);
 			if (!this.runBroadcast()) return;
 			room.update();
 			let num = room.poll.obtain(parseInt(target));

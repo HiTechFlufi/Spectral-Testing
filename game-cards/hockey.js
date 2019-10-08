@@ -397,14 +397,14 @@ class Hockey extends Console.Console {
 			}
 			html += `</tbody></table>`;
 			base += `<center>`;
-			if (game.host.userid === this.userid) base += `<button class="button${game.players.length % 2 === 0 ? `" name="send" value="/hockey start"` : ` disabled"`}>Start Game</button>`;
+			if (game.host.id === this.userid) base += `<button class="button${game.players.length % 2 === 0 ? `" name="send" value="/hockey start"` : ` disabled"`}>Start Game</button>`;
 			base += ` <button class="button" name="send" value="/hockey back">Leave</button>`;
 			this.back = `/hockey leave`;
 			break;
 		case "setTeams":
 			html += `<h2 style="text-align: center; color: #FFF">Setup Game - Set Teams</h2>`;
 			// If you are the host, allow buttons, if not, all buttons are disabled, and you simply watch the host set things up
-			let isHost = game.host.userid === this.userid;
+			let isHost = game.host.id === this.userid;
 			for (let i = 0; i < game.players.length; i++) {
 				let targetUser = Users.get(game.players[i]);
 				if (isHost) html += `<p><strong style="color: #FFF">${Server.nameColor(targetUser.name, true, true)}:</strong> <button class="button${targetUser.console.team === game.options.names[0] ? ` disabled"` : `" name="send" value="/hockey setteam ${targetUser.name}, ${game.options.names[0]}"`}>${names[game.options.names[0]].name}</button> <button class="button${targetUser.console.team === game.options.names[1] ? ` disabled"` : `" name="send" value="/hockey setteam ${targetUser.name}, ${game.options.names[1]}"`}>${names[game.options.names[1]].name}</button></p>`;
@@ -447,7 +447,7 @@ class Hockey extends Console.Console {
 			html += `<h4 style="text-align: center; color: #FFF; font-weight: bold">${team.home === "zone1" ? `Defensive` : `Offensive`} Zone:</h4>`;
 			for (let zone1 of game.players) {
 				if (Users.get(zone1).console.zone === "zone1") {
-					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(zone1).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(zone1).console.userid}"></div>`;
+					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(zone1).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(zone1).console.id}"></div>`;
 				}
 			}
 			if (game.puck.zone === "zone1" && !game.puck.holder) html += `<div style="border-radius: 100%; background-color: #000; height: 25px; width: 25px; display: inline-block"; title="puck"></div>`;
@@ -455,7 +455,7 @@ class Hockey extends Console.Console {
 			html += `<h4 style="text-align: center; color: #FFF; font-weight: bold">Center Zone:</h4>`;
 			for (let center of game.players) {
 				if (Users.get(center).console.zone === "center") {
-					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(center).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(center).console.userid}"></div>`;
+					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(center).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(center).console.id}"></div>`;
 				}
 			}
 			if (game.puck.zone === "center" && !game.puck.holder) html += `<div style="border-radius: 100%; background-color: #000; height: 25px; width: 25px; display: inline-block"; title="puck"></div>`;
@@ -463,7 +463,7 @@ class Hockey extends Console.Console {
 			html += `<h4 style="text-align: center; color: #FFF; font-weight: bold">${team.home === "zone1" ? `Offensive` : `Defensive`} Zone:</h4>`;
 			for (let zone2 of game.players) {
 				if (Users.get(zone2).console.zone === "zone2") {
-					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(zone2).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(zone2).console.userid}"></div>`;
+					html += `<div style="border-radius: 100%; background-color: ${names[Users.get(zone2).console.team].color}; height: 25px; width: 25px; display: inline-block"; title="${Users.get(zone2).console.id}"></div>`;
 				}
 			}
 			if (game.puck.zone === "zone2" && !game.puck.holder) html += `<div style="border-radius: 100%; background-color: #000; height: 25px; width: 25px; display: inline-block"; title="puck"></div>`;
@@ -495,7 +495,7 @@ class Hockey extends Console.Console {
 		if (this.game) {
 			let game = HOCKEY_GAMES[this.game];
 			if (!game) return;
-			let isHost = game.host.userid === this.userid;
+			let isHost = game.host.id === this.userid;
 			if (isHost) {
 				game.end(true);
 			}
@@ -509,7 +509,7 @@ class HockeyGame {
 		this.id = id;
 		this.host = host;
 		this.period = 0;
-		this.players = [host.userid];
+		this.players = [host.id];
 		this.spectators = [];
 		this.teams = {};
 		this.phase = "pre-signups";
@@ -540,16 +540,16 @@ class HockeyGame {
 
 	join(user, pin) {
 		if (this.phase !== "signups" || this.options.cap <= this.players.length) return;
-		if (this.players.includes(user.userid)) return false;
+		if (this.players.includes(user.id)) return false;
 		// Remove the user from spectating if they want to join
-		if (this.spectators.includes(user.userid)) this.spectators.splice(this.spectators.indexOf(user.userid), 1);
+		if (this.spectators.includes(user.id)) this.spectators.splice(this.spectators.indexOf(user.id), 1);
 		if (this.options.pin) {
 			// PIN locked game - authenticate
 			pin = parseInt(pin);
 			if (isNaN(pin) || pin.toString().length !== 4) return user.console.update(...user.console.buildScreen("pin", {cmd: `pin ${this.id},`}));
 			if (pin !== this.options.pin) return user.console.update(...user.console.buildScreen("error", {text: "The provided PIN was incorrect."}));
 		}
-		this.players.push(user.userid);
+		this.players.push(user.id);
 		user.console.game = this.id;
 		this.updateAll("awaitingPlayers");
 	}
@@ -557,8 +557,8 @@ class HockeyGame {
 	spectate(user) {
 		if (this.phase === "pre-signups") return false;
 		// Users cannot spectate and play the game
-		if (this.players.includes(user.userid)) return false;
-		this.spectators.push(user.userid);
+		if (this.players.includes(user.id)) return false;
+		this.spectators.push(user.id);
 		user.console.game = this.id;
 		if (this.phase === "signups") {
 			user.console.update(...user.console.buildScreen("awaitingPlayers"));
@@ -569,9 +569,9 @@ class HockeyGame {
 
 	leave(user, force) {
 		if (this.phase !== "signups" && !force) return false;
-		if (!this.players.includes(user.userid) && !this.spectators.includes(user.userid)) return false;
-		if (this.players.includes(user.userid)) this.players.splice(this.players.indexOf(user.userid), 1);
-		if (this.spectators.includes(user.userid)) this.spectators.splice(this.spectators.indexOf(user.userid), 1);
+		if (!this.players.includes(user.id) && !this.spectators.includes(user.id)) return false;
+		if (this.players.includes(user.id)) this.players.splice(this.players.indexOf(user.id), 1);
+		if (this.spectators.includes(user.id)) this.spectators.splice(this.spectators.indexOf(user.id), 1);
 		user.console.game = null;
 		user.console.update(user.console.buildScreen("home"));
 		// Only send the players back to the awaitingPlayers screen if they were still in signups phase
@@ -614,29 +614,29 @@ class HockeyGame {
 			let order = ["forwards", "goalie", "forwards", "defensemen", "forwards", "defensemen"];
 			if (i % 2 === 0) {
 				let team = this.teams[this.options.names[1]];
-				team.players.push(user.userid);
+				team.players.push(user.id);
 				user.console.team = this.options.names[1];
 				user.console.position = order[team.players.length - 1];
 				if (user.console.position === "goalie") {
-					team.goalie = user.userid;
+					team.goalie = user.id;
 					// Ideally goalie should start out at the defensive zone for their team
 					user.console.zone = team.home;
 				} else {
-					team[user.console.position].push(user.userid);
+					team[user.console.position].push(user.id);
 					// Ideally every other player should start out at the center zone
 					user.console.zone = "center";
 				}
 			} else {
 				let team = this.teams[this.options.names[0]];
-				team.players.push(user.userid);
+				team.players.push(user.id);
 				user.console.team = this.options.names[0];
 				user.console.position = order[team.players.length - 1];
 				if (user.console.position === "goalie") {
-					team.goalie = user.userid;
+					team.goalie = user.id;
 					// Ideally goalie should start out at the defensive zone for their team
 					user.console.zone = team.home;
 				} else {
-					team[user.console.position].push(user.userid);
+					team[user.console.position].push(user.id);
 					// Ideally every other player should start out at the center zone
 					user.console.zone = "center";
 				}
@@ -681,7 +681,7 @@ class HockeyGame {
 			if (!Users.get(player).console.team) {
 				let teams = this.options.names[Math.floor(Math.random() * this.options.names.length)];
 				Users.get(player).console.team = teams;
-				this.teams[teams].players.push(Users.get(player).userid);
+				this.teams[teams].players.push(Users.get(player).id);
 			}
 			// Assign Positions
 			let order = ["forwards", "goalie", "forwards", "defensemen", "forwards", "defensemen"];
@@ -689,11 +689,11 @@ class HockeyGame {
 				let team = this.teams[this.options.names[1]];
 				Users.get(player).console.position = order[team.players.length - 1];
 				if (Users.get(player).console.position === "goalie") {
-					team.goalie = player.userid;
+					team.goalie = player.id;
 					// Ideally goalie should start out at the defensive zone for their team
 					Users.get(player).console.zone = team.home;
 				} else {
-					team[Users.get(player).console.position].push(player.userid);
+					team[Users.get(player).console.position].push(player.id);
 					// Ideally every other player should start out at the center zone
 					Users.get(player).console.zone = "center";
 				}
@@ -701,11 +701,11 @@ class HockeyGame {
 				let team = this.teams[this.options.names[0]];
 				Users.get(player).console.position = order[team.players.length - 1];
 				if (Users.get(player).console.position === "goalie") {
-					team.goalie = player.userid;
+					team.goalie = player.id;
 					// Ideally goalie should start out at the defensive zone for their team
 					Users.get(player).console.zone = team.home;
 				} else {
-					team[Users.get(player).console.position].push(player.userid);
+					team[Users.get(player).console.position].push(player.id);
 					// Ideally every other player should start out at the center zone
 					Users.get(player).console.zone = "center";
 				}
@@ -718,21 +718,21 @@ class HockeyGame {
 
 	move(user, newZone) {
 		if (this.frozen) return false;
-		if (!this.players.includes(user.userid)) return false;
+		if (!this.players.includes(user.id)) return false;
 		let validPlaces = ["center", "zone1", "zone2"];
 		if (user.console.position === "goalie") return false;
 		// The user can't skip two zones
 		if (user.console.zone === "zone2" && newZone === "zone2" || user.console.zone === "zone1" && newZone === "zone2") return false;
 		if (!validPlaces.includes(newZone)) return false;
 		if (newZone === user.console.zone) return false;
-		if (this.puck.holder === user.userid) this.puck.zone = newZone;
+		if (this.puck.holder === user.id) this.puck.zone = newZone;
 		user.console.zone = newZone;
 		this.updateAll("rink");
 	}
 
 	block(user) {
 		if (this.frozen) return false;
-		if (!this.players.includes(user.userid)) return false;
+		if (!this.players.includes(user.id)) return false;
 		if (user.console.position !== "goalie") return false;
 		if (Date.now() - this.teams[user.console.team].lastBlock < BLOCK_COOLDOWN) return false;
 		if (this.teams[user.console.team].blocking) return false; // Should never happen but better safe than sorry
@@ -762,12 +762,12 @@ class HockeyGame {
 
 	stealPuck(user, hasPuck) {
 		if (this.frozen) return false;
-		if (!this.players.includes(user.userid)) return false;
+		if (!this.players.includes(user.id)) return false;
 		if (Date.now() - user.console.stealCooldown < STEAL_COOLDOWN) return false;
 		// Target must have the puck check
 		if (this.puck.holder !== hasPuck) return false;
 		// Check if the target is in their team/if target is themselves has the puck and deny if so
-		if (Users.get(hasPuck).console.team === user.console.team || hasPuck === user.userid) return false;
+		if (Users.get(hasPuck).console.team === user.console.team || hasPuck === user.id) return false;
 		// Check if the user is in the same zone as target to steal
 		if (Users.get(hasPuck).console.zone !== user.console.zone) return false;
 		let steal = Math.floor(Math.random() * 50);
@@ -775,7 +775,7 @@ class HockeyGame {
 		user.console.stealCooldown = Date.now();
 		if (steal > 30) {
 			// User takes puck
-			this.puck.holder = user.userid;
+			this.puck.holder = user.id;
 		}
 		this.updateAll("rink");
 		let cooldown = Date.now() - user.console.stealCooldown + STEAL_COOLDOWN;
@@ -787,12 +787,12 @@ class HockeyGame {
 
 	shootPuck(user) {
 		if (this.frozen) return false;
-		if (!this.players.includes(user.userid)) return false;
+		if (!this.players.includes(user.id)) return false;
 		// Must have the puck to shoot the puck
-		if (this.puck.holder !== user.userid) return false;
+		if (this.puck.holder !== user.id) return false;
 		let opponent;
-		if (this.teams[this.options.names[0]].players.includes(user.userid)) opponent = this.teams[this.options.names[1]];
-		if (this.teams[this.options.names[1]].players.includes(user.userid)) opponent = this.teams[this.options.names[0]];
+		if (this.teams[this.options.names[0]].players.includes(user.id)) opponent = this.teams[this.options.names[1]];
+		if (this.teams[this.options.names[1]].players.includes(user.id)) opponent = this.teams[this.options.names[0]];
 		// Can only shoot in the offense zone
 		if (user.console.zone !== opponent.home) return false;
 		let shoot = Math.floor(Math.random() * 100);
@@ -839,12 +839,12 @@ class HockeyGame {
 
 	grabPuck(user) {
 		if (this.frozen) return false;
-		if (!this.players.includes(user.userid)) return false;
+		if (!this.players.includes(user.id)) return false;
 		if (Date.now() - user.console.grabCooldown < GRAB_COOLDOWN) return false;
 		// cannot grab the puck if someone else has it
 		if (this.puck.holder) return false;
 		if (this.puck.zone !== user.console.zone) return false;
-		this.puck.holder = user.userid;
+		this.puck.holder = user.id;
 		// Steal Cooldown
 		user.console.grabCooldown = Date.now();
 		this.updateAll("rink");
@@ -918,7 +918,7 @@ exports.commands = {
 		options(target, room, user) {
 			if (!user.console || user.console.gameId !== "hockey") return false;
 			let game = HOCKEY_GAMES[user.console.game];
-			if (!game || game.host.userid !== user.userid || game.phase !== "pre-signups") return;
+			if (!game || game.host.id !== user.id || game.phase !== "pre-signups") return;
 			target = target.split(",").map(x => { return x.trim(); });
 			switch (target.shift()) {
 			case "cap":
@@ -990,7 +990,7 @@ exports.commands = {
 			target = target.split(",").map(x => { return x.trim(); });
 			if (target[0] === "ID") return false;
 			let game = HOCKEY_GAMES[target.shift()];
-			if (!game || game.host.userid === user.userid || game.phase !== "signups" || !game.options.pin) return false;
+			if (!game || game.host.id === user.id || game.phase !== "signups" || !game.options.pin) return false;
 			if (target[0]) {
 				if (target[0] === "cancel") return user.console.update(...user.console.buildScreen("home"));
 				let pin = parseInt(target[0]);
@@ -1038,7 +1038,7 @@ exports.commands = {
 			if (!user.console.game) return false;
 			let game = HOCKEY_GAMES[user.console.game];
 			if (!game || !["signups", "pre-signups"].includes(game.phase)) return false;
-			let isHost = (game.host.userid === user.userid);
+			let isHost = (game.host.id === user.id);
 			if (isHost && cmd !== "confirmleave") return user.console.update(...user.console.buildScreen("confirmLeave"));
 			if (isHost) return game.end(true);
 			game.leave(user);
@@ -1048,7 +1048,7 @@ exports.commands = {
 			if (!user.console || user.console.gameId !== "hockey") return false;
 			if (!user.console.game) return false;
 			let game = HOCKEY_GAMES[user.console.game];
-			if (!game || game.host.userid !== user.userid || game.phase !== "signups") return false;
+			if (!game || game.host.id !== user.id || game.phase !== "signups") return false;
 			if (!game.players.length % 2 !== 0) return false;
 			game.start();
 		},
@@ -1069,21 +1069,21 @@ exports.commands = {
 			let [player, team] = target.split(",").map(x => { return x.trim(); });
 			if (!player || !team) return false;
 			if (!game || game.phase !== "assigningTeams") return false;
-			let isHost = (game.host.userid === user.userid);
+			let isHost = (game.host.id === user.id);
 			if (!isHost) return false;
 			// Check if the player is not in the game
-			if (!game.players.includes(Users.get(player).userid)) return false;
+			if (!game.players.includes(Users.get(player).id)) return false;
 			// Check if the team is one of the two team names
 			if (!game.teams[team]) return false;
 			// Remove the user from previously assigned teams (assuming they had one)
-			if (game.teams[game.options.names[0]].players.includes(Users.get(player).userid)) {
-				game.teams[game.options.names[0]].players.splice(game.teams[game.options.names[0]].players.indexOf(Users.get(player).userid), 1);
+			if (game.teams[game.options.names[0]].players.includes(Users.get(player).id)) {
+				game.teams[game.options.names[0]].players.splice(game.teams[game.options.names[0]].players.indexOf(Users.get(player).id), 1);
 			}
-			if (game.teams[game.options.names[1]].players.includes(Users.get(player).userid)) {
-				game.teams[game.options.names[1]].players.splice(game.teams[game.options.names[1]].players.indexOf(Users.get(player).userid), 1);
+			if (game.teams[game.options.names[1]].players.includes(Users.get(player).id)) {
+				game.teams[game.options.names[1]].players.splice(game.teams[game.options.names[1]].players.indexOf(Users.get(player).id), 1);
 			}
 			// Assign them to the team's players' data
-			game.teams[team].players.push(Users.get(player).userid);
+			game.teams[team].players.push(Users.get(player).id);
 			// Assign player to the team name
 			Users.get(player).console.team = team;
 			return user.console.update(...user.console.buildScreen("setTeams"));
@@ -1094,7 +1094,7 @@ exports.commands = {
 			if (!user.console.game) return false;
 			let game = HOCKEY_GAMES[user.console.game];
 			if (!game || game.phase !== "assigningTeams") return false;
-			let isHost = (game.host.userid === user.userid);
+			let isHost = (game.host.id === user.id);
 			if (!isHost) return false;
 			game.confirmTeams();
 		},

@@ -33,7 +33,7 @@ class Survey {
 
 	answer(user, reply, number) {
 		let ip = user.latestIp;
-		let userid = user.userid;
+		let userid = user.id;
 
 		if (userid in this.surveyArray[number].repliers || ip in this.surveyArray[number].replierIps) {
 			return user.sendTo(this.room, "You have already answered this survey.");
@@ -48,7 +48,7 @@ class Survey {
 
 	blankanswer(user, reply, number) {
 		let ip = user.latestIp;
-		let userid = user.userid;
+		let userid = user.id;
 
 		if (userid in this.surveyArray[number].repliers || ip in this.surveyArray[number].replierIps) {
 			//this.updateTo(user, true);
@@ -73,7 +73,7 @@ class Survey {
 	update(number) {
 		for (let i in this.room.users) {
 			let thisUser = this.room.users[i];
-			if (thisUser.userid in this.surveyArray[number].repliers || thisUser.latestIp in this.surveyArray[number].replierIps) {
+			if (thisUser.id in this.surveyArray[number].repliers || thisUser.latestIp in this.surveyArray[number].replierIps) {
 				thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|<div class="infobox"><p style="margin: 2px 0 5px 0"><span style="border:1px solid #6A6;color:#484;border-radius:4px;padding:0 3px"><i class="fa fa-bar-chart"></i> Survey-${this.surveyArray[number].surveyNum}</span> <strong style="font-size:11pt">${(this.surveyArray[number].allowHTML ? this.surveyArray[number].question : Chat.escapeHTML(this.surveyArray[number].question))}</strong></p>Thank you for answering the survey.<br/><div style="margin-top: 7px; padding-left: 12px"><button value="/survey results ${this.surveyArray[number].surveyNum}" class="button" name="send" title="Show results - view all replies"><small>(View Results)</small></div></div>`);
 			}
 		}
@@ -84,7 +84,7 @@ class Survey {
 			let toAnswer = this.generateQuestion(u);
 			for (let i in this.room.users) {
 				let thisUser = this.room.users[i];
-				if (thisUser.userid in this.surveyArray[u].repliers) {
+				if (thisUser.id in this.surveyArray[u].repliers) {
 					thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[u].surveyNum}|<div class="infobox"><p style="margin: 2px 0 5px 0"><span style="border:1px solid #6A6;color:#484;border-radius:4px;padding:0 3px"><i class="fa fa-bar-chart"></i> Survey-${this.surveyArray[u].surveyNum}</span> <strong style="font-size:11pt">${(this.surveyArray[u].allowHTML ? this.surveyArray[u].question : Chat.escapeHTML(this.surveyArray[u].question))}</strong></p>Thank you for answering the survey.<br/><div style="margin-top: 7px; padding-left: 12px"><button class="button" value="/survey results ${this.surveyArray[u].surveyNum}" name="send" title="Show results - view all replies"><small>(View Results)</small></div></div>`);
 				} else if (thisUser.latestIp in this.surveyArray[u].replierIps) {
 					thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[u].surveyNum}|<div class="infobox"><p style="margin: 2px 0 5px 0"><span style="border:1px solid #6A6;color:#484;border-radius:4px;padding:0 3px"><i class="fa fa-bar-chart"></i> Survey-${this.surveyArray[u].surveyNum}</span> <strong style="font-size:11pt">${(this.surveyArray[u].allowHTML ? this.surveyArray[u].question : Chat.escapeHTML(this.surveyArray[u].question))}</strong></p>Thank you for answering the survey.<br/><div style="margin-top: 7px; padding-left: 12px"><button class="button" value="/survey results ${this.surveyArray[u].surveyNum}" name="send" title="Show results - view all replies"><small>(View Results)</small></div></div>`);
@@ -98,7 +98,7 @@ class Survey {
 	displayTo(user, connection) {
 		for (let u in this.surveyArray) {
 			if (!connection) connection = user;
-			if (user.userid in this.surveyArray[u].repliers) {
+			if (user.id in this.surveyArray[u].repliers) {
 				connection.sendTo(this.room, `|uhtml|survey${this.surveyArray[u].surveyNum}|<div class="infobox"><p style="margin: 2px 0 5px 0"><span style="border:1px solid #6A6;color:#484;border-radius:4px;padding:0 3px"><i class="fa fa-bar-chart"></i> Survey-${this.surveyArray[u].surveyNum}</span> <strong style="font-size:11pt">${(this.surveyArray[u].allowHTML ? this.surveyArray[u].question : Chat.escapeHTML(this.surveyArray[u].question))}</strong></p>Thank you for answering the survey.<br/><div style="margin-top: 7px; padding-left: 12px"><button value="/survey results ${this.surveyArray[u].surveyNum}" class="button" name="send" title="Show results - view all replies"><small>(View Results)</small></div></div>`, u);
 			} else if (user.latestIp in this.surveyArray[u].replierIps) {
 				connection.sendTo(this.room, `|uhtml|survey${this.surveyArray[u].surveyNum}|<div class="infobox"><p style="margin: 2px 0 5px 0"><span style="border:1px solid #6A6;color:#484;border-radius:4px;padding:0 3px"><i class="fa fa-bar-chart"></i> Survey-${this.surveyArray[u].surveyNum}</span> <strong style="font-size:11pt">${(this.surveyArray[u].allowHTML ? this.surveyArray[u].question : Chat.escapeHTML(this.surveyArray[u].question))}</strong></p>Thank you for answering the survey.<br/><div style="margin-top: 7px; padding-left: 12px"><button value="/survey results ${this.surveyArray[u].surveyNum}" class="button" name="send" title="Show results - view all replies"><small>(View Results)</small></div></div>`, u);
@@ -112,8 +112,8 @@ class Survey {
 		for (let i in this.room.users) {
 			let toAnswer = this.generateQuestion(number);
 			let thisUser = this.room.users[i];
-			if (thisUser.userid in this.surveyArray[number].repliers) {
-				thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|${this.surveyArray[number].repliers[thisUser.userid]}`);
+			if (thisUser.id in this.surveyArray[number].repliers) {
+				thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|${this.surveyArray[number].repliers[thisUser.id]}`);
 			} else if (thisUser.latestIp in this.surveyArray[number].replierIps) {
 				thisUser.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|${this.surveyArray[number].replierIps[thisUser.latestIp]}`);
 			} else {
@@ -124,7 +124,7 @@ class Survey {
 
 	displaySpecificTo(user, connection, number) {
 		if (!connection) connection = user;
-		if (user.userid in this.surveyArray[number].repliers) {
+		if (user.id in this.surveyArray[number].repliers) {
 			connection.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|${this.generateResults(false, number)}`);
 		} else if (user.latestIp in this.surveyArray[number].replierIps) {
 			connection.sendTo(this.room, `|uhtml|survey${this.surveyArray[number].surveyNum}|${this.generateResults(false, number)}`);
@@ -148,7 +148,7 @@ class Survey {
 	}
 
 	hasReplied(user, number) {
-		let userid = user.userid;
+		let userid = user.id;
 		let userIp = user.latestIp;
 		if (userid in this.surveyArray[number].repliers) return true;
 		if (userIp in this.surveyArray[number].replierIps) return true;
@@ -157,7 +157,7 @@ class Survey {
 
 	updateTo(user, number, getResults) {
 		let results = this.generateResults(false, number);
-		if (user.userid in this.surveyArray[number].repliers) {
+		if (user.id in this.surveyArray[number].repliers) {
 			if (getResults) {
 				user.sendTo(this.room, `|uhtmlchange|survey${this.surveyArray[number].surveyNum}|${results}`, number);
 			} else {

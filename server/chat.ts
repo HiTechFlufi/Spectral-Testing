@@ -227,12 +227,12 @@ export class PageContext extends MessageContext {
 		}
 
 		this.room = room;
-		return room.id;
+		return room.roomid;
 	}
 
 	send(content: string) {
 		if (!content.startsWith('|deinit')) {
-			const roomid = this.room !== Rooms.global ? `[${this.room.id}] ` : '';
+			const roomid = this.room !== Rooms.global ? `[${this.room.roomid}] ` : '';
 			if (!this.initialized) {
 				content = `|init|html\n|title|${roomid}${this.title}\n|pagehtml|${content}`;
 				this.initialized = true;
@@ -338,7 +338,7 @@ export class CommandContext extends MessageContext {
 				if (this.room === Rooms.global) {
 					return this.popupReply(`You tried use "${message}" as a global command, but it is not a global command.`);
 				} else if (this.room) {
-					return this.popupReply(`You tried to send "${message}" to the room "${this.room.id}" but it failed because you were not in that room.`);
+					return this.popupReply(`You tried to send "${message}" to the room "${this.room.roomid}" but it failed because you were not in that room.`);
 				}
 				return this.errorReply(`The command "${this.cmdToken}${this.fullCmd}" is unavailable in private messages. To send a message starting with "${this.cmdToken}${this.fullCmd}", type "${this.cmdToken}${this.cmdToken}${this.fullCmd}".`);
 			}
@@ -365,18 +365,18 @@ export class CommandContext extends MessageContext {
 			}
 		}
 
-		if (this.room && Server.nightclub[this.room.id] && message) {
+		if (this.room && Server.nightclub[this.room.roomid] && message) {
 			if (Users.ShadowBan.checkBanned(this.user)) {
 				if (this.user.blockEmoticons !== true) {
 					if (Server.parseEmoticons(message)) return;
-					Users.ShadowBan.addMessage(this.user, `To ${this.room.id}`, message);
-					this.user.sendTo(this.room.id, `|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
+					Users.ShadowBan.addMessage(this.user, `To ${this.room.roomid}`, message);
+					this.user.sendTo(this.room.roomid, `|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
 				} else if (this.user.blockEmoticons === true) {
-					Users.ShadowBan.addMessage(this.user, `To ${this.room.id}`, message);
-					this.user.sendTo(this.room.id, `|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
+					Users.ShadowBan.addMessage(this.user, `To ${this.room.roomid}`, message);
+					this.user.sendTo(this.room.roomid, `|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
 				}
 			} else {
-				this.room.add(`|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.userid] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
+				this.room.add(`|raw|<div style="background-color: rgba(0, 0, 0, 0.85); margin:-3px; text-shadow:0px 0px 2px #000;"><font size="3"><button class="username" style="font-size: 18px; color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default" data-roomgroup="${this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group}" data-name="${this.user.name}"><small>${Server.nightclubify((this.room.auth ? (this.room.auth[this.user.id] || this.user.group) : this.user.group))}</small><b>${Server.nightclubify(Chat.escapeHTML(this.user.name))}${Server.nightclubify(":")}</button></b>${Server.nightclubify(message)}</font></div>`).update();
 				return null;
 			}
 		}
@@ -391,21 +391,21 @@ export class CommandContext extends MessageContext {
 					for (const u in this.room.users) {
 						const curUser = Users.get(u);
 						if (!curUser || !curUser.connected) continue;
-						if (Server.ignoreEmotes[curUser.userid]) {
-							curUser.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.id)}|${message}`);
+						if (Server.ignoreEmotes[curUser.id]) {
+							curUser.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.roomiid)}|${message}`);
 							continue;
 						}
-						curUser.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.id)}|/html ${emoticons}`);
+						curUser.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.roomid)}|/html ${emoticons}`);
 					}
-					this.room.log.log.push(`${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.id)}|${message}`);
+					this.room.log.log.push(`${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.roomid)}|${message}`);
 				} else {
 					// @ts-ignore
 					if (Users.ShadowBan.checkBanned(this.user)) {
 						// @ts-ignore
-						Users.ShadowBan.addMessage(this.user, `To ${this.room.id}`, message);
-						this.user.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.id)}|${message}`);
+						Users.ShadowBan.addMessage(this.user, `To ${this.room.roomid}`, message);
+						this.user.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.roomid)}|${message}`);
 					} else {
-						this.room.add(`${(this.room.type === 'chat' ? (this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`) : `|c|`)}${this.user.getIdentity(this.room.id)}|${message}`);
+						this.room.add(`${(this.room.type === 'chat' ? (this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`) : `|c|`)}${this.user.getIdentity(this.room.roomid)}|${message}`);
 					}
 				}
 				if (this.room && this.room.game && this.room.game.onLogMessage) {
@@ -521,7 +521,7 @@ export class CommandContext extends MessageContext {
 		const requireGlobalCommand = (
 			this.pmTarget ||
 			this.room === Rooms.global ||
-			(this.room && !(this.user.userid in this.room.users))
+			(this.room && !(this.user.id in this.room.users))
 		);
 
 		if (typeof commandHandler === 'function' && requireGlobalCommand) {
@@ -543,7 +543,7 @@ export class CommandContext extends MessageContext {
 		} catch (err) {
 			Monitor.crashlog(err, 'A chat command', {
 				user: this.user.name,
-				room: this.room && this.room.id,
+				room: this.room && this.room.roomid,
 				pmTarget: this.pmTarget && this.pmTarget.name,
 				message: this.message,
 			});
@@ -688,7 +688,7 @@ export class CommandContext extends MessageContext {
 		this.roomlog(msg);
 	}
 	globalModlog(action: string, user: string | User | null, note: string) {
-		let buf = `(${this.room.id}) ${action}: `;
+		let buf = `(${this.room.roomid}) ${action}: `;
 		if (user) {
 			if (typeof user === 'string') {
 				buf += `[${user}]`;
@@ -712,7 +712,7 @@ export class CommandContext extends MessageContext {
 		note: string | null = null,
 		options: Partial<{noalts: any, noip: any}> = {}
 	) {
-		let buf = `(${this.room.id}) ${action}: `;
+		let buf = `(${this.room.roomid}) ${action}: `;
 		if (user) {
 			if (typeof user === 'string') {
 				buf += `[${toID(user)}]`;
@@ -727,7 +727,7 @@ export class CommandContext extends MessageContext {
 				if (!options.noip) buf += ` [${user.latestIp}]`;
 			}
 		}
-		buf += ` by ${this.user.userid}`;
+		buf += ` by ${this.user.id}`;
 		if (note) buf += `: ${note.replace(/\n/gm, ' ')}`;
 
 		this.room.modlog(buf);
@@ -749,7 +749,7 @@ export class CommandContext extends MessageContext {
 		if (this.room) this.room.update();
 	}
 	filter(message: string, targetUser: User | null = null) {
-		if (!this.room || this.room.id === 'global') return null;
+		if (!this.room || this.room.roomid === 'global') return null;
 		return Chat.filter(this, message, this.user, this.room as GameRoom | ChatRoom, this.connection, targetUser);
 	}
 	statusfilter(status: string) {
@@ -790,8 +790,8 @@ export class CommandContext extends MessageContext {
 			this.broadcastMessage = broadcastMessage;
 
 			if (Users.ShadowBan.checkBanned(this.user)) {
-				Users.ShadowBan.addMessage(this.user, `To  + ${this.room.id}`, message);
-				this.user.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.id)}|${message}`);
+				Users.ShadowBan.addMessage(this.user, `To  + ${this.room.roomid}`, message);
+				this.user.sendTo(this.room, `${(this.room.type === 'chat' ? `|c:|${(~~(Date.now() / 1000))}|` : `|c|`)}${this.user.getIdentity(this.room.roomid)}|${message}`);
 				this.parse('/' + this.message.substr(1));
 				return false;
 			}
@@ -814,7 +814,7 @@ export class CommandContext extends MessageContext {
 		if (this.pmTarget) {
 			this.sendReply('|c~|' + (suppressMessage || this.message));
 		} else {
-			this.sendReply('|c|' + this.user.getIdentity(this.room.id) + '|' + (suppressMessage || this.message));
+			this.sendReply('|c|' + this.user.getIdentity(this.room.roomid) + '|' + (suppressMessage || this.message));
 		}
 		if (!ignoreCooldown && !this.pmTarget) {
 			this.room.lastBroadcast = this.broadcastMessage;
@@ -830,7 +830,7 @@ export class CommandContext extends MessageContext {
 		if (targetUser) {
 			room = null;
 		} else if (!room) {
-			if (this.room.id === 'global') {
+			if (this.room.roomid === 'global') {
 				this.connection.popup(`Your message could not be sent:\n\n${message}\n\nIt needs to be sent to a user or room.`);
 				return false;
 			}
@@ -870,7 +870,7 @@ export class CommandContext extends MessageContext {
 					this.errorReply(this.tr `Because moderated chat is set, you must be of rank ${groupName} or higher to speak in this room.`);
 					return false;
 				}
-				if (!(user.userid in room.users)) {
+				if (!(user.id in room.users)) {
 					connection.popup(`You can't send a message to this room without being in it.`);
 					return false;
 				}
@@ -903,7 +903,8 @@ export class CommandContext extends MessageContext {
 						return this.sendReply(`|html|If you need help, try opening a <a href="view-help-request" class="button">help ticket</a>`);
 					}
 				}
-				if (user.blockPMs && (user.blockPMs === true || !targetUser.authAtLeast(user.blockPMs)) && !targetUser.can('lock')) {
+				if (user.blockPMs && (user.blockPMs === true
+					|| !targetUser.authAtLeast(user.blockPMs)) && !targetUser.can('lock')) {
 					return this.errorReply(`You are blocking private messages right now.`);
 				}
 			}
@@ -980,7 +981,7 @@ export class CommandContext extends MessageContext {
 
 		if (room) {
 			const normalized = message.trim();
-			if (!user.can('bypassall') && (room.id === 'lobby' || room.id === 'help') && (normalized === user.lastMessage) &&
+			if (!user.can('bypassall') && (['help', 'lobby'].includes(room.roomid)) && (normalized === user.lastMessage) &&
 					((Date.now() - user.lastMessageTime) < MESSAGE_COOLDOWN)) {
 				this.errorReply(this.tr("You can't send the same message again so soon."));
 				return false;
@@ -992,7 +993,9 @@ export class CommandContext extends MessageContext {
 		if (room && room.highTraffic &&
 			toID(message).replace(/[^a-z]+/, '').length < 2
 			&& !user.can('broadcast', null, room)) {
-			this.errorReply(this.tr('Due to this room being a high traffic room, your message must contain at least two letters.'));
+			this.errorReply(
+				this.tr('Due to this room being a high traffic room, your message must contain at least two letters.')
+			);
 			return false;
 		}
 
@@ -1148,8 +1151,7 @@ export class CommandContext extends MessageContext {
 
 export const Chat = new class {
 	constructor() {
-		// tslint:disable-next-line: no-floating-promises
-		this.loadTranslations();
+		void this.loadTranslations();
 	}
 	multiLinePattern = new PatternTester();
 
@@ -1402,8 +1404,8 @@ export const Chat = new class {
 		} else if (pmTarget !== user) {
 			pmTarget.send(buf);
 		}
-		pmTarget.lastPM = user.userid;
-		user.lastPM = pmTarget.userid;
+		pmTarget.lastPM = user.id;
+		user.lastPM = pmTarget.id;
 	}
 
 	packageData = {};
@@ -1445,8 +1447,7 @@ export const Chat = new class {
 	loadPlugins() {
 		if (Chat.commands) return;
 
-		// tslint:disable-next-line: no-floating-promises
-		FS('package.json').readIfExists().then(data => {
+		void FS('package.json').readIfExists().then(data => {
 			if (data) Chat.packageData = JSON.parse(data);
 		});
 
@@ -1692,12 +1693,23 @@ export const Chat = new class {
 	}
 
 	/**
-	 * Takes an array and turns it into a sentence string by adding commas and the word 'and' at the end
+	 * Takes an array and turns it into a sentence string by adding commas and the word "and"
 	 */
 	toListString(arr: string[]) {
 		if (!arr.length) return '';
 		if (arr.length === 1) return arr[0];
-		return `${arr.slice(0, -1).join(", ")} and ${arr.slice(-1)}`;
+		if (arr.length === 2) return `${arr[0]} and ${arr[1]}`;
+		return `${arr.slice(0, -1).join(", ")}, and ${arr.slice(-1)[0]}`;
+	}
+
+	/**
+	 * Takes an array and turns it into a sentence string by adding commas and the word "or"
+	 */
+	toOrList(arr: string[]) {
+		if (!arr.length) return '';
+		if (arr.length === 1) return arr[0];
+		if (arr.length === 2) return `${arr[0]} or ${arr[1]}`;
+		return `${arr.slice(0, -1).join(", ")}, or ${arr.slice(-1)[0]}`;
 	}
 
 	collapseLineBreaksHTML(htmlContent: string) {

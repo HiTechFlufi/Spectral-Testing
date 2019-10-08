@@ -234,7 +234,7 @@ exports.commands = {
 		if (room.autorank && room.autorank === target) return this.errorReply(`Autorank is already set to "${target}".`);
 
 		if (Config.groups[target] && !Config.groups[target].globalonly) {
-			if (target === "#" && user.userid !== room.founder) return this.errorReply("You can't set autorank to # unless you're the room founder.");
+			if (target === "#" && user.id !== room.founder) return this.errorReply("You can't set autorank to # unless you're the room founder.");
 			room.autorank = target;
 			room.chatRoomData.autorank = target;
 			Rooms.global.writeChatRoomData();
@@ -248,9 +248,9 @@ exports.commands = {
 	bonus: "dailybonus",
 	checkbonus: "dailybonus",
 	dailybonus(target, room, user) {
-		let nextBonus = Date.now() - Db.DailyBonus.get(user.userid, [1, Date.now()])[1];
-		if ((86400000 - nextBonus) <= 0) return Server.giveDailyReward(user.userid, user);
-		return this.errorReply(`Your next bonus is ${(Db.DailyBonus.get(user.userid, [1, Date.now()])[0] === 8 ? 7 : Db.DailyBonus.get(user.userid, [1, Date.now()])[0])} ${(Db.DailyBonus.get(user.userid, [1, Date.now()])[0] === 1 ? moneyName : moneyPlural)} in ${Chat.toDurationString(Math.abs(86400000 - nextBonus))}`);
+		let nextBonus = Date.now() - Db.DailyBonus.get(user.id, [1, Date.now()])[1];
+		if ((86400000 - nextBonus) <= 0) return Server.giveDailyReward(user.id, user);
+		return this.errorReply(`Your next bonus is ${(Db.DailyBonus.get(user.id, [1, Date.now()])[0] === 8 ? 7 : Db.DailyBonus.get(user.id, [1, Date.now()])[0])} ${(Db.DailyBonus.get(user.id, [1, Date.now()])[0] === 1 ? moneyName : moneyPlural)} in ${Chat.toDurationString(Math.abs(86400000 - nextBonus))}`);
 	},
 
 	"!sota": true,
@@ -351,7 +351,7 @@ exports.commands = {
 					if (room) room.update();
 					return;
 				} else {
-					if (!definitions[0]) Rooms.get("development").add(`Urban Define crash info: target: ${target} | user: ${user.userid}`).update(); // i'm curious as to who keeps causing it
+					if (!definitions[0]) Rooms.get("development").add(`Urban Define crash info: target: ${target} | user: ${user.id}`).update(); // i'm curious as to who keeps causing it
 					if (!definitions[0] || !definitions[0][`word`] || !definitions[0][`definition`]) {
 						this.sendReplyBox(`No results for <strong>"${target}"</strong>.`);
 						if (room) room.update();
@@ -428,7 +428,7 @@ exports.commands = {
 		if (!userid || userid === "") return this.errorReply(`User "${name}" does not exist.`);
 
 		if (room.auth[userid] !== "#") return this.errorReply(`User "${name}" is not a room owner.`);
-		if (!room.founder || user.userid !== room.founder && !this.can("makeroom", null, room)) return false;
+		if (!room.founder || user.id !== room.founder && !this.can("makeroom", null, room)) return false;
 
 		delete room.auth[userid];
 		this.sendReply(`(${name} is no longer Room Owner.)`);
@@ -452,7 +452,7 @@ exports.commands = {
 		if (!targetUser) return this.errorReply(`User "${this.targetUsername}" is not online.`);
 
 		if (!room.founder) return this.errorReply("The room needs a Room Founder before it can have a Room Leader.");
-		if (room.founder !== user.userid && !this.can("addhtml", null, room)) return this.errorReply("/roomleader - Access denied.");
+		if (room.founder !== user.id && !this.can("addhtml", null, room)) return this.errorReply("/roomleader - Access denied.");
 
 		if (!room.auth) room.auth = room.chatRoomData.auth = {};
 
@@ -462,7 +462,7 @@ exports.commands = {
 			targetUser.popup(`|html|You were appointed Room Leader by ${Server.nameColor(user.name, true, true)} in ${room.title}.`);
 			room.onUpdateIdentity(targetUser);
 		}
-		room.auth[targetUser.userid] = "&";
+		room.auth[targetUser.id] = "&";
 		this.addModAction(`${name} was appointed Room Leader by ${user.name}.`);
 		room.onUpdateIdentity(targetUser);
 		Rooms.global.writeChatRoomData();
@@ -481,7 +481,7 @@ exports.commands = {
 		if (!userid || userid === "") return this.errorReply(`User "${name}" does not exist.`);
 
 		if (room.auth[userid] !== "&") return this.errorReply(`User "${name}" is not a room leader.`);
-		if (!room.founder || user.userid !== room.founder && !this.can("addhtml", null, room)) return false;
+		if (!room.founder || user.id !== room.founder && !this.can("addhtml", null, room)) return false;
 
 		if (targetUser) {
 			targetUser.popup(`|html|You were demoted from Room Leader by ${Server.nameColor(user.name, true)} in ${room.title}.`);
@@ -544,7 +544,7 @@ exports.commands = {
 		if (newName.length > 18 && !user.can("lock")) return this.errorReply(`"${target}" is too long to use as your away status.`);
 
 		// forcerename any possible impersonators
-		let targetUser = Users.getExact(user.userid + target);
+		let targetUser = Users.getExact(user.id + target);
 		if (targetUser && targetUser !== user && targetUser.name === `${user.name} - ${target}`) {
 			targetUser.resetName();
 			targetUser.send(`|nametaken||Your name conflicts with ${user.name}'${(user.name.substr(-1).endsWith("s") ? `` : `s`)} new away status.`);
@@ -566,7 +566,7 @@ exports.commands = {
 		let statusIdx = newName.search(/\s\-\s[\u24B6-\u24E9\u2460-\u2468\u24EA]+$/); // eslint-disable-line no-useless-escape
 		if (statusIdx < 0) {
 			user.isAway = false;
-			if (user.can("mute", null, room)) this.add(`|raw|-- ${Server.nameColor(user.userid, true)} is no longer away.`);
+			if (user.can("mute", null, room)) this.add(`|raw|-- ${Server.nameColor(user.id, true)} is no longer away.`);
 			return false;
 		}
 
@@ -575,7 +575,7 @@ exports.commands = {
 		user.forceRename(newName, user.registered);
 		user.updateIdentity();
 		user.isAway = false;
-		if (user.can("mute", null, room)) this.add(`|raw|-- ${Server.nameColor(user.userid, true)} is no longer ${status.toLowerCase()}.`);
+		if (user.can("mute", null, room)) this.add(`|raw|-- ${Server.nameColor(user.id, true)} is no longer ${status.toLowerCase()}.`);
 		if (user.can("lock")) this.parse("/show");
 	},
 	backhelp: ["/back - Sets a user's away status back to normal."],
@@ -725,7 +725,7 @@ exports.commands = {
 	},
 
 	clearroomauth(target, room, user) {
-		if (!this.can("declare") && room.founder !== user.userid) return this.errorReply("/clearroomauth - Access denied.");
+		if (!this.can("declare") && room.founder !== user.id) return this.errorReply("/clearroomauth - Access denied.");
 		if (!room.auth) return this.errorReply("Room does not have roomauth.");
 		let count;
 		if (!target) {
@@ -739,7 +739,7 @@ exports.commands = {
 				if (room.auth[userid] === "+") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply("(This room has zero roomvoices)");
@@ -752,7 +752,7 @@ exports.commands = {
 				if (room.auth[userid] === "\u2605") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply(`(This room has zero roomplayers)`);
@@ -765,7 +765,7 @@ exports.commands = {
 				if (room.auth[userid] === "%") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply(`(This room has zero drivers)`);
@@ -778,7 +778,7 @@ exports.commands = {
 				if (room.auth[userid] === "@") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply(`(This room has zero mods)`);
@@ -791,7 +791,7 @@ exports.commands = {
 				if (room.auth[userid] === "&") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply(`(This room has zero room leaders)`);
@@ -804,7 +804,7 @@ exports.commands = {
 				if (room.auth[userid] === "#") {
 					delete room.auth[userid];
 					count++;
-					if (userid in room.users) room.users[userid].updateIdentity(room.id);
+					if (userid in room.users) room.users[userid].updateIdentity(room.roomid);
 				}
 			}
 			if (!count) return this.errorReply(`(This room has zero roomowners)`);
@@ -858,19 +858,19 @@ exports.commands = {
 		if (target.length > 300) return this.errorReply("The reason is too long. It cannot exceed 300 characters.");
 		if (!targetUser || !targetUser.connected) return this.errorReply(`User "${this.targetUsername}" not found.`);
 		if (!this.can("mute", targetUser, room)) return false;
-		if (!room.users[targetUser.userid]) return this.errorReply(`User "${this.targetUsername}" is not in this room.`);
+		if (!room.users[targetUser.id]) return this.errorReply(`User "${this.targetUsername}" is not in this room.`);
 
 		this.addModAction(`${targetUser.name} was kicked from the room by ${user.name}.${(target ? ` (${target})` : ``)}`);
-		targetUser.popup(`You were kicked from ${room.id} by ${user.name}.${(target ? ` (${target})` : ``)}`);
-		targetUser.leaveRoom(room.id);
+		targetUser.popup(`You were kicked from ${room.roomid} by ${user.name}.${(target ? ` (${target})` : ``)}`);
+		targetUser.leaveRoom(room.roomid);
 	},
 	kickhelp: ["/kick [user], [reason] - Kick a user out of a room [reasons are optional]. Requires: % @ # & ~"],
 
 	kickall(target, room, user) {
 		if (!this.can("declare")) return this.errorReply("/kickall - Access denied.");
 		for (let i in room.users) {
-			if (room.users[i] !== user.userid) {
-				room.users[i].leaveRoom(room.id);
+			if (room.users[i] !== user.id) {
+				room.users[i].leaveRoom(room.roomid);
 			}
 		}
 		this.privateModAction(`(${user.name} kicked everyone from the room.)`);
@@ -904,7 +904,7 @@ exports.commands = {
 		let rooms = [];
 
 		Rooms.rooms.forEach(curRoom => {
-			if (curRoom.id !== "global") rooms.push(curRoom.id);
+			if (curRoom.roomid !== "global") rooms.push(curRoom.roomid);
 		});
 
 		rooms.sort();
@@ -912,11 +912,11 @@ exports.commands = {
 		for (let u in rooms) {
 			let curRoom = Rooms.get(rooms[u]);
 			if (curRoom.type === "battle") {
-				battleRooms.push(`<a href="/${curRoom.id}" class="ilink">${curRoom.title}</a> (${curRoom.userCount})`);
+				battleRooms.push(`<a href="/${curRoom.roomid}" class="ilink">${curRoom.title}</a> (${curRoom.userCount})`);
 			}
 			if (curRoom.type === "chat") {
 				if (curRoom.isPersonal) {
-					groupChats.push(`<a href="/${curRoom.id}" class="ilink">${curRoom.id}</a> (${curRoom.userCount})`);
+					groupChats.push(`<a href="/${curRoom.roomid}" class="ilink">${curRoom.roomid}</a> (${curRoom.userCount})`);
 					continue;
 				}
 				if (curRoom.isOfficial) {
@@ -1006,15 +1006,15 @@ exports.commands = {
 			return this.addModAction(`${target} was permalocked by ${user.name}.`);
 		}
 		if (!tarUser.registered) return this.errorReply("Only registered users can be permalocked.");
-		if (Db.perma.get(tarUser.userid, 0) >= 5) {
-			if (Db.perma.get(tarUser.userid, 0) === 5) return this.errorReply(`${tarUser.name} is already permalocked.`);
+		if (Db.perma.get(tarUser.id, 0) >= 5) {
+			if (Db.perma.get(tarUser.id, 0) === 5) return this.errorReply(`${tarUser.name} is already permalocked.`);
 			if (cmd !== "forcepermalock") return this.errorReply(`${tarUser.name} is permabanned and cannot be permalocked. If you want to change their permaban to a permalock, please use /forcepermalock.`);
 		}
 		if (tarUser.trusted && cmd !== "forcepermalock") return this.errorReply(`${tarUser.name} is a trusted user. If you're sure you want to permalock them, please use /forcepermalock.`);
-		Db.perma.set(tarUser.userid, 5);
-		if (!Punishments.userids.get(tarUser.userid) || Punishments.userids.get(tarUser.userid)[0] !== "BAN") Punishments.lock(tarUser, Date.now() + (1000 * 60 * 60 * 24 * 30), tarUser.userid, `Permalocked as ${tarUser.userid}`);
+		Db.perma.set(tarUser.id, 5);
+		if (!Punishments.userids.get(tarUser.id) || Punishments.userids.get(tarUser.id)[0] !== "BAN") Punishments.lock(tarUser, Date.now() + (1000 * 60 * 60 * 24 * 30), tarUser.id, `Permalocked as ${tarUser.id}`);
 		tarUser.popup(`You have been permalocked by ${user.name}.\nUnlike permalocks issued by the main server, this permalock only effects this server.`);
-		if (tarUser.trusted) Monitor.log(`[CrisisMonitor] Trusted user ${tarUser.userid} was permalocked by ${user.name} and was automatically demoted from ${tarUser.distrust()}.`);
+		if (tarUser.trusted) Monitor.log(`[CrisisMonitor] Trusted user ${tarUser.id} was permalocked by ${user.name} and was automatically demoted from ${tarUser.distrust()}.`);
 		Monitor.adminlog(`[Perma Monitor] ${user.name} has permalocked ${tarUser.name}.`);
 		return this.addModAction(`${tarUser.name} was permalocked by ${user.name}.`);
 	},
@@ -1056,12 +1056,12 @@ exports.commands = {
 			return this.addModAction(`${target} was permabanned by ${user.name}.`);
 		}
 		if (!tarUser.registered) return this.errorReply(`Only registered users can be permalocked.`);
-		if (Db.perma.get(tarUser.userid, 0) === 6) return this.errorReply(`${tarUser.name} is already permabanned.`);
+		if (Db.perma.get(tarUser.id, 0) === 6) return this.errorReply(`${tarUser.name} is already permabanned.`);
 		if (tarUser.trusted && cmd !== "forcepermaban") return this.errorReply(`${tarUser.name} is a trusted user. If you're sure you want to permaban them, please use /forcepermaban.`);
-		Db.perma.set(tarUser.userid, 6);
+		Db.perma.set(tarUser.id, 6);
 		tarUser.popup(`You have been permabanned by ${user.name}.\nUnlike permabans issued by the main server, this permaban only effects this server.`);
-		Punishments.ban(tarUser, Date.now() + (1000 * 60 * 60 * 24 * 30), tarUser.userid, `Permabanned as ${tarUser.userid}`);
-		if (tarUser.trusted) Monitor.log(`[CrisisMonitor] Trusted user ${tarUser.userid} was permabanned by ${user.name} and was automatically demoted from ${tarUser.distrust()}.`);
+		Punishments.ban(tarUser, Date.now() + (1000 * 60 * 60 * 24 * 30), tarUser.id, `Permabanned as ${tarUser.id}`);
+		if (tarUser.trusted) Monitor.log(`[CrisisMonitor] Trusted user ${tarUser.id} was permabanned by ${user.name} and was automatically demoted from ${tarUser.distrust()}.`);
 		Monitor.adminlog(`[Perma Monitor] ${user.name} has permabanned ${tarUser.name}.`);
 		return this.addModAction(`${tarUser.name} was permabanned by ${user.name}.`);
 	},
@@ -1201,7 +1201,7 @@ exports.commands = {
 
 	errorlogs: "crashlogs",
 	crashlogs(target, room, user) {
-		if (!this.can("hotpatch") && !Server.isDev(user.userid)) return false;
+		if (!this.can("hotpatch") && !Server.isDev(user.id)) return false;
 		let crashes = FS("logs/errors.txt").readIfExistsSync().split("\n").splice(-100).join("\n");
 		user.send(`|popup|${crashes}`);
 		return;
@@ -1223,7 +1223,7 @@ exports.commands = {
 		}
 
 		return function (target, room, user) {
-			if (!this.can("broadcast") && !Server.isDev(user.userid)) return false;
+			if (!this.can("broadcast") && !Server.isDev(user.id)) return false;
 			if (!this.runBroadcast()) return;
 			let uptime = process.uptime();
 			this.sendReplyBox(`Uptime: <strong>${formatUptime(uptime)}</strong>${(global.uptimeRecord ? `<br /><font color="green">Record: <strong>"${formatUptime(global.uptimeRecord)}</strong></font>` : ``)}`);
@@ -1338,7 +1338,7 @@ exports.commands = {
 	poof(target, room, user) {
 		if (Config.poofOff) return this.errorReply("Poof is currently disabled.");
 		if (target && !this.can("broadcast")) return false;
-		if (room.id !== "lobby") return false;
+		if (room.roomid !== "lobby") return false;
 		let message = target || messages[Math.floor(Math.random() * messages.length)];
 		if (message.indexOf(`{{user}}`) < 0) message = `{{user}} ${message}`;
 		message = message.replace(/{{user}}/g, user.name);
@@ -1408,7 +1408,7 @@ exports.commands = {
 
 	flogout: "forcelogout",
 	forcelogout(target, room, user) {
-		if (!Server.isDev(user.userid)) return false;
+		if (!Server.isDev(user.id)) return false;
 		if (!this.canTalk()) return false;
 		if (!target) return this.parse("/help forcelogout");
 		target = this.splitTarget(target);
@@ -1458,7 +1458,7 @@ exports.commands = {
 	wel(target, room, user) {
 		if (!this.canTalk()) return;
 		if (!target) return this.errorReply(`This command requires a target.`);
-		if (toID(target) === user.userid) this.add(`${user.name} is a narcisstic person, but hey they want to be welcomed [I guess].`);
+		if (toID(target) === user.id) this.add(`${user.name} is a narcisstic person, but hey they want to be welcomed [I guess].`);
 		this.parse(`Welcome to ${Config.serverName}, ${target}! Feel free to check out a few of our features by checking out /serverhelp!`);
 	},
 
@@ -1486,7 +1486,7 @@ exports.commands = {
 	devmessage: "devpm",
 	devmsg: "devpm",
 	devpm(target, room, user) {
-		if (!Server.isDev(user.userid) && !this.can("bypassall")) return false;
+		if (!Server.isDev(user.id) && !this.can("bypassall")) return false;
 		if (!target) return this.errorReply(`You need to specify the message.`);
 		if (target.length > 500) return this.errorReply(`Dev PM messages can be a maximum of 500 characters long.`);
 		Server.devPM(`~Developer Chat`, `${Server.nameColor(user.name, true, true)} said: "${target}".`);

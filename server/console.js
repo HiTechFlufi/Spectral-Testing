@@ -3,7 +3,7 @@
 class Console {
 	constructor(user, css, html, bottom, muted, sound) {
 		this.title = 'Game Console';
-		this.userid = user.userid;
+		this.userid = user.id;
 		this.muted = !!muted;
 		this.sound = sound || null;
 		this.curScreen = [null, null, null];

@@ -2,7 +2,7 @@
 
 /**@type {{[k: string]: ModdedFormatsData}} */
 let BattleFormats = {
-	pokemon: {
+	obtainablemoves: {
 		inherit: true,
 		banlist: [
 			'Chansey + Charm + Seismic Toss',

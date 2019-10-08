@@ -43,7 +43,7 @@ function cleanUserAgents() {
 let lockUserAgent = function (user, reason) {
 	lockedUserAgents[user.userAgent] = {
 		time: Date.now(),
-		userid: user.userid,
+		userid: user.id,
 	};
 };
 

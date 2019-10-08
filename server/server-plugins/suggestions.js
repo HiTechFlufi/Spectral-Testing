@@ -42,7 +42,7 @@ exports.commands = {
 			if (suggestion.length > 500) return this.errorReply("Please make your suggestion 500 characters or less.");
 			if (Rooms.get("staff")) Rooms.get("staff").add(`/raw <div style="border: #000000 solid 2px;"><center><br><font size="1">${Server.nameColor(user.name, true, true)} has submitted a suggestion:</font>"${suggestion}"</center><br /></div>`);
 			suggestions[toID(title)] = {
-				user: user.userid,
+				user: user.id,
 				title: title,
 				id: toID(title),
 				desc: suggestion,
@@ -68,7 +68,7 @@ exports.commands = {
 		list(target, room, user) {
 			if (!this.can("ban")) return false;
 			if (!this.runBroadcast()) return;
-			if (this.broadcasting && room.id !== "staff") return this.errorReply(`You cannot broadcast the suggestions index outside of the Staff room.`);
+			if (this.broadcasting && room.roomid !== "staff") return this.errorReply(`You cannot broadcast the suggestions index outside of the Staff room.`);
 			if (Object.keys(suggestions).length < 1) return this.errorReply(`There are no suggestions on ${Config.serverName} yet.`);
 			let output = `<strong><u>Suggestions (${Object.keys(suggestions).length})</u></strong><br />`;
 			for (let suggestion in suggestions) output += `<strong>${suggestion}</strong> <button class="button" name="send" value="/suggestions view ${suggestion}">View ${suggestion}</button><br />`;
@@ -78,7 +78,7 @@ exports.commands = {
 		display: "view",
 		view(target, room, user) {
 			if (!this.can("ban")) return false;
-			if (room && room.id === "staff" && !this.runBroadcast()) return;
+			if (room && room.roomid === "staff" && !this.runBroadcast()) return;
 			let suggestion = toID(target);
 			if (!suggestions[suggestion]) return this.errorReply(`The suggestion "${target}" is not currently a suggestion on ${Config.serverName}.`);
 			this.sendReplyBox(`<strong>"${suggestions[suggestion].title}"</strong> was suggested by ${Server.nameColor(suggestions[suggestion].user, true, true)}:<br /> ${suggestions[suggestion].desc}`);

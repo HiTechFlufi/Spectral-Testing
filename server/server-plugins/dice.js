@@ -40,7 +40,7 @@ class Dice {
 
 	join(user, self) {
 		if (this.players.length >= 2) return self.errorReply("Two users have already joined this game of dice.");
-		Economy.readMoney(user.userid, money => {
+		Economy.readMoney(user.id, money => {
 			if (money < this.bet) return self.sendReply("You don't have enough money for this game of dice.");
 			if (this.players.includes(user)) return self.sendReply("You have already joined this game of dice.");
 			if (this.players.length && this.players[0].latestIp === user.latestIp) return self.errorReply(`You have already joined this game of dice under the alt "${this.players[0].name}".`);
@@ -62,8 +62,8 @@ class Dice {
 	play() {
 		let p1 = this.players[0],
 			p2 = this.players[1];
-		Economy.readMoney(p1.userid, money1 => {
-			Economy.readMoney(p2.userid, money2 => {
+		Economy.readMoney(p1.id, money1 => {
+			Economy.readMoney(p2.id, money2 => {
 				if (money1 < this.bet || money2 < this.bet) {
 					let user = (money1 < this.bet ? p1 : p2);
 					let other = (user === p1 ? p2 : p1);
@@ -96,10 +96,10 @@ class Dice {
 					msg += `${Server.nameColor(winner.name, true)} has won <strong style="color: green">${(this.bet - taxedAmt).toLocaleString()}</strong> ${buck}!<br />`;
 					msg += `Better luck next time, ${Server.nameColor(loser.name, true)}!`;
 					this.room.add(`|uhtmlchange|${this.room.diceCount}|${msg}`).update();
-					Economy.writeMoney(winner.userid, (this.bet - taxedAmt), () => {
-						Economy.writeMoney(loser.userid, -this.bet, () => {
-							Economy.readMoney(winner.userid, winnerMoney => {
-								Economy.readMoney(loser.userid, loserMoney => {
+					Economy.writeMoney(winner.id, (this.bet - taxedAmt), () => {
+						Economy.writeMoney(loser.id, -this.bet, () => {
+							Economy.readMoney(winner.id, winnerMoney => {
+								Economy.readMoney(loser.id, loserMoney => {
 									Economy.logTransaction(`${winner.name} has won a dice against ${loser.name}. They now have ${winnerMoney.toLocaleString()} ${(winnerMoney === 1 ? moneyName : moneyPlural)}.`);
 									Economy.logTransaction(`${loser.name} has lost a dice against ${winner.name}. They now have ${loserMoney.toLocaleString()} ${(loserMoney === 1 ? moneyName : moneyPlural)}.`);
 									this.end();
@@ -122,8 +122,8 @@ class Dice {
 exports.commands = {
 	startdice: "dicegame",
 	dicegame(target, room, user) {
-		if (room.id === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
-		if (!user.can("broadcast", null, room) && room.id !== "casino") return this.errorReply("You must be ranked + or higher in this room to start a game of dice outside the Casino.");
+		if (room.roomid === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
+		if (!user.can("broadcast", null, room) && room.roomid !== "casino") return this.errorReply("You must be ranked + or higher in this room to start a game of dice outside the Casino.");
 		if (!this.canTalk()) return;
 		if (room.dice) return this.errorReply("There is already a game of dice going on in this room.");
 		if (room.diceDisabled) return this.errorReply(`Dice is currently disabled in ${room.title}.`);
@@ -131,7 +131,7 @@ exports.commands = {
 		let amount = Number(target) || 1;
 		if (isNaN(target)) return this.errorReply(`"${target}" isn't a valid number.`);
 		if (target.includes(".") || amount < 1 || amount > 5000) return this.errorReply(`The number of ${moneyPlural} must be between 1 and 5,000 and cannot contain a decimal.`);
-		Economy.readMoney(user.userid, money => {
+		Economy.readMoney(user.id, money => {
 			if (money < amount) return this.errorReply(`You don't have ${amount.toLocaleString()} ${money === 1 ? moneyName : moneyPlural}.`);
 			room.dice = new Dice(room, amount, user.name);
 			this.parse("/joindice");
@@ -140,7 +140,7 @@ exports.commands = {
 
 	dicejoin: "joindice",
 	joindice(target, room, user) {
-		if (room.id === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
+		if (room.roomid === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
 		if (!this.canTalk()) return;
 		if (!room.dice) return this.errorReply("There is no game of dice going on in this room.");
 
@@ -149,7 +149,7 @@ exports.commands = {
 
 	diceleave: "leavedice",
 	leavedice(target, room, user) {
-		if (room.id === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
+		if (room.roomid === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
 		if (!room.dice) return this.errorReply("There is no game of dice going on in this room.");
 
 		room.dice.leave(user, this);
@@ -157,7 +157,7 @@ exports.commands = {
 
 	diceend: "enddice",
 	enddice(target, room, user) {
-		if (room.id === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
+		if (room.roomid === "lobby") return this.errorReply("This command cannot be used in the Lobby.");
 		if (!this.canTalk()) return;
 		if (!room.dice) return this.errorReply("There is no game of dice going on in this room.");
 		if (!user.can("broadcast", null, room) && !room.dice.players.includes(user)) return this.errorReply("You must be ranked + or higher in this room to end a game of dice.");
@@ -169,7 +169,7 @@ exports.commands = {
 	diceoff: "dicedisable",
 	dicedisable(target, room, user) {
 		if (!this.can("gamemanagement", null, room)) return;
-		if (room.id === "casino") return this.errorReply(`Casino cannot disable Dice.`);
+		if (room.roomid === "casino") return this.errorReply(`Casino cannot disable Dice.`);
 		if (room.diceDisabled) {
 			return this.errorReply("Dice is already disabled in this room.");
 		}

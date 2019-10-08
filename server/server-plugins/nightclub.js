@@ -61,15 +61,15 @@ Server.nightclubify = colorify;
 exports.commands = {
 	nightclub(target, room, user) {
 		if (!this.can('declare', null, room)) return false;
-		if (Server.nightclub[room.id]) return this.errorReply('This room is already engulfed in nightclubness.');
-		Server.nightclub[room.id] = true;
+		if (Server.nightclub[room.roomid]) return this.errorReply('This room is already engulfed in nightclubness.');
+		Server.nightclub[room.roomid] = true;
 		room.addRaw(`<div class="nightclub"><font size="6">${Server.nightclubify(`LETS GET FITZY!! nightclub mode: ON!!!`)}</font><font size="2"> started by: ${Server.nameColor(user.name, true, true)}</font></div>`);
 	},
 
 	dayclub(target, room, user) {
 		if (!this.can('declare', null, room)) return false;
-		if (!Server.nightclub[room.id]) return this.errorReply('This room is already in broad daylight.');
-		delete Server.nightclub[room.id];
+		if (!Server.nightclub[room.roomid]) return this.errorReply('This room is already in broad daylight.');
+		delete Server.nightclub[room.roomid];
 		room.addRaw(`<div class="nightclub"><font size="6">${Server.nightclubify(`sizzle down now... nightclub mode: off.`)}</font><font size="2"> ended by: ${Server.nameColor(user.name, true, true)}</font></div>`);
 	},
 };

@@ -38,7 +38,7 @@ exports.commands = {
 	getfile(target, room, user) {
 		if (!this.runBroadcast()) return;
 		if (!target) return this.parse('/help getfile');
-		if (!user.hasConsoleAccess(user.connections[0]) && !Server.isDev(user.userid)) return Server.UCMD(this);
+		if (!user.hasConsoleAccess(user.connections[0]) && !Server.isDev(user.id)) return Server.UCMD(this);
 		let file = target.trim();
 		return new Promise((resolve, reject) => {
 			fs.readFile(file, (err, data) => {
@@ -57,7 +57,7 @@ exports.commands = {
 
 	forcewritefile: 'writefile',
 	writefile(target, room, user, connection, cmd) {
-		if (!user.hasConsoleAccess(user.connections[0]) && !Server.isDev(user.userid)) return Server.UCMD(this);
+		if (!user.hasConsoleAccess(user.connections[0]) && !Server.isDev(user.id)) return Server.UCMD(this);
 		target = target.split(',').map(x => {
 			return x.trim();
 		});
@@ -91,7 +91,7 @@ exports.commands = {
 	},
 
 	comlist(target, room, user) {
-		if (!this.can('hotpatch') && !Server.isDev(user.userid)) return Server.UCMD(this);
+		if (!this.can('hotpatch') && !Server.isDev(user.id)) return Server.UCMD(this);
 		let data = Object.keys(Chat.commands).join(',\n').toString();
 		Server.uploadToHastebin(data, (pass, response) => {
 			if (!pass) return this.errorReply(`An error occurred while attempting to upload to Hastebin: ${response}`);

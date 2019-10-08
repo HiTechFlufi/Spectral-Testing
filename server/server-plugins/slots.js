@@ -63,16 +63,16 @@ exports.commands = {
 	slots: {
 		start: "spin",
 		spin(target, room, user) {
-			if (room.id !== "casino") return this.errorReply(`Casino games can only be played in the "Casino".`);
+			if (room.roomid !== "casino") return this.errorReply(`Casino games can only be played in the "Casino".`);
 			if (!this.runBroadcast()) return;
 			if (!this.canTalk()) return false;
 
-			Economy.readMoney(user.userid, money => {
+			Economy.readMoney(user.id, money => {
 				if (money < 3) {
 					this.errorReply(`You do not have 3 ${moneyPlural} to spin the slots.`);
 					return;
 				}
-				Economy.writeMoney(user.userid, -3, () => {
+				Economy.writeMoney(user.id, -3, () => {
 					Economy.logTransaction(`${user.name} spent 3 ${moneyPlural} to spin the slots.`);
 				});
 
@@ -81,7 +81,7 @@ exports.commands = {
 				const chancesGenerated = 70 + availableSlots.indexOf(result) * 3;
 
 				if (chancePercentage >= chancesGenerated) {
-					Economy.writeMoney(user.userid, slots[result]);
+					Economy.writeMoney(user.id, slots[result]);
 					Economy.logTransaction(`${user.name} has won ${slots[result]} ${moneyPlural} from playing slots.`);
 					return this.sendReplyBox(display(true, user.name, result, result, result));
 				}

@@ -19,7 +19,7 @@ class TeamTours extends Rooms.RoomGame {
 		}
 		this.format = toID(format);
 
-		this.id = room.id;
+		this.id = room.roomid;
 		this.room = room;
 		this.title = Dex.getFormat(format).name + ' Team Tour';
 		this.teams = [];
@@ -278,7 +278,7 @@ class TeamTours extends Rooms.RoomGame {
 
 		for (const otherPlayer of this.players) {
 			if (!otherPlayer) continue;
-			const otherUser = Users.get(otherPlayer.userid);
+			const otherUser = Users.get(otherPlayer.id);
 			if (otherUser && otherUser.latestIp === user.latestIp) {
 				stuff.sendReply('You have already joined this game on another alt.');
 				return;
@@ -286,7 +286,7 @@ class TeamTours extends Rooms.RoomGame {
 		}
 		const player = this.addPlayer(user);
 		if (!player) return false;
-		this.playerPool.push(user.userid);
+		this.playerPool.push(user.id);
 		return true;
 	}
 
@@ -307,7 +307,7 @@ class TeamTours extends Rooms.RoomGame {
 					busy = true;
 					break;
 				}
-				this.players[Users.get(subOut).userid].destroy();
+				this.players[Users.get(subOut).id].destroy();
 				this.addPlayer(Users.get(subIn));
 				team.players.splice(team.players.indexOf(subOut), 1);
 				team.players.push(subIn);
@@ -332,13 +332,13 @@ class TeamTours extends Rooms.RoomGame {
 		let winner = winnerid;
 		let loserTeamName = 'notNamed';
 		for (let u in this.teams) {
-			if (from.userid === winnerid) {
-				if (this.teams[u].players.indexOf(to.userid) !== -1) {
+			if (from.id === winnerid) {
+				if (this.teams[u].players.indexOf(to.id) !== -1) {
 					loserTeamName = this.teams[u].name;
 					break;
 				}
-			} else if (to.userid === winnerid) {
-				if (this.teams[u].players.indexOf(from.userid) !== -1) {
+			} else if (to.id === winnerid) {
+				if (this.teams[u].players.indexOf(from.id) !== -1) {
 					loserTeamName = this.teams[u].name;
 					break;
 				}
@@ -362,23 +362,23 @@ class TeamTours extends Rooms.RoomGame {
 		if (win) {
 			for (let u in this.teams) {
 				if (this.teams[u]) {
-					if (winner === from.userid && this.teams[u].name === loserTeamName && this.teams[u].players.indexOf(winner) === -1) {
+					if (winner === from.id && this.teams[u].name === loserTeamName && this.teams[u].players.indexOf(winner) === -1) {
 						this.disqualifyTeam(this.teams[u].id);
 						break;
-					} else if (winner === to.userid && this.teams[u].name === loserTeamName && this.teams[u].players.indexOf(winner) === -1) {
+					} else if (winner === to.id && this.teams[u].name === loserTeamName && this.teams[u].players.indexOf(winner) === -1) {
 						this.disqualifyTeam(this.teams[u].id);
 						break;
 					}
 				}
 			}
 		}
-		if (from.userid === winner) {
+		if (from.id === winner) {
 			this.room.add(`|html|${Server.nameColor(from.name, true, true)} has won the match against ${Server.nameColor(to.name, true, true)} in the team tournament.`).update();
 		} else {
 			this.room.add(`|html|${Server.nameColor(to.name, true, true)} has won the match against ${Server.nameColor(from.name, true, true)} in the team tournament.`).update();
 		}
 
-		this.haveBattled.push(from.userid, to.userid);
+		this.haveBattled.push(from.id, to.id);
 		this.winners.push(winner);
 		if (win) this.remaining++;
 
@@ -477,7 +477,7 @@ function createTeamTour(room, format, teamAmount, stuff) {
 		stuff.errorReply("Tournaments can only be created in chat rooms.");
 		return false;
 	}
-	if (getTeamTour(room.id, stuff)) {
+	if (getTeamTour(room.roomid, stuff)) {
 		stuff.errorReply("There is already a team tour in this room!");
 		return false;
 	}
@@ -593,7 +593,7 @@ exports.commands = {
 		end(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
 			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
-			if (deleteTeamTour(room.id, this)) {
+			if (deleteTeamTour(room.roomid, this)) {
 				this.privateModAction(`(${user.name} forcibly ended a team tournament.)`);
 			}
 		},
@@ -626,18 +626,18 @@ exports.commands = {
 		leave(target, room, user) {
 			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
 			if (!room.teamTours.isStarted) {
-				let player = room.game.playerTable[user.userid];
+				let player = room.game.playerTable[user.id];
 				const playerIndex = room.game.players.indexOf(player);
 				if (playerIndex !== -1) {
 					if (playerIndex < 0) return false;
-					if (user.userid) delete room.game.playerTable[player.userid];
+					if (user.id) delete room.game.playerTable[player.id];
 					room.game.players.splice(playerIndex, 1);
-					let index = room.teamTours.playerPool.indexOf(user.userid);
+					let index = room.teamTours.playerPool.indexOf(user.id);
 					room.teamTours.playerPool.splice(index, 1);
 					player.destroy();
 					room.game.playerCount--;
 					room.teamTours.buildDisplay();
-					return room.add(`|html|${Server.nameColor(user.userid, true, true)} has left the Team Tournament.`).update();
+					return room.add(`|html|${Server.nameColor(user.id, true, true)} has left the Team Tournament.`).update();
 				} else {
 					return this.sendReply('You are not in the team tour.');
 				}
@@ -656,7 +656,7 @@ exports.commands = {
 			subIn = Users.get(toID(subIn));
 			if (!subOut) return this.errorReply('You need both a user to sub out!');
 			if (!subIn || !subIn.connected) return this.errorReply('Sub in user not online!');
-			room.teamTours.subMember(subOut, subIn.userid, this);
+			room.teamTours.subMember(subOut, subIn.id, this);
 		},
 
 		scout(target, room, user) {

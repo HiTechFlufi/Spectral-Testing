@@ -45,7 +45,7 @@ function alertGenners(message) {
 
 function isGenner(user) {
 	if (!user) return;
-	if (typeof user === "object") user = user.userid;
+	if (typeof user === "object") user = user.id;
 	if (Db.genners.has(user)) return true;
 	return false;
 }
@@ -79,14 +79,14 @@ exports.commands = {
 			if (!user.autoconfirmed) return this.errorReply(`Only autoconfirmed Users.get( may use this command to prevent spam.`);
 			if (!description) return this.parse("/genrequesthelp");
 			if (isNaN(reward)) return this.errorReply(`The reward must be an integer.`);
-			Economy.readMoney(user.userid, money => {
+			Economy.readMoney(user.id, money => {
 				if (money < reward) {
 					this.errorReply(`You do not have enough ${moneyPlural} to give ${reward.toLocaleString()} as a reward.`);
 					return;
 				}
 
-				requests[user.userid] = {
-					user: user.userid,
+				requests[user.id] = {
+					user: user.id,
 					reward,
 					description,
 					lastUpdated: Date.now(),
@@ -127,8 +127,8 @@ exports.commands = {
 		},
 
 		cancel(target, room, user) {
-			if (!requests[user.userid]) return this.errorReply(`You don't have any requests to cancel.`);
-			delete requests[user.userid];
+			if (!requests[user.id]) return this.errorReply(`You don't have any requests to cancel.`);
+			delete requests[user.id];
 			updateRequests();
 			return this.sendReply(`You have cancelled your gen request.`);
 		},

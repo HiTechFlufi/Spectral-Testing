@@ -79,7 +79,7 @@ class PingPong extends Console.Console {
 			}
 			html += `</tbody></table>`;
 			base += `<center>`;
-			if (game.host.userid === this.userid) base += `<button class="button${game.players.length % 2 === 0 ? `" name="send" value="/pingpong start"` : ` disabled"`}>Start Game</button>`;
+			if (game.host.id === this.userid) base += `<button class="button${game.players.length % 2 === 0 ? `" name="send" value="/pingpong start"` : ` disabled"`}>Start Game</button>`;
 			base += ` <button class="button" name="send" value="/pingpong back">Leave</button>`;
 			this.back = `/pingpong leave`;
 			break;
@@ -128,7 +128,7 @@ class PingPongGame {
 	constructor(host, id) {
 		this.host = host;
 		this.id = id;
-		this.players = [host.userid];
+		this.players = [host.id];
 		this.state = "pre-signups";
 		this.teams = {
 			"alpha": {name: "Alpha", id: "alpha", players: [], points: 0},
@@ -165,19 +165,19 @@ class PingPongGame {
 			if (isNaN(pin) || pin.toString().length !== 4) return user.console.update(...user.console.buildScreen("pin", {cmd: `pin ${this.id},`}));
 			if (pin !== this.options.pin) return user.console.update(...user.console.buildScreen("error", {text: "The provided PIN was incorrect."}));
 		}
-		this.players.push(user.userid);
+		this.players.push(user.id);
 		user.console.game = this.id;
 		this.updateAll("awaitingPlayers");
 	}
 
 	leave(user, force) {
 		if (!["pre-signups", "signups"].includes(this.state) && !force && this.options.pvp) return false;
-		if (!this.players.includes(user.userid)) return false;
-		this.players.splice(this.players.indexOf(user.userid), 1);
+		if (!this.players.includes(user.id)) return false;
+		this.players.splice(this.players.indexOf(user.id), 1);
 		if (!["pre-signups", "signups"].includes(this.state) && this.options.pvp && user.console.team) {
-			this.teams[user.console.team].players.splice(this.teams[user.console.team].players.indexOf(user.userid), 1);
+			this.teams[user.console.team].players.splice(this.teams[user.console.team].players.indexOf(user.id), 1);
 			if (this.teams["alpha"].players.length < 1 || this.teams["bravo"].players.length < 1 || this.players.length < 2) return this.endGame(true); // End the game since there is no competition
-			if (this.hasBall === user.userid) {
+			if (this.hasBall === user.id) {
 				if (user.console.team === "alpha") {
 					let team = this.teams["alpha"].players;
 					let randomTeammate = team[Math.floor(Math.random() * team.length)];
@@ -196,7 +196,7 @@ class PingPongGame {
 		if (!this.options.pvp) return this.endGame(true);
 		user.console.game = null;
 		user.console.update(...user.console.buildScreen("home"));
-		if (["pre-signups", "signups"].includes(this.state) && this.host.userid === user.userid) {
+		if (["pre-signups", "signups"].includes(this.state) && this.host.id === user.id) {
 			for (let player of this.players) {
 				player = Users.get(player);
 				if (player && player.console) {
@@ -212,13 +212,13 @@ class PingPongGame {
 
 	setUpCom() {
 		// Allow host to have the first serve (the bot won't mind I promise)
-		this.hasBall = this.host.userid;
+		this.hasBall = this.host.id;
 		this.state = "awaitingServe";
-		this.teams["alpha"].players.push(this.host.userid);
+		this.teams["alpha"].players.push(this.host.id);
 		Users.get(this.host).console.team = "alpha";
 		this.teams["bravo"].players.push("COM");
 		this.updateAll("play", {text: `${Server.nameColor(this.hasBall, true, true)} has been given the ball!`});
-		this.setTimer(this.host.userid);
+		this.setTimer(this.host.id);
 	}
 
 	setUpPvP() {
@@ -229,11 +229,11 @@ class PingPongGame {
 			let user = Users.get(list[i]);
 			if (!user || !user.console || user.console.gameId !== "pingpong") throw new Error(`Ping Pong: User not found: ${list[i]}`);
 			if (i % 2 === 0) {
-				this.teams["bravo"].players.push(user.userid);
+				this.teams["bravo"].players.push(user.id);
 				user.console.team = "bravo";
 				user.popup(`|html|<strong>You have been assigned to Team Bravo!</strong>`);
 			} else {
-				this.teams["alpha"].players.push(user.userid);
+				this.teams["alpha"].players.push(user.id);
 				user.console.team = "alpha";
 				user.popup(`|html|<strong>You have been assigned to Team Alpha!</strong>`);
 			}
@@ -245,10 +245,10 @@ class PingPongGame {
 
 	serve(user) {
 		if (this.state !== "awaitingServe") return false;
-		if (this.hasBall !== user.userid) return false;
+		if (this.hasBall !== user.id) return false;
 		this.state = "awaitingHit";
 		// Randomly serve towards one of the opponents
-		if (this.teams["alpha"].players.includes(user.userid)) {
+		if (this.teams["alpha"].players.includes(user.id)) {
 			let otherTeam = this.teams["bravo"].players;
 			let randomOpponent = otherTeam[Math.floor(Math.random() * otherTeam.length)];
 			this.hasBall = randomOpponent;
@@ -270,25 +270,25 @@ class PingPongGame {
 		// Slight delay so the player can see the updateAll() messages they send so it doesn't look like they do nothing at times
 		setTimeout(() => {
 			if (this.state === "awaitingServe") {
-				this.hasBall = this.host.userid;
+				this.hasBall = this.host.id;
 				this.state = "awaitingHit";
 				this.updateAll("play", {text: `The COM has served the ball towards ${Server.nameColor(this.hasBall, true, true)}! Hit the ball back!`});
-				this.setTimer(this.host.userid);
+				this.setTimer(this.host.id);
 			}
 			let hitChance = Math.floor(Math.random() * 100) > 30;
 			if (this.state === "awaitingHit") {
 				if (hitChance) {
-					this.hasBall = this.host.userid;
+					this.hasBall = this.host.id;
 					this.state = "awaitingHit";
 					this.updateAll("play", {text: `The COM hit the ball towards ${Server.nameColor(this.hasBall, true, true)}! Hit the ball back!`});
-					this.setTimer(this.host.userid);
+					this.setTimer(this.host.id);
 				} else {
 					this.state = "awaitingServe";
-					this.hasBall = this.host.userid;
+					this.hasBall = this.host.id;
 					// The COM missed!
 					this.score("alpha");
 					this.updateAll("play", {text: `The COM missed! You earned a point! ${Server.nameColor(this.hasBall, true, true)} was given the ball to serve!`});
-					this.setTimer(this.host.userid);
+					this.setTimer(this.host.id);
 				}
 			}
 		}, 3000);
@@ -296,11 +296,11 @@ class PingPongGame {
 
 	hit(user) {
 		if (this.state !== "awaitingHit") return false;
-		if (this.hasBall !== user.userid) return false;
+		if (this.hasBall !== user.id) return false;
 		let hitChance = Math.floor(Math.random() * 100) > 30;
 		if (hitChance) {
 			// Continue to keep the state awaitingHit (successfully hit the ball back)
-			if (this.teams["alpha"].players.includes(user.userid)) {
+			if (this.teams["alpha"].players.includes(user.id)) {
 				let otherTeam = this.teams["bravo"].players;
 				let randomOpponent = otherTeam[Math.floor(Math.random() * otherTeam.length)];
 				this.hasBall = randomOpponent;
@@ -352,7 +352,7 @@ class PingPongGame {
 		if (this.players.length < 2 && this.options.pvp) return;
 		if (!this.options.pvp && player === "COM") return this.comAction();
 		this.timer = setTimeout(() => {
-			if (this.teams["alpha"].players.includes(Users.get(player).userid)) {
+			if (this.teams["alpha"].players.includes(Users.get(player).id)) {
 				this.score("bravo");
 				let otherTeam = this.teams["bravo"].players;
 				let randomOpponent = otherTeam[Math.floor(Math.random() * otherTeam.length)];
@@ -396,16 +396,16 @@ class PingPongGame {
 					for (let alphaTeam of this.teams["alpha"].players) {
 						alphaTeam = Users.get(alphaTeam);
 						if (alphaTeam && alphaTeam.connected) Users.get(alphaTeam).popup(`|html|<center>You have won the game of Ping Pong! Congratulations, you and your teammates have earned 5 EXP and 2 ${moneyPlural}.<br /><button class="button" name="send" value="/pingpong init">Play Another Game!</button></center>`);
-						Server.ExpControl.addExp(alphaTeam.userid, null, 5);
-						Economy.writeMoney(alphaTeam.userid, 2);
+						Server.ExpControl.addExp(alphaTeam.id, null, 5);
+						Economy.writeMoney(alphaTeam.id, 2);
 						Economy.logTransaction(`${alphaTeam.name} has won 2 ${moneyPlural} and 5 EXP for winning a game of Ping Pong!`);
 					}
 				} else {
 					for (let bravoTeam of this.teams["bravo"].players) {
 						bravoTeam = Users.get(bravoTeam);
 						if (bravoTeam && bravoTeam.connected) Users.get(bravoTeam).popup(`|html|<center>You have won the game of Ping Pong! Congratulations, you and your teammates have earned 5 EXP and 2 ${moneyPlural}.<br /><button class="button" name="send" value="/pingpong init">Play Another Game!</button></center>`);
-						Server.ExpControl.addExp(bravoTeam.userid, null, 5);
-						Economy.writeMoney(bravoTeam.userid, 2);
+						Server.ExpControl.addExp(bravoTeam.id, null, 5);
+						Economy.writeMoney(bravoTeam.id, 2);
 						Economy.logTransaction(`${bravoTeam.name} has won 2 ${moneyPlural} and 5 EXP for winning a game of Ping Pong!`);
 					}
 				}
@@ -467,7 +467,7 @@ exports.commands = {
 		options(target, room, user) {
 			if (!user.console || user.console.gameId !== "pingpong") return false;
 			let game = PINGPONG_GAMES[user.console.game];
-			if (!game || game.host.userid !== user.userid || game.state !== "pre-signups") return;
+			if (!game || game.host.id !== user.id || game.state !== "pre-signups") return;
 			target = target.split(",").map(x => { return x.trim(); });
 			switch (target.shift()) {
 			case "cap":
@@ -575,7 +575,7 @@ exports.commands = {
 			target = target.split(",").map(x => { return x.trim(); });
 			if (target[0] === "ID") return false;
 			let game = PINGPONG_GAMES[target.shift()];
-			if (!game || game.host.userid === user.userid || game.state !== "signups" || !game.options.pin) return false;
+			if (!game || game.host.id === user.id || game.state !== "signups" || !game.options.pin) return false;
 			if (target[0]) {
 				if (target[0] === "cancel") return user.console.update(...user.console.buildScreen("home"));
 				let pin = parseInt(target[0]);
@@ -592,7 +592,7 @@ exports.commands = {
 		start(target, room, user) {
 			if (!user.console || user.console.gameId !== "pingpong") return false;
 			let game = PINGPONG_GAMES[user.console.game];
-			if (!game || game.host.userid !== user.userid) return;
+			if (!game || game.host.id !== user.id) return;
 			game.start();
 		},
 

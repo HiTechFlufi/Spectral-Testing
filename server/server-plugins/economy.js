@@ -146,19 +146,19 @@ function handleBoughtItem(item, user, cost) {
 		this.sendReply("You will have this until you log off for more than an hour.");
 		this.sendReply("If you do not want your custom symbol anymore, you may use /resetsymbol to go back to your old symbol.");
 	} else if (item === "ability") {
-		Server.ssb[user.userid].bought.cAbility = true;
+		Server.ssb[user.id].bought.cAbility = true;
 		writeSSB();
 	} else if (item === "ffasymbol") {
-		Server.ssb[user.userid].bought.cSymbol = true;
+		Server.ssb[user.id].bought.cSymbol = true;
 		writeSSB();
 	} else if (item === "move") {
-		Server.ssb[user.userid].bought.cMove = true;
+		Server.ssb[user.id].bought.cMove = true;
 		writeSSB();
 	} else if (item === "item") {
-		Server.ssb[user.userid].bought.cItem = true;
+		Server.ssb[user.id].bought.cItem = true;
 		writeSSB();
 	} else if (item === "shiny") {
-		Server.ssb[user.userid].canShiny = true;
+		Server.ssb[user.id].canShiny = true;
 		writeSSB();
 	} else {
 		user.tokens[item] = true;
@@ -285,15 +285,15 @@ exports.commands = {
 
 		amount = Math.round(Number(amount));
 		if (amount < 1 || amount > 1000 || isNaN(amount)) return this.errorReply(`/${cmd} - You can't transfer more than 1-1,000 ${moneyPlural} at a time.`);
-		Economy.readMoney(user.userid, money => {
+		Economy.readMoney(user.id, money => {
 			if (money < amount) return this.errorReply(`/${cmd} - You can't transfer more ${moneyName} than you have.`);
 			if (cmd !== "confirmtransfercurrency" && cmd !== "confirmtransferbucks") {
 				return this.popupReply(`|html|<center><button class = "card-td button" name = "send" value = "/confirmtransferbucks ${toID(targetUser)}, ${amount}" style = "outline: none; width: 200px; font-size: 11pt; padding: 10px; border-radius: 14px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.4) inset; transition: all 0.2s;">Confirm transfer to <br />${Server.nameColor(targetUser, true)}</button></center>`);
 			}
-			Economy.writeMoney(user.userid, -amount, () => {
+			Economy.writeMoney(user.id, -amount, () => {
 				Economy.writeMoney(targetUser, amount, () => {
 					Economy.readMoney(targetUser, firstAmount => {
-						Economy.readMoney(user.userid, secondAmount => {
+						Economy.readMoney(user.id, secondAmount => {
 							this.popupReply(`You sent ${amount.toLocaleString()} ${((amount === 1) ? `${moneyName}` : `${moneyPlural}`)} to ${targetUser}.`);
 							Economy.logTransaction(`${user.name} has transfered ${amount.toLocaleString()} ${((amount === 1) ? `${moneyName}` : `${moneyPlural}`)} to ${targetUser}. ${user.name} now has ${secondAmount.toLocaleString()} ${(secondAmount === 1 ? `${moneyName}` : `${moneyPlural}`)}. ${targetUser} now has ${firstAmount.toLocaleString()} ${(firstAmount === 1 ? `${moneyName}` : `${moneyPlural}`)}.`);
 							if (Users.getExact(targetUser) && Users.getExact(targetUser).connected) {
@@ -404,13 +404,13 @@ exports.commands = {
 
 	buy(target, room, user) {
 		if (!target) return this.parse("/help buy");
-		let amount = Db.money.get(user.userid, 0);
+		let amount = Db.money.get(user.id, 0);
 		let cost = findItem.call(this, target, amount);
 		if (!cost) return;
-		Economy.readMoney(user.userid, money => {
+		Economy.readMoney(user.id, money => {
 			if (cost > money) return this.errorReply(`You do not have enough ${moneyPlural} to purchase this item.`);
-			Economy.writeMoney(user.userid, cost * -1, () => {
-				Economy.readMoney(user.userid, amount => {
+			Economy.writeMoney(user.id, cost * -1, () => {
+				Economy.readMoney(user.id, amount => {
 					Economy.logTransaction(`${user.name} has purchased a ${target} for ${cost.toLocaleString()} ${(cost === 1 ? moneyName : moneyPlural)}. They now have ${amount.toLocaleString()} ${(money === 1 ? moneyName : moneyPlural)}.`);
 					this.sendReply(`You have bought ${target} for ${cost.toLocaleString()} ${(cost === 1 ? moneyName : moneyPlural)}. You now have ${amount.toLocaleString()} ${(money === 1 ? moneyName : moneyPlural)} left.`);
 					this.sendReply(`If a global staff member does not reach out to you, please contact a staff member within a few minutes.`);
@@ -438,7 +438,7 @@ exports.commands = {
 		case "avatar":
 			if (![".png", ".gif", ".jpg"].includes(target[1].slice(-4))) return this.errorReply(`The image needs to end in .png, .gif, or .jpg`);
 			msg = `/html <center>${Server.nameColor(user.name, true)} has redeemed a avatar token.<br /><img src="${target[1]}" alt="avatar"/><br />`;
-			msg += `<button class="button" name="send" value="/customavatar set ${user.userid}, ${target[1]}">Apply Avatar</button></center>`;
+			msg += `<button class="button" name="send" value="/customavatar set ${user.id}, ${target[1]}">Apply Avatar</button></center>`;
 			delete user.tokens[target[0]];
 			return Server.pmStaff(msg);
 		case "declare":
@@ -458,7 +458,7 @@ exports.commands = {
 		case "icon":
 			if (![".png", ".gif", ".jpg"].includes(target[1].slice(-4))) return this.errorReply(`The image needs to end in .png, .gif, or .jpg`);
 			msg += `/html <center>${Server.nameColor(user.name, true)} has redeemed a icon token.<br /><img src="${target[1]}" alt="icon"/><br />`;
-			msg += `<button class="button" name="send" value="/customicon set ${user.userid}, ${target[1]}">Apply icon</button></center>`;
+			msg += `<button class="button" name="send" value="/customicon set ${user.id}, ${target[1]}">Apply icon</button></center>`;
 			delete user.tokens[target[0]];
 			return Server.pmStaff(msg);
 		case "title":
@@ -466,7 +466,7 @@ exports.commands = {
 			target[2] = target[2].trim();
 			if (target[1].substring(0, 1) !== "#" || target[1].length !== 7) return this.errorReply(`Colors must be a 6 digit hex code starting with # such as #009900`);
 			msg += `/html <center>${Server.nameColor(user.name, true)} has redeemed a title token.<br /> Title name: ${target[1]}<br />`;
-			msg += `<button class="button" name="send" value="/customtitle set ${user.userid}, ${target[1]}, ${target[2]}">Set title (<b><font color="${target[2]}">${target[2]}</font></b>)</button></center>`;
+			msg += `<button class="button" name="send" value="/customtitle set ${user.id}, ${target[1]}, ${target[2]}">Set title (<b><font color="${target[2]}">${target[2]}</font></b>)</button></center>`;
 			delete user.tokens[target[0]];
 			return Server.pmStaff(msg);
 		case "emote":
@@ -490,7 +490,7 @@ exports.commands = {
 			target[1] = target[1].trim();
 			if (![".png", ".gif", ".jpg"].includes(target[1].slice(-4))) return this.errorReply(`The image needs to end in .png, .gif, or .jpg`);
 			msg += `/html <center>${Server.nameColor(user.name, true)} has redeemed a background token.<br /><img src="${target[1]}/><br />`;
-			msg += `<button class="button" name="send" value="/background set ${user.userid}, ${target[1]}">Set the background</button></center>`;
+			msg += `<button class="button" name="send" value="/background set ${user.id}, ${target[1]}">Set the background</button></center>`;
 			delete user.tokens[target[0]];
 			return Server.messageSeniorStaff(msg);
 		case "music":
@@ -498,7 +498,7 @@ exports.commands = {
 			target[1] = target[1].trim();
 			if (![".mp3", ".mp4", ".m4a"].includes(target[1].slice(-4))) return this.errorReply(`The song needs to end in .mp3, .mp4, or .m4a`);
 			msg += `/html <center>${Server.nameColor(user.name, true)} has redeemed a music token.<br /><audio src="${target[2]}" alt="${target[1]}"></audio><br />`;
-			msg += `<button class="button" name="send" value="/music set ${user.userid}, ${target[1]}, ${target[2]}">Set music</button></center>`;
+			msg += `<button class="button" name="send" value="/music set ${user.id}, ${target[1]}, ${target[2]}">Set music</button></center>`;
 			delete user.tokens[target[0]];
 			return Server.pmStaff(msg);
 		case "roomshop":

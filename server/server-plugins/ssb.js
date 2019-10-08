@@ -366,7 +366,7 @@ class SSB {
 		this.movepool.push(move.name);
 		writeSSB();
 		if (self.cmd !== "moveq") self.sendReply(`Added the move "${move.name}" to your movepool.`);
-		return self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.userid}${buildMenu(self.user.userid)}`);
+		return self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.id}${buildMenu(self.user.id)}`);
 	}
 
 	removeMove(move) {
@@ -437,16 +437,16 @@ class SSB {
 		if (valid.length === 0) {
 			this.active = !this.active;
 			if (this.active) {
-				self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.userid}|${buildMenu(self.user.userid)}`);
+				self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.id}|${buildMenu(self.user.id)}`);
 				self.sendReply("Your Pokemon was activated! Your Pokemon will appear in battles once the server restarts.");
 			} else {
-				self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.userid}|${buildMenu(self.user.userid)}`);
+				self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.id}|${buildMenu(self.user.id)}`);
 				self.sendReply("Your Pokemon was deactivated. Your Pokemon will no longer appear in battles once the server restarts.");
 			}
 			return true;
 		}
 		this.active = false;
-		self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.userid}|${buildMenu(self.user.userid)}`);
+		self.user.sendTo(self.room, `|uhtmlchange|ssb${self.user.id}|${buildMenu(self.user.id)}`);
 		self.sendReply("Your Pokemon was deactivated. Your Pokemon will no longer appear in battles once the server restarts.");
 		return false;
 	}
@@ -621,17 +621,17 @@ exports.commands = {
 			main(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
+				let targetUser = Server.ssb[user.id];
 				targetUser.updateName(user.name);
 				if (cmd === "") {
-					return user.sendTo(room, `|uhtml|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtml|ssb${user.id}|${buildMenu(user.id)}`);
 				} else {
-					return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 				}
 			},
 
@@ -639,12 +639,12 @@ exports.commands = {
 			species(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
+				let targetUser = Server.ssb[user.id];
 				if (toID(target) === "") return this.sendReply("/ssb edit species [species] - change the species of your SSB Pokemon.");
 				let active = targetUser.active;
 				if (!targetUser.setSpecies(target)) {
@@ -653,7 +653,7 @@ exports.commands = {
 					writeSSB();
 					if (active) this.sendReply("Your Pokemon was deactivated because it now has 0 moves.");
 					if (cmd !== "speciesq") this.sendReply(`Your Pokemon was set as a ${targetUser.species}`);
-					return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 				}
 			},
 
@@ -661,14 +661,14 @@ exports.commands = {
 			move(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
+				let targetUser = Server.ssb[user.id];
 				target = target.split(",");
-				if (!toID(target[0])) return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${moveMenu(user.userid)}`);
+				if (!toID(target[0])) return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${moveMenu(user.id)}`);
 				if (toID(target[0]) === "help") return this.sendReply("/ssb edit move [set|remove|custom], [move name] - Set or remove moves. Maximum of 4 moves (3 regular + 1 custom OR 4 regular).");
 				switch (target[0]) {
 				case "set":
@@ -683,7 +683,7 @@ exports.commands = {
 							targetUser.active = false;
 							this.sendReply(`Your Pokemon was deactivated because it now has 0 moves.`);
 						}
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 					} else {
 						return this.errorReply(`You do not have the move ${target[1]} in your movepool, or set as your custom move.`);
 					}
@@ -692,7 +692,7 @@ exports.commands = {
 					if (targetUser.setCustomMove(target[1])) {
 						writeSSB();
 						if (cmd !== "moveq") this.sendReply(`Your custom move has been set to ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 					} else {
 						return this.errorReply(`${target[1]} is either not a custom move, or not a custom move you can use.`);
 					}
@@ -705,14 +705,14 @@ exports.commands = {
 			stats(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
+				let targetUser = Server.ssb[user.id];
 				//temp
-				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${statMenu(user.userid)}`);
+				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${statMenu(user.id)}`);
 				if (toID(target) === "help") return this.sendReply(`/ssb edit stats [ev|iv|nature], [stat|nature], (value) - Set your Pokemon's EVs, IVs, or nature.`);
 				if (toID(target) === "naturehelp") return this.sendReply(`/ssb edit stats nature, [nature] - Set your Pokemon's nature.`);
 				target = target.split(",");
@@ -744,7 +744,7 @@ exports.commands = {
 					if (targetUser.setEvs(target[1], target[2])) {
 						writeSSB();
 						if (cmd !== "statsq") this.sendReply(`${target[1]} EV was set to ${target[2]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${statMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${statMenu(user.id)}`);
 					} else {
 						return this.errorReply(`Unable to set ${target[1]} EV to ${target[2]}. Check to make sure your EVs don't exceed 510 total.`);
 					}
@@ -754,7 +754,7 @@ exports.commands = {
 					if (targetUser.setIvs(target[1], target[2])) {
 						writeSSB();
 						if (cmd !== "statsq") this.sendReply(`${target[1]} IV was set to ${target[2]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${statMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${statMenu(user.id)}`);
 					} else {
 						return this.errorReply("Make sure your IVs are between 0 and 31 and that you spelled the stat name correctly.");
 					}
@@ -762,7 +762,7 @@ exports.commands = {
 					if (targetUser.setNature(target[1])) {
 						writeSSB();
 						if (cmd !== "statsq") this.sendReply(`Your Pokemon's nature was set to ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${statMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${statMenu(user.id)}`);
 					} else {
 						return this.errorReply(`${target[1]} is not a valid nature.`);
 					}
@@ -775,18 +775,18 @@ exports.commands = {
 			ability(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
-				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${abilityMenu(user.userid)}`);
+				let targetUser = Server.ssb[user.id];
+				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${abilityMenu(user.id)}`);
 				if (toID(target) === "help") return this.sendReply(`/ssb edit ability [ability] - Set your Pokemon's ability.`);
 				if (targetUser.setAbility(target)) {
 					writeSSB();
 					if (cmd !== "abilityq") this.sendReply(`Your Pokemon's ability is now ${target}.`);
-					return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 				} else {
 					this.errorReply(`${target} could not be set as your Pokemon's ability because it is not a legal ability for ${targetUser.species}, and it is not your custom ability.`);
 				}
@@ -796,26 +796,26 @@ exports.commands = {
 			item(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
-				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${itemMenu(user.userid)}`);
+				let targetUser = Server.ssb[user.id];
+				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${itemMenu(user.id)}`);
 				if (toID(target) === "help") return this.sendReply(`/ssb edit item [item] - Sets your Pokemon's item.`);
 				if (toID(target) === "reset") {
 					targetUser.item = false;
 					writeSSB();
 					if (cmd !== "itemq") this.sendReply("Your item was reset.");
-					return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 				}
 				if (!targetUser.setItem(target)) {
 					return this.errorReply(`The item "${target}" does not exist or is banned from SSBFFA.`);
 				} else {
 					writeSSB();
 					if (cmd !== "itemq") return this.sendReply(`Your Pokemon's item was set to ${target}.`);
-					return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+					return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 				}
 			},
 
@@ -823,13 +823,13 @@ exports.commands = {
 			details(target, room, user, connection, cmd, message) {
 				if (!user.named) return this.errorReply("You must choose a name first.");
 				if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-				if (!Server.ssb[user.userid]) {
+				if (!Server.ssb[user.id]) {
 					this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-					Server.ssb[user.userid] = new SSB(user.userid, user.name);
+					Server.ssb[user.id] = new SSB(user.id, user.name);
 					writeSSB();
 				}
-				let targetUser = Server.ssb[user.userid];
-				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${detailMenu(user.userid)}`);
+				let targetUser = Server.ssb[user.id];
+				if (toID(target) === "") return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${detailMenu(user.id)}`);
 				if (toID(target) === "help") return this.sendReply(`/ssb edit details [level|gender|happiness|shiny], (argument) - edit your Pokemon's details.`);
 				target = target.split(",");
 				switch (toID(target[0])) {
@@ -839,7 +839,7 @@ exports.commands = {
 					if (targetUser.setLevel(target[1])) {
 						writeSSB();
 						if (cmd !== "detailsq") this.sendReply(`Your Pokemon's level was set to ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${detailMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${detailMenu(user.id)}`);
 					} else {
 						return this.errorReply("Levels must be greater than or equal to 1, and less than or equal to 100.");
 					}
@@ -848,7 +848,7 @@ exports.commands = {
 					if (targetUser.setGender(target[1])) {
 						writeSSB();
 						if (cmd !== "detailsq") this.sendReply(`Your Pokemon's gender was set to ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${detailMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${detailMenu(user.id)}`);
 					} else {
 						return this.errorReply("Valid Pokemon genders are: Male, Female, random, and genderless.");
 					}
@@ -858,7 +858,7 @@ exports.commands = {
 					if (targetUser.setHappiness(target[1])) {
 						writeSSB();
 						if (cmd !== "detailsq") this.sendReply(`Your Pokemon's happiness level was set to ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${detailMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${detailMenu(user.id)}`);
 					} else {
 						return this.errorReply("Happiness levels must be greater than or equal to 0, and less than or equal to 255.");
 					}
@@ -867,7 +867,7 @@ exports.commands = {
 					if (targetUser.setShiny()) {
 						writeSSB();
 						if (cmd !== "detailsq") this.sendReply(`Your Pokemon's shinyness was toggled.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${buildMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${buildMenu(user.id)}`);
 					} else {
 						return this.errorReply("You must purchase this from the shop first!");
 					}
@@ -878,7 +878,7 @@ exports.commands = {
 					if (targetUser.setSymbol(target[1])) {
 						writeSSB();
 						if (cmd !== "detailsq") this.sendReply(`Your symbol is now ${target[1]}.`);
-						return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${detailMenu(user.userid)}`);
+						return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${detailMenu(user.id)}`);
 					} else {
 						return this.errorReply("Unable to set your custom symbol. Be sure your not using an illegal staff symbol.");
 					}
@@ -891,13 +891,13 @@ exports.commands = {
 		toggle(target, room, user, connection, cmd, message) {
 			if (!user.named) return this.errorReply("You must choose a name first.");
 			if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-			if (!Server.ssb[user.userid]) {
+			if (!Server.ssb[user.id]) {
 				this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-				Server.ssb[user.userid] = new SSB(user.userid, user.name);
+				Server.ssb[user.id] = new SSB(user.id, user.name);
 				writeSSB();
 				return this.sendReply("Your new SSB Pokemon is not active, you should edit it before activating.");
 			}
-			Server.ssb[user.userid].activate(this);
+			Server.ssb[user.id].activate(this);
 		},
 
 		custommoves: "custom",
@@ -905,21 +905,21 @@ exports.commands = {
 		custom(target, room, user, connection, cmd, message) {
 			if (!user.named) return this.errorReply("You must choose a name first.");
 			if (user.locked) return this.errorReply("You cannot edit your SSB Pokemon while locked.");
-			if (!Server.ssb[user.userid]) {
+			if (!Server.ssb[user.id]) {
 				this.sendReply("Could not find your SSB Pokemon, creating a new one...");
-				Server.ssb[user.userid] = new SSB(user.userid, user.name);
+				Server.ssb[user.id] = new SSB(user.id, user.name);
 				writeSSB();
 			}
-			return user.sendTo(room, `|uhtmlchange|ssb${user.userid}|${customMenu()}`);
+			return user.sendTo(room, `|uhtmlchange|ssb${user.id}|${customMenu()}`);
 		},
 
 		log(target, room, user, connection, cmd, message) {
-			if (!target) target = (user.can("ssbffa") ? `view, all` : `view, ${user.userid}`);
+			if (!target) target = (user.can("ssbffa") ? `view, all` : `view, ${user.id}`);
 			target = target.split(",");
 			switch (target[0]) {
 			case "view":
-				if (!target[1]) target[1] = (user.can("ssbffa") ? "all" : user.userid);
-				if (toID(target[1]) !== user.userid && !user.can("ssbffa")) return this.errorReply("You can only view your own SSBFFA purchases.");
+				if (!target[1]) target[1] = (user.can("ssbffa") ? "all" : user.id);
+				if (toID(target[1]) !== user.id && !user.can("ssbffa")) return this.errorReply("You can only view your own SSBFFA purchases.");
 				let output = `<div style="max-height: 300px; overflow: scroll; width: 100%"><table><tr><th style="border: 1px solid black">Name</th><th style="border: 1px solid black">Item</th><th style="border: 1px solid black">Status</th>`;
 				if (toID(target[1]) === "all") {
 					output += `<th style="border: 1px solid black">Options</th><tr/>`;

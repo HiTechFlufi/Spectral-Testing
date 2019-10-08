@@ -105,6 +105,73 @@ describe('Team Validator', function () {
 		];
 		let illegal = TeamValidator.get('gen71v1').validateTeam(team);
 		assert(illegal);
+
+		team = [
+			{species: 'rayquazamega', ability: 'deltastream', moves: ['dragonascent'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7ou').validateTeam(team);
+		assert(illegal);
+
+		team = [
+			{species: 'mimikyutotem', ability: 'disguise', moves: ['shadowsneak'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7ou@@@-mimikyu').validateTeam(team);
+		assert(illegal);
+
+		// bans should override past unbans
+		team = [
+			{species: 'torkoal', ability: 'drought', moves: ['bodyslam'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7ou@@@-drought,+drought').validateTeam(team);
+		assert.strictEqual(illegal, null);
+		illegal = TeamValidator.get('gen7ou@@@-drought,+drought,-drought').validateTeam(team);
+		assert(illegal);
+	});
+
+	it('should handle weird things', function () {
+		// Necrozma-DW should use Necrozma's events, plus Moongeist Beam
+		let team = [
+			{species: 'necrozmadawnwings', ability: 'prismarmor', shiny: true, moves: ['moongeistbeam', 'metalclaw'], evs: {hp: 1}},
+		];
+		let illegal = TeamValidator.get('gen7anythinggoes').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		// Shedinja should be able to take one level-up move from ninjask in gen 3-4
+
+		team = [
+			{species: 'shedinja', ability: 'wonderguard', moves: ['silverwind', 'swordsdance'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen4ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
+			{species: 'shedinja', ability: 'wonderguard', moves: ['silverwind', 'batonpass'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen3ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
+			{species: 'shedinja', ability: 'wonderguard', moves: ['silverwind', 'swordsdance', 'batonpass'], evs: {hp: 1}},
+			{species: 'charmander', ability: 'blaze', moves: ['flareblitz', 'dragondance'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen4ou').validateTeam(team);
+		assert(illegal);
+
+		// Chansey can't have Chansey-only egg moves as well as Happiny-only level-up moves
+
+		team = [
+			{species: 'chansey', ability: 'naturalcure', moves: ['charm', 'seismictoss'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7ou').validateTeam(team);
+		assert(illegal);
+
+		// male-only hidden abilities are incompatible with egg moves in Gen 5
+
+		team = [
+			{species: 'combusken', ability: 'speedboost', moves: ['batonpass'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen5ou').validateTeam(team);
+		assert(illegal);
 	});
 
 	it('should reject illegal egg move combinations', function () {
@@ -151,9 +218,23 @@ describe('Team Validator', function () {
 		assert(illegal);
 
 		team = [
+			{species: 'hitmontop', ability: 'intimidate', moves: ["highjumpkick", 'machpunch'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen3ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
 			{species: 'snorlax', ability: 'immunity', moves: ['curse', 'pursuit'], evs: {hp: 1}},
 		];
 		illegal = TeamValidator.get('gen4ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
+			{species: 'charizard', ability: 'blaze', moves: ['dragondance'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen4ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+		illegal = TeamValidator.get('gen5ou').validateTeam(team);
 		assert.strictEqual(illegal, null);
 	});
 
@@ -224,6 +305,8 @@ describe('Team Validator', function () {
 		// base forme ability
 		let team = [
 			{species: 'gyaradosmega', item: 'gyaradosite', ability: 'intimidate', moves: ['dragondance', 'crunch', 'waterfall', 'icefang'], evs: {hp: 1}},
+			{species: 'kyogreprimal', item: 'blueorb', ability: 'drizzle', moves: ['originpulse'], evs: {hp: 1}},
+			{species: 'rayquazamega', item: 'leftovers', ability: 'airlock', moves: ['dragonascent'], evs: {hp: 1}},
 		];
 		let illegal = TeamValidator.get('gen7anythinggoes').validateTeam(team);
 		assert.strictEqual(illegal, null);
@@ -231,6 +314,8 @@ describe('Team Validator', function () {
 		// mega forme ability
 		team = [
 			{species: 'gyaradosmega', item: 'gyaradosite', ability: 'moldbreaker', moves: ['dragondance', 'crunch', 'waterfall', 'icefang'], evs: {hp: 1}},
+			{species: 'kyogreprimal', item: 'blueorb', ability: 'primordialsea', moves: ['originpulse'], evs: {hp: 1}},
+			{species: 'rayquazamega', item: 'leftovers', ability: 'deltastream', moves: ['dragonascent'], evs: {hp: 1}},
 		];
 		illegal = TeamValidator.get('gen7anythinggoes').validateTeam(team);
 		assert.strictEqual(illegal, null);
@@ -247,6 +332,30 @@ describe('Team Validator', function () {
 	/*********************************************************
  	* Custom rules
  	*********************************************************/
+	it('should support legality tags', function () {
+		let team = [
+			{species: 'kitsunoh', ability: 'frisk', moves: ['shadowstrike'], evs: {hp: 1}},
+		];
+		let illegal = TeamValidator.get('gen7anythinggoes').validateTeam(team);
+		assert(illegal);
+		illegal = TeamValidator.get('gen7anythinggoes@@@+cap').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
+			{species: 'pikachu', ability: 'airlock', moves: ['thunderbolt'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7anythinggoes').validateTeam(team);
+		assert(illegal);
+		illegal = TeamValidator.get('gen7ou@@@!obtainableabilities').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
+		team = [
+			{species: 'pikachu', ability: 'airlock', moves: ['dragondance'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen7ou@@@!obtainableabilities').validateTeam(team);
+		assert(illegal);
+	});
+
 	it('should allow Pokemon to be banned', function () {
 		let team = [
 			{species: 'pikachu', ability: 'static', moves: ['agility', 'protect', 'thunder', 'thunderbolt'], evs: {hp: 1}},

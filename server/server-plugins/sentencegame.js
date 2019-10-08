@@ -28,14 +28,14 @@ class SentenceGame {
 	}
 
 	addWord(user, word, self) {
-		if (this.lastUser === user.userid) return self.errorReply(`You were the last user to add a word, try letting other users join in.`);
+		if (this.lastUser === user.id) return self.errorReply(`You were the last user to add a word, try letting other users join in.`);
 		if (word === this.sentence[this.sentence.length - 1]) return self.errorReply(`${word} was the last word, try something else to make it interesting.`);
 		if (cleanWord(word) === false) return self.errorReply(`You may only use alpha characters.`);
 		if (word.length > 20) return self.errorReply(`Let's try to keep words a maximum of 20 characters.`);
 		if (word.indexOf(" ") > -1) return self.errorReply(`You may not add spaces (don't worry we automatically space for you).`);
 		if (this.sentence.length === this.wordCount - 1 && badEndings.indexOf(word) > -1) return self.errorReply(`${word} is a boring way to end this sentence.`);
 		this.sentence.push(word);
-		this.lastUser = user.userid;
+		this.lastUser = user.id;
 		let wordsLeft = this.wordCount - this.sentence.length;
 		this.room.addRaw(`${Server.nameColor(user.name, true, true)} has added "${word}" to the sentence.<br />Sentence: ${this.sentence.join(" ")}.<br />${wordsLeft === 0 ? `` : `<small>There ${wordsLeft === 1 ? `is` : `are`} ${wordsLeft} word${wordsLeft === 1 ? `` : `s`} remaining in this Sentence Game.</small>`}`);
 		if (this.sentence.length === this.wordCount) {

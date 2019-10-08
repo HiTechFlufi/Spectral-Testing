@@ -81,18 +81,18 @@ class ExpFunctions {
 		if (!room) room = Rooms.get("lobby");
 		user = Users.get(toID(user));
 		if (!user.registered) return false;
-		if (Db.expoff.get(user.userid)) return false;
+		if (Db.expoff.get(user.id)) return false;
 		if (DOUBLE_XP || user.doubleExp) amount = amount * 2;
-		EXP.readExp(user.userid, totalExp => {
-			let oldLevel = this.level(user.userid);
-			EXP.writeExp(user.userid, amount, newTotal => {
-				let level = this.level(user.userid);
+		EXP.readExp(user.id, totalExp => {
+			let oldLevel = this.level(user.id);
+			EXP.writeExp(user.id, amount, newTotal => {
+				let level = this.level(user.id);
 				if (oldLevel < level) {
 					let reward = ``;
 					switch (level) {
 					case 5:
 						Economy.logTransaction(`${user.name} received a Profile Background and Profile Music for reaching level ${level}.`);
-						Monitor.log(`${user.userid} has earned a Profile Background and Profile Music for reaching level ${level}!`);
+						Monitor.log(`${user.id} has earned a Profile Background and Profile Music for reaching level ${level}!`);
 						if (!user.tokens) user.tokens = {};
 						user.tokens.bg = true;
 						user.tokens.music = true;
@@ -134,7 +134,7 @@ class ExpFunctions {
 						reward = `a Custom Color. To claim your Custom Color, use the command /usetoken color, [hex color].`;
 						break;
 					case 35:
-						Economy.writeMoney(user.userid, 50);
+						Economy.writeMoney(user.id, 50);
 						Economy.logTransaction(`${user.name} received 50 ${moneyPlural} for leveling up to Level 35.`);
 						reward = `50 ${moneyPlural}.`;
 						break;
@@ -153,7 +153,7 @@ class ExpFunctions {
 						reward = `a Roomshop. To claim your Roomshop, use the command /usetoken roomshop, [room for room shop].`;
 						break;
 					default:
-						Economy.writeMoney(user.userid, Math.ceil(level * 0.5));
+						Economy.writeMoney(user.id, Math.ceil(level * 0.5));
 						Economy.logTransaction(`${user.name} has received ${Math.ceil(level * 0.5).toLocaleString()} ${(Math.ceil(level * 0.5) === 1 ? moneyName : moneyPlural)} for reaching level ${level.toLocaleString()}.`);
 						reward = `${Math.ceil(level * 0.5).toLocaleString()} ${(Math.ceil(level * 0.5) === 1 ? moneyName : moneyPlural)}.`;
 					}
@@ -187,13 +187,13 @@ exports.commands = {
 		if (!this.runBroadcast()) return;
 		let targetId = toID(target);
 		if (target || !target && this.broadcasting) {
-			if (!target) targetId = user.userid;
+			if (!target) targetId = user.id;
 			EXP.readExp(targetId, exp => {
 				this.sendReplyBox(`${Server.nameColor(targetId, true)} has ${exp.toLocaleString()} exp, and is Level ${Server.ExpControl.level(targetId).toLocaleString()} and needs ${Server.ExpControl.nextLevel(targetId).toLocaleString()} to reach the next level.`);
 			});
 		} else {
-			EXP.readExp(user.userid, exp => {
-				let expData = `Name: ${Server.nameColor(user.name, true)}<br />Current level: ${Server.ExpControl.level(user.userid).toLocaleString()}<br />Current Exp: ${exp.toLocaleString()}<br />Exp Needed for Next level: ${Server.ExpControl.nextLevel(user.userid).toLocaleString()}`;
+			EXP.readExp(user.id, exp => {
+				let expData = `Name: ${Server.nameColor(user.name, true)}<br />Current level: ${Server.ExpControl.level(user.id).toLocaleString()}<br />Current Exp: ${exp.toLocaleString()}<br />Exp Needed for Next level: ${Server.ExpControl.nextLevel(user.id).toLocaleString()}`;
 				expData += `<br />All rewards have a 1 time use! <br /><br />`;
 				expData += `Level 5 unlocks a free Profile Background and Song. <br /><br />`;
 				expData += `Level 10 unlocks a free Custom Avatar. <br /><br />`;
