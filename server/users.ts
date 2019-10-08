@@ -834,7 +834,7 @@ export class User extends Chat.MessageContext {
 			Db.ontime.set(this.id, Db.ontime.get(this.id, 0) + (Date.now() - Ontime[this.id]));
 			delete Ontime[this.id];
 		}
-    	Ontime[id] = Date.now();
+    	Ontime[this.id] = Date.now();
 		Server.showNews(userid, this);
 		Server.checkFriends(userid, this);
 		tracker.check(this);
