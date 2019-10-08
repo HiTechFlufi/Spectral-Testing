@@ -606,6 +606,7 @@ let BattleMovedex = {
 		category: "Special",
 		onPrepareHit(target, source) {
 			this.add('-anim', source, 'Tri Attack', target);
+			this.add(`c|+Lady Kakizaki|LoVE MEeeeEE!!!!!!!!!!!`);
 		},
 		flags: {protect: 1, mirror: 1},
 		secondaries: [
