@@ -167,12 +167,12 @@ let BattleAbilities = {
 			move.secondaries.push({
 				chance: 30,
 				status: 'tox',
-				ability: this.getAbility('venomshock'),
+				ability: this.dex.getAbility('venomshock'),
 			});
 			move.secondaries.push({
 				chance: 30,
 				status: 'par',
-				ability: this.getAbility('venomshock'),
+				ability: this.dex.getAbility('venomshock'),
 			});
 		},
 	},

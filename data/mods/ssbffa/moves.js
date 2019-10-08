@@ -320,12 +320,12 @@ exports.BattleMovedex = {
 				for (let targetCondition in removeTarget) {
 					if (target.side.removeSideCondition(targetCondition)) {
 						if (!removeAll[targetCondition]) continue;
-						this.add('-sideend', target.side, this.getEffect(targetCondition).name, '[from] move: Ventilation', '[of] ' + target);
+						this.add('-sideend', target.side, this.dex.getEffect(targetCondition).name, '[from] move: Ventilation', '[of] ' + target);
 					}
 				}
 				for (let sideCondition in removeAll) {
 					if (source.side.removeSideCondition(sideCondition)) {
-						this.add('-sideend', source.side, this.getEffect(sideCondition).name, '[from] move: Ventilation', '[of] ' + source);
+						this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: Ventilation', '[of] ' + source);
 					}
 				}
 				this.clearWeather();

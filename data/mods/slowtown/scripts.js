@@ -57,7 +57,7 @@ let BattleScripts = {
 							// unreleased hidden ability
 							continue;
 						}
-						let ability = this.getAbility(abilityName);
+						let ability = this.dex.getAbility(abilityName);
 						if (banlistTable && ability.id in banlistTable) continue;
 						if (pokemon.knownType && !this.getImmunity('trapped', pokemon)) continue;
 						this.singleEvent('FoeMaybeTrapPokemon',

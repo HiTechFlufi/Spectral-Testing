@@ -37,7 +37,7 @@ let BattleItems = {
 		},
 		onAfterMoveSecondarySelf(source, target, move) {
 			if (source && source !== target && move && move.category !== 'Status' && source.hp !== 1) {
-				this.damage(source.maxhp / 10, source, source, this.getItem('soulorb'));
+				this.damage(source.maxhp / 10, source, source, this.dex.getItem('soulorb'));
 			}
 		},
 		desc: "Holder's attacks do 1.5x damage, and it loses 1/10 its max HP after the attack. At 1 HP, the user takes no recoil.",

@@ -3,22 +3,22 @@
 /**@type {BattleScriptsData} */
 let BattleScripts = {
 	init() {
-		Object.values(this.data.Abilities).forEach(ability => {
+		Object.values(this.dex.data.Abilities).forEach(ability => {
 			let abi = {};
 			let statusability = {"aerilate": true, "aurabreak": true, "flashfire": true, "parentalbond": true, "pixilate": true, "refrigerate": true, "sheerforce": true, "slowstart": true, "truant": true, "unburden": true, "zenmode": true};
 			for (let i in ability) abi[i] = ability[i];
 			if (statusability[abi.id]) {
-				this.data.Statuses["other" + ability.id] = abi;
-				this.data.Statuses["other" + ability.id].effectType = "Ability";
-				this.data.Statuses["other" + ability.id]["name"] = "Other " + ability["name"];
-				this.data.Statuses["other" + ability.id].noCopy = true;
-				this.data.Statuses["other" + ability.id]["id"] = "other" + ability.id;
+				this.dex.data.Statuses["other" + ability.id] = abi;
+				this.dex.data.Statuses["other" + ability.id].effectType = "Ability";
+				this.dex.data.Statuses["other" + ability.id]["name"] = "Other " + ability["name"];
+				this.dex.data.Statuses["other" + ability.id].noCopy = true;
+				this.dex.data.Statuses["other" + ability.id]["id"] = "other" + ability.id;
 			} else {
-				this.data.Statuses[ability.id] = abi;
-				this.data.Statuses[ability.id].effectType = "Ability";
-				this.data.Statuses[ability.id].noCopy = true;
+				this.dex.data.Statuses[ability.id] = abi;
+				this.dex.data.Statuses[ability.id].effectType = "Ability";
+				this.dex.data.Statuses[ability.id].noCopy = true;
 			}
-			this.data.Statuses.trace = {
+			this.dex.data.Statuses.trace = {
 				desc: "On switch-in, this Pokemon copies a random adjacent opposing Pokemon's Ability. If there is no Ability that can be copied at that time, this Ability will activate as soon as an Ability can be copied. Abilities that cannot be copied are Flower Gift, Forecast, Illusion, Imposter, Multitype, Stance Change, Trace, and Zen Mode.",
 				shortDesc: "On switch-in, or when it can, this Pokemon copies a random adjacent foe's Ability.",
 				onUpdate(pokemon) {
@@ -30,7 +30,7 @@ let BattleScripts = {
 						let rand = 0;
 						if (possibleTargets.length > 1) rand = this.random(possibleTargets.length);
 						let target = possibleTargets[rand];
-						let ability = this.getAbility(target.abilitwo);
+						let ability = this.dex.getAbility(target.abilitwo);
 						let bannedAbilities = {flowergift: 1, forecast: 1, illusion: 1, imposter: 1, multitype: 1, stancechange: 1, trace: 1, zenmode: 1};
 						if (bannedAbilities[target.ability]) {
 							possibleTargets.splice(rand, 1);
@@ -80,10 +80,10 @@ let BattleScripts = {
 		let atLeastOne = false;
 		let zMoves = [];
 		for (let i = 0; i < pokemon.moves.length; i++) {
-			let move = this.getMove(pokemon.moves[i]);
+			let move = this.dex.getMove(pokemon.moves[i]);
 			let zMoveName = this.getZMove(move, pokemon, true) || '';
 			if (zMoveName) {
-				let zMove = this.getMove(zMoveName);
+				let zMove = this.dex.getMove(zMoveName);
 				zMoves.push({move: zMoveName, target: zMove.target});
 			} else {
 				zMoves.push(null);

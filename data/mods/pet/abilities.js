@@ -67,7 +67,7 @@ exports.BattleAbilities = {
 			move.secondaries.push({
 				chance: 30,
 				status: 'tox',
-				ability: this.getAbility('toxicclaw'),
+				ability: this.dex.getAbility('toxicclaw'),
 			});
 		},
 		id: "toxicclaw",

@@ -2180,7 +2180,7 @@ let Formats = [
 		banlist: ['Uber', 'Unreleased', 'Shadow Tag', 'Assist', 'Shedinja', 'Medichamite', 'Kyurem-Black', 'Serperior'],
 		unbanlist: ['Deoxys-Speed', 'Deoxys-Defense', 'Darkrai', 'Genesect', 'Aegislash'],
 		onModifyTemplate(template, pokemon) {
-			let fusionTemplate = this.getTemplate(pokemon.name), mixedTemplate = Object.assign({}, template);
+			let fusionTemplate = this.dex.getTemplate(pokemon.name), mixedTemplate = Object.assign({}, template);
 			if (!fusionTemplate.exists) return template;
 			try {
 				mixedTemplate.baseSpecies = mixedTemplate.species = template.species;
@@ -2256,8 +2256,8 @@ let Formats = [
 		onValidateSet(set, teamHas) {
 			let problems = [];
 			if (!set.name || set.name === set.species) return;
-			let template = this.getTemplate(set.species);
-			let fusionTemplate = this.getTemplate(set.name);
+			let template = this.dex.getTemplate(set.species);
+			let fusionTemplate = this.dex.getTemplate(set.name);
 			let banlist = {
 				"shedinja": true,
 				"hugepower": true,
@@ -2303,7 +2303,7 @@ let Formats = [
 			if (!canHaveAbility) return [`"${set.species}" cannot have "${set.ability}".`];
 			let added = {};
 			let movepool = [];
-			let prevo = template.isMega ? this.getTemplate(template.species.substring(0, template.species.length - 5)).prevo : template.prevo;
+			let prevo = template.isMega ? this.dex.getTemplate(template.species.substring(0, template.species.length - 5)).prevo : template.prevo;
 
 			if (!this.data.Learnsets[toID(fusionTemplate.species)]) {
 				fusionTemplate.learnset = this.data.Learnsets[toID(fusionTemplate.species.split("-")[0])].learnset;
@@ -2322,12 +2322,12 @@ let Formats = [
 			} while (!added[template.species]);
 			while (prevo) {
 				movepool = movepool.concat(Object.keys(this.data.Learnsets[prevo].learnset));
-				prevo = this.getTemplate(prevo).prevo;
+				prevo = this.dex.getTemplate(prevo).prevo;
 			}
-			prevo = fusionTemplate.isMega ? this.getTemplate(fusionTemplate.species.substring(0, fusionTemplate.species.length - 5)).prevo : fusionTemplate.prevo;
+			prevo = fusionTemplate.isMega ? this.dex.getTemplate(fusionTemplate.species.substring(0, fusionTemplate.species.length - 5)).prevo : fusionTemplate.prevo;
 			while (prevo) {
 				movepool = movepool.concat(Object.keys(this.data.Learnsets[prevo].learnset));
-				prevo = this.getTemplate(prevo).prevo;
+				prevo = this.dex.getTemplate(prevo).prevo;
 			}
 			let moves = {};
 			for (let kek = 0; kek < movepool.length; kek++) moves[movepool[kek]] = true;
@@ -2423,7 +2423,7 @@ let Formats = [
 			let scale = 600 - template.baseStats['hp'];
 			for (const stat of stats) {
 				// @ts-ignore
-				template.baseStats[stat] = this.clampIntRange(template.baseStats[stat] * scale / pst, 1, 255);
+				template.baseStats[stat] = this.dex.clampIntRange(template.baseStats[stat] * scale / pst, 1, 255);
 			}
 			return template;
 		},
@@ -2439,7 +2439,7 @@ let Formats = [
 		},
 		onSwitchIn(pokemon) {
 			let name = toID(pokemon.illusion ? pokemon.illusion.name : pokemon.name);
-			if (this.getTemplate(name).exists) {
+			if (this.dex.getTemplate(name).exists) {
 				// Certain pokemon have volatiles named after their speciesid
 				// To prevent overwriting those, and to prevent accidentaly leaking
 				// that a pokemon is on a team through the onStart even triggering
@@ -2448,7 +2448,7 @@ let Formats = [
 				name = /** @type {ID} */(name + 'user');
 			}
 			// Add the mon's status effect to it as a volatile.
-			let status = this.getEffect(name);
+			let status = this.dex.getEffect(name);
 			if (status && status.exists) {
 				pokemon.addVolatile(name, pokemon);
 			}
@@ -2563,7 +2563,7 @@ let Formats = [
 		},
 		battle: {
 			getAbility(name) {
-				let move = this.getMove(toID(name));
+				let move = this.dex.getMove(toID(name));
 				if (!move.exists) return Object.getPrototypeOf(this).getAbility.call(this, name);
 				return {
 					id: move.id,

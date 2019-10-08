@@ -8,7 +8,7 @@ let BattleMovedex = {
 			// Ability suppression implemented in BattlePokemon.ignoringAbility() within battle-engine.js
 			onStart(pokemon) {
 				this.add('-endability', pokemon);
-				this.singleEvent('End', this.getAbility(pokemon.ability), pokemon.abilityData, pokemon, pokemon, 'gastroacid');
+				this.singleEvent('End', this.dex.getAbility(pokemon.ability), pokemon.abilityData, pokemon, pokemon, 'gastroacid');
 				if (pokemon.hasAbility(pokemon.abilitwo)) pokemon.removeVolatile(pokemon.abilitwo, pokemon);
 			},
 		},
