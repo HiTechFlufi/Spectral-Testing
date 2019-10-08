@@ -1378,6 +1378,38 @@ export class User extends Chat.MessageContext {
 				return false;
 			}
 		}
+
+		// @ts-ignore
+		if (room.ttBattle) {
+			// @ts-ignore
+			let ttRoom = Server.getTeamTourRoom(room.p1.userid);
+			let players = [];
+			// @ts-ignore
+			if (Server.findTeamMatchUp(room.p1.userid, room.p2.userid) && Rooms.get(ttRoom) && Rooms.get(ttRoom).teamTours) {
+				// @ts-ignore
+				for (let u = 0; u < Rooms.get(ttRoom).teamTours.teams.length; u++) {
+					// @ts-ignore
+					for (let i = 0; i < Rooms.get(ttRoom).teamTours.teams[u].players.length; i++) {
+						// @ts-ignore
+						if (Rooms.get(ttRoom).teamTours.teams[u].players[i] && players.indexOf(Rooms.get(ttRoom).teamTours.teams[u].players[i]) === -1) players.push(Rooms.get(ttRoom).teamTours.teams[u].players[i]);
+					}
+				}
+				let fail = false;
+				// @ts-ignore
+				if (ttRoom.teamTours.scout || this.useird === room.p1.userid || this.userid === room.p2.userid) {
+					for (let u = 0; u < players.length; u++) {
+						// @ts-ignore
+						if (Users.get(players[u]).latestIp !== this.latestIp) {
+							connection.sendTo(roomid, `|noinit|joinfailed|Scouting is banned: team tour players can't watch other tournament battles.`);
+							fail = true;
+							break;
+						}
+					}
+				}
+				if (fail) return false;
+			}
+		}
+
 		if (room.isPrivate) {
 			if (!this.named) {
 				return Rooms.RETRY_AFTER_LOGIN;

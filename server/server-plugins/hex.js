@@ -131,3 +131,11 @@ function showDailyRewardAni(userid) {
 	}
 	return output;
 }
+
+Server.isEven = function (n) {
+	return n % 2 === 0;
+}
+
+Server.isOdd = function (n) {
+	return Math.abs(n % 2) === 1;
+}

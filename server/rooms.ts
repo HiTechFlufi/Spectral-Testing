@@ -1485,6 +1485,7 @@ export class GameRoom extends BasicChatRoom {
 	rated: number;
 	battle: RoomBattle | null;
 	game: RoomGame;
+	ttBattle: boolean;
 	constructor(roomid: RoomID, title?: string, options: AnyObject = {}) {
 		options.logTimes = false;
 		options.autoTruncate = false;
@@ -1680,6 +1681,30 @@ export const Rooms = {
 				user.inviteOnlyNextBattle = false;
 			}
 		}
+
+		// @ts-ignore
+		let ttRoom = Server.getTeamTourRoom(p1.userid);
+		if (ttRoom.teamTours.haveBattled.indexOf(p1.userid) === -1 && ttRoom.teamTours.haveBattled.indexOf(p2.userid) === -1) {
+			// @ts-ignore
+			if (Server.findTeamMatchUp(p1.userid, p2.userid) && ttRoom && ttRoom.teamTours) {
+				for (let u = 0; u < ttRoom.teamTours.teams.length; u++) {
+					if (ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p1.userid) !== -1 || ttRoom.teamTours.format === formatid && ttRoom.teamTours.teams[u].players.indexOf(p2.userid) !== -1) ttRoom.teamTours.teams[u].busy = true;
+				}
+				if (!ttRoom.teamTours.modjoin) inviteOnly.splice(0, inviteOnly.length);
+				// @ts-ignore
+				if (ttRoom.teamTours.teamLock) {
+				// @ts-ignore	
+				if (!Server.ttTeamLock) Server.ttTeamLock = {};
+				// @ts-ignore
+				if (!Server.ttTeamLock[p1.userid]) Server.ttTeamLock[p1.userid] = p1.team;
+				// @ts-ignore
+					if (!Server.ttTeamLock[p2.userid]) Server.ttTeamLock[p2.userid] = p2.team;
+				}
+				ttRoom.add(`|html|<font color="green"><a href="${room.id}">The team tour battle between ${Server.nameColor(p1.name, true, true)} and ${Server.nameColor(p2.name, true, true)} has now begun!</a></font>`).update();
+				room.ttBattle = true;
+			}
+		}
+
 		if (inviteOnly.length) {
 			const prefix = battle.forcedPublic();
 			if (prefix) {

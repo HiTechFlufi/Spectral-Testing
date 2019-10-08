@@ -810,6 +810,14 @@ export class RoomBattle extends RoomGames.RoomGame {
 				Chat.parse('/savereplay', this.room, uploader, uploader.connections[0]);
 			}
 		}
+		let ttRoom = Server.getTeamTourRoom(p1id);
+		if (!ttRoom) ttRoom = Server.getTeamTourRoom(p2id);
+		// if (!ttRoom) this.room.add(`|c| Spectral Server|/html <font color="red">Both players are offline making the team tour stuck. Please contact an admin and end the team tour.</font>`); // ...
+		if (Server.findTeamMatchUp(p1id, p2id) && ttRoom && ttRoom.teamTours) {
+			delete this.room.ttBattle;
+			ttRoom.teamTours.onBattleWin(this.room, winnerid);
+		}
+
 		const parentGame = this.room.parent && this.room.parent.game;
 		// @ts-ignore - Tournaments aren't TS'd yet
 		if (parentGame && parentGame.onBattleWin) {
