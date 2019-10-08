@@ -21,7 +21,7 @@ let BattleAbilities = {
 			if (pokemon.baseTemplate.baseSpecies !== 'Gallade' || pokemon.transformed || !pokemon.hp) return;
 			if (pokemon.template.speciesid === 'gallademega' || pokemon.hp > pokemon.maxhp / 2) return;
 			this.add('-activate', pokemon, 'ability: Ceasars Wish');
-			let template = this.getTemplate('Gallade-Mega');
+			let template = this.dex.getTemplate('Gallade-Mega');
 			pokemon.formeChange(template);
 			pokemon.baseTemplate = template;
 			pokemon.details = template.species + (pokemon.level === 100 ? '' : ', L' + pokemon.level) + (pokemon.gender === '' ? '' : ', ' + pokemon.gender) + (pokemon.set.shiny ? ', shiny' : '');

@@ -28,13 +28,13 @@ let BattleItems = {
 		inherit: true,
 		onModifyDefPriority: 2,
 		onModifyDef(def, pokemon) {
-			if (pokemon.baseTemplate.nfe && this.getTemplate(pokemon.fusion).nfe) {
+			if (pokemon.baseTemplate.nfe && this.dex.getTemplate(pokemon.fusion).nfe) {
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpDPriority: 2,
 		onModifySpD(spd, pokemon) {
-			if (pokemon.baseTemplate.nfe && this.getTemplate(pokemon.fusion).nfe) {
+			if (pokemon.baseTemplate.nfe && this.dex.getTemplate(pokemon.fusion).nfe) {
 				return this.chainModify(1.5);
 			}
 		},
@@ -61,7 +61,7 @@ let BattleItems = {
 		onBasePowerPriority: 6,
 		onBasePower(basePower, user, target, move) {
 			if (user.template.num !== 380 && user.template.num !== 381) return;
-			if (move && (this.getTemplate(user.fusion).num === 380 || this.getTemplate(user.fusion).num === 381) && (move.type === 'Psychic' || move.type === 'Dragon')) {
+			if (move && (this.dex.getTemplate(user.fusion).num === 380 || this.dex.getTemplate(user.fusion).num === 381) && (move.type === 'Psychic' || move.type === 'Dragon')) {
 				return this.chainModify([0x1333, 0x1000]);
 			}
 		},
