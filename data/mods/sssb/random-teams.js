@@ -313,7 +313,7 @@ class RandomSSSBTeams extends RandomTeams {
 				nature: "Bold",
 			},
 		};
-		let pool = this.shuffle(Object.keys(sets));
+		let pool = this.dex.shuffle(Object.keys(sets));
 		/** @type {{[type: string]: number}} */
 		let typePool = {};
 		let i = 0;

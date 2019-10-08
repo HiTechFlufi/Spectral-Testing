@@ -104,7 +104,7 @@ class RandomFakemonsTeams extends RandomTeams {
 		}
 
 		// Generate the team randomly.
-		let pool = this.shuffle(Object.keys(sets));
+		let pool = this.dex.shuffle(Object.keys(sets));
 		for (let i = 0; i < 6; i++) {
 			let set = sets[pool[i]];
 			set.level = 100;
