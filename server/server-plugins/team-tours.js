@@ -646,6 +646,7 @@ exports.commands = {
 			}
 		},
 
+		sub: 'submember',
 		submember(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
 			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
@@ -745,19 +746,18 @@ exports.commands = {
 		help(target, room, user) {
 			if (!this.runBroadcast()) return;
 			return this.sendReplyBox('<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require room operator unless otherwise specified.</center><br />' +
-			'/teamtour create (format), (team limit) - creates a new team tour. If no limit is specified the default is 16.<br />' +
-			'/teamtour display - pushes down the team tour display. Requires room voice.<br />' +
-			'/teamtour join - joins the team tour.<br />' +
-			'/teamtour leave - leaves the team tour.<br />' +
-			'/teamtour start - starts the team tour.<br />' +
-			'/teamtour end - ends the team tour.<br />' +
-			'/teamtour disqualify (team) - eliminates a team from the team tour.<br />' +
-			'/teamtour invite (user) - invites a user to your team in the tour. Requires team captain<br />' +
-			'/teamtour submember (sub out), (sub in) - subs a member whos already in the tour out for a user not in the tour.<br />' +
-			'/teamtour scout on/off - sets scouting rules for battles.<br />' +
-			'/teamtour playerlimit (number) - sets a limit of players per team.<br />' +
-			'/teamtour modjoin on/off - sets modjoin rules for battles.<br />' +
-			'/teamtour teamlock on/off - sets teamlock for battles. <br />');
+			'<ul><li>/teamtour create (format), (team limit) - creates a new team tour. If no limit is specified the default is 16.</li><br />' +
+			'<li>/teamtour display - pushes down the team tour display. Requires room voice.</li><br />' +
+			'<li>/teamtour join - joins the team tour.</li><br />' +
+			'<li>/teamtour leave - leaves the team tour.</li><br />' +
+			'<li>/teamtour start - starts the team tour.</li><br />' +
+			'<li>/teamtour end - ends the team tour.</li><br />' +
+			'<li>/teamtour disqualify (team) - eliminates a team from the team tour.</li><br />' +
+			'<li>/teamtour submember (sub out), (sub in) - subs a member whos already in the tour out for a user not in the tour.</li><br />' +
+			'<li>/teamtour scout on/off - sets scouting rules for battles.</li><br />' +
+			'<li>/teamtour playerlimit (number) - sets a limit of players per team.</li><br />' +
+			'<li>/teamtour modjoin on/off - sets modjoin rules for battles.</li><br />' +
+			'<li>/teamtour teamlock on/off - sets teamlock for battles. </li></ul>');
 		},
 	},
 };
