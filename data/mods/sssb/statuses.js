@@ -179,13 +179,29 @@ let BattleStatuses = {
 			this.add(`c|+Revival Rawk|Oh, is it my turn now? Okay... I guess...`);
 		},
 		onSwitchOut() {
-			this.add(`c|+Revival Rawk|/raw I should be back later. No promises. <img src="http://i.imgur.com/rBA9M7A.png" height="50" width="50">`);
+			this.add(`c|/raw ${Server.nameColor("Revival Rawk", true, true)}: I should be back later. No promises. <img src="http://i.imgur.com/rBA9M7A.png" height="50" width="50">`);
 		},
 		onFaint() {
 			this.add(`c|+Revival Rawk|Welp, I guess it's time to go do something else.`);
 		},
 		onSourceFaint() {
 			this.add(`c|+Revival Rawk|Neato Burrito! I scored a KO!`);
+		},
+	},
+
+	ladykakizaki: {
+		noCopy: true,
+		onStart() {
+			this.add(`c|+Lady Kakizaki|WELCOME TO DIE!!!1!!`);
+		},
+		onSwitchOut() {
+			this.add(`c|+Lady Kakizaki|I'll be back, bitches`);
+		},
+		onFaint() {
+			this.add(`c|+Lady Kakizaki|Welp, I guess it's time to go do something else.`);
+		},
+		onSourceFaint() {
+			this.add(`c|+Lady Kakizaki|I killed you, because that's how much I love you ^w^ `);
 		},
 	},
 
