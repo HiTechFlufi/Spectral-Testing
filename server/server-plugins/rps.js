@@ -139,7 +139,7 @@ class RPSGame {
 		if (gameResult === "pp") {
 			// tie
 			this.p1.send(`|pm|~Rock/Paper/Scissors${this.gameType !== "ladderRPSLS" ? `` : `/Lizard/Spock`} Host|${this.p1.id}|/html The game with ${Server.nameColor(this.p2.name, true)} was a tie! ${Server.nameColor(this.p2.name, true)} has chose ${choiceNames[this.p2choice]}.`);
-			this.p2.send(`|pm|~Rock/Paper/Scissors${this.gameType !== "ladderRPSLS" ? `` : `/Lizard/Spock`} Host|${this.p2.}|/html The game with ${Server.nameColor(this.p1.name, true)} was a tie! ${Server.nameColor(this.p1.name, true)} has chose ${choiceNames[this.p1choice]}.`);
+			this.p2.send(`|pm|~Rock/Paper/Scissors${this.gameType !== "ladderRPSLS" ? `` : `/Lizard/Spock`} Host|${this.p2.id}|/html The game with ${Server.nameColor(this.p1.name, true)} was a tie! ${Server.nameColor(this.p1.name, true)} has chose ${choiceNames[this.p1choice]}.`);
 			if (this.gameType === "bucks") {
 				// return their 3 bucks each
 				Economy.writeMoney(this.p1.id, 3);
