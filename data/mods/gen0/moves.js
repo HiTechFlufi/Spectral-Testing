@@ -544,33 +544,29 @@ let BattleMovedex = {
 	leechseed: {
 		inherit: true,
 		desc: "At the end of each of the target's turns, The Pokemon at the user's position steals 1/16 of the target's maximum HP, rounded down and multiplied by the target's current Toxic counter if it has one, even if the target currently has less than that amount of HP remaining. If the target switches out or any Pokemon uses Haze, this effect ends. Grass-type Pokemon are immune to this move.",
-		onHit() {},
+		volatileStatus: 'leechseed',
 		effect: {
 			onStart(target) {
 				this.add('-start', target, 'move: Leech Seed');
 			},
-			onAfterMoveSelfPriority: 1,
-			onAfterMoveSelf(pokemon) {
-				let leecher = pokemon.side.foe.active[pokemon.volatiles['leechseed'].sourcePosition];
-				if (!leecher || leecher.fainted || leecher.hp <= 0) {
+			onResidualOrder: 8,
+			onResidual(pokemon) {
+				let target = this.effectData.source.side.active[pokemon.volatiles['leechseed'].sourcePosition];
+				if (!target || target.fainted || target.hp <= 0) {
 					this.debug('Nothing to leech into');
 					return;
 				}
-				// We check if leeched Pokémon has Toxic to increase leeched damage.
-				let toxicCounter = 1;
-				let residualdmg = pokemon.volatiles['residualdmg'];
-				if (residualdmg) {
-					residualdmg.counter++;
-					toxicCounter = residualdmg.counter;
+				let damage = this.damage(pokemon.maxhp / 8, pokemon, target);
+				if (damage) {
+					this.heal(damage, target, pokemon);
 				}
-				let toLeech = this.dex.clampIntRange(Math.floor(pokemon.maxhp / 16), 1) * toxicCounter;
-				let damage = this.damage(toLeech, pokemon, leecher);
-				if (residualdmg) this.hint("In Gen 1, Leech Seed's damage is affected by Toxic's counter.", true);
-				if (!damage || toLeech > damage) {
-					this.hint("In Gen 1, Leech Seed recovery is not limited by the remaining HP of the seeded Pokemon.", true);
-				}
-				this.heal(toLeech, leecher, pokemon);
 			},
+		},
+		onTryHit(target) {
+			if (target.hasType('Grass')) {
+				this.add('-immune', target);
+				return null;
+			}
 		},
 	},
   leechlife: {
