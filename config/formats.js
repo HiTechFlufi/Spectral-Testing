@@ -2387,9 +2387,9 @@ let Formats = [
 			for (const stat of stats) {
 				// @ts-ignore
 				if (spattack > spdefense) {
-					template.baseStats['spd'] = Dex.clampIntRange(template.baseStats['spa'], 1, 255);
+					template.baseStats['spd'] = this.dex.clampIntRange(template.baseStats['spa'], 1, 255);
 				} else if (spdefense > spattack) {
-					template.baseStats['spa'] = Dex.clampIntRange(template.baseStats['spd'], 1, 255);
+					template.baseStats['spa'] = this.dex.clampIntRange(template.baseStats['spd'], 1, 255);
 				}
 			}
 			return template;
