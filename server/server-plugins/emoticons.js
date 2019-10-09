@@ -182,6 +182,7 @@ exports.commands = {
 		ladder(target) {
 			if (!this.runBroadcast()) return;
 			if (!target) target = 50;
+			if (target && isNaN(target)) return this.errorReply(`"${target}" is not a valid number.`);
 			let keys = Db.emoteLadder.keys().map(name => {
 				return {name: name, usage: Db.emoteLadder.get(name).toLocaleString()};
 			});
