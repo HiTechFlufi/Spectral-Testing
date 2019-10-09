@@ -2365,9 +2365,6 @@ let Formats = [
 		onValidateSet: function (set) {
 			let template = this.dex.getTemplate(set.species);
 			let problems = [];
-			if (template.isNonstandard) {
-				problems.push(set.species + ' is not a real Pokemon.');
-			}
 			// Remove all held items
 			set.item = '';
 
