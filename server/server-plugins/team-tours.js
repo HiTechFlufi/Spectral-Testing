@@ -660,7 +660,7 @@ exports.commands = {
 			subOut = toID(subOut);
 			subIn = Users.get(toID(subIn));
 			if (!subOut) return this.errorReply('You need both a user to sub out!');
-			if (!subIn || !subIn.connected) return this.errorReply(`${subin} is not online!`);
+			if (!subIn || !subIn.connected) return this.errorReply(`${subIn} is not online!`);
 			room.teamTours.subMember(subOut, subIn.id, this);
 		},
 
