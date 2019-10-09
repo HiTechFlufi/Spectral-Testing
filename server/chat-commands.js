@@ -405,7 +405,7 @@ const commands = {
 		}
 
 		let output = `There ${Chat.plural(userList, "are", "is")} <strong style="color:#24678d">${Chat.count(userList, "</strong> users")} in this room:<br />`;
-		output += userList.join(`, `);
+		output += Chat.toListString(userList.map(u => { return Server.nameColor(u, true, true); }));
 
 		this.sendReplyBox(output);
 	},
