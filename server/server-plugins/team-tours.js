@@ -140,7 +140,7 @@ class TeamTours extends Rooms.RoomGame {
 
 		for (let u in players) {
 			if (!this.teams[teamNum]) {
-				this.teams[teamNum] = {id: players[u], name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
+				this.teams[teamNum] = {id: 'team'+ (teamNum + 1), name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
 				continue;
 			}
 			if (this.teams[teamNum].players.length !== this.teamPlayerCap) {
@@ -311,6 +311,9 @@ class TeamTours extends Rooms.RoomGame {
 				this.addPlayer(Users.get(subIn));
 				team.players.splice(team.players.indexOf(subOut), 1);
 				team.players.push(subIn);
+				Users.get(subIn).opponent = Users.get(subOut).opponent;
+				delete Users.get(subOut).opponent;
+				Users.get(Users.get(subIn).opponent).opponent = subIn;
 				break;
 			}
 		}
@@ -729,7 +732,7 @@ exports.commands = {
 					if (room.teamTours.teams[u].players.indexOf(team1[0]) !== -1) team1Name = room.teamTours.teams[u].name;
 					if (room.teamTours.teams[u].players.indexOf(team2) !== -1) team2Name = room.teamTours.teams[u].name;
 				}
-				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${team1[0]} ${(team2 ? ` vs ${team2Name}: ${team2}` : ' has proceeded to the next round!')}<br />`;
+				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${Server.nameColor(team1[0], true)} ${(team2 ? ` vs ${team2Name}: ${Server.nameColor(team2, true)}` : ' has proceeded to the next round!')}<br />`;
 			});
 			return this.sendReplyBox(display);
 		},
