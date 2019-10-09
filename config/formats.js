@@ -2284,7 +2284,7 @@ let Formats = [
 				'Castform-Rainy': true,
 				'Aegislash-Blade': true,
 			};
-			let types = Object.keys(this.data.TypeChart);
+			let types = Object.keys(this.dex.data.TypeChart);
 			for (let i = 0; i < types.length; i++) {
 				unobtainable[`Silvally-${types[i]}`] = true;
 			}
@@ -2305,15 +2305,15 @@ let Formats = [
 			let movepool = [];
 			let prevo = template.isMega ? this.dex.getTemplate(template.species.substring(0, template.species.length - 5)).prevo : template.prevo;
 
-			if (!this.data.Learnsets[toID(fusionTemplate.species)]) {
-				fusionTemplate.learnset = this.data.Learnsets[toID(fusionTemplate.species.split("-")[0])].learnset;
+			if (!this.dex.data.Learnsets[toID(fusionTemplate.species)]) {
+				fusionTemplate.learnset = this.dex.data.Learnsets[toID(fusionTemplate.species.split("-")[0])].learnset;
 			} else {
-				fusionTemplate.learnset = this.data.Learnsets[toID(fusionTemplate.species)].learnset;
+				fusionTemplate.learnset = this.dex.data.Learnsets[toID(fusionTemplate.species)].learnset;
 			}
 			if (!template.learnset) {
-				template.learnset = this.data.Learnsets[toID(template.species.split("-")[0])].learnset;
+				template.learnset = this.dex.data.Learnsets[toID(template.species.split("-")[0])].learnset;
 			} else {
-				template.learnset = this.data.Learnsets[(template.species.indexOf("-") !== -1 && template.isMega ? toID(template.species.split("-")[0]) : toID(template.species))].learnset;
+				template.learnset = this.dex.data.Learnsets[(template.species.indexOf("-") !== -1 && template.isMega ? toID(template.species.split("-")[0]) : toID(template.species))].learnset;
 			}
 			do {
 				added[template.species] = true;
@@ -2321,12 +2321,12 @@ let Formats = [
 				movepool = movepool.concat(Object.keys(fusionTemplate.learnset));
 			} while (!added[template.species]);
 			while (prevo) {
-				movepool = movepool.concat(Object.keys(this.data.Learnsets[prevo].learnset));
+				movepool = movepool.concat(Object.keys(this.dex.data.Learnsets[prevo].learnset));
 				prevo = this.dex.getTemplate(prevo).prevo;
 			}
 			prevo = fusionTemplate.isMega ? this.dex.getTemplate(fusionTemplate.species.substring(0, fusionTemplate.species.length - 5)).prevo : fusionTemplate.prevo;
 			while (prevo) {
-				movepool = movepool.concat(Object.keys(this.data.Learnsets[prevo].learnset));
+				movepool = movepool.concat(Object.keys(this.dex.data.Learnsets[prevo].learnset));
 				prevo = this.dex.getTemplate(prevo).prevo;
 			}
 			let moves = {};
