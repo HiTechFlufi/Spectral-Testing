@@ -2376,24 +2376,6 @@ let Formats = [
 
 			return problems;
 		},
-		// Remove special split
-		onModifyTemplate: function (template, target, source) {
-			template = Object.assign({}, template);
-			template.baseStats = Object.assign({}, template.baseStats);
-			let stats = ['atk', 'def', 'spa', 'spd', 'spe'];
-			// @ts-ignore
-			let spattack = template.baseStats['spa'];
-			let spdefense = template.baseStats['spd'];
-			for (const stat of stats) {
-				// @ts-ignore
-				if (spattack > spdefense) {
-					template.baseStats['spd'] = this.dex.clampIntRange(template.baseStats['spa'], 1, 255);
-				} else if (spdefense > spattack) {
-					template.baseStats['spa'] = this.dex.clampIntRange(template.baseStats['spd'], 1, 255);
-				}
-			}
-			return template;
-		},
 	},
 	{
 		name: "[Gen 7] Legendless",
