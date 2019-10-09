@@ -72,7 +72,7 @@ class TeamTours extends Rooms.RoomGame {
 					Users.get(p1).opponent = p2[0];
 				}
 			});
-			display += '<button class="button" name="send" value="/teamtours matches">Match ups</button>';
+			display += '<button class="button" name="send" value="/teamtours matches">Check the Matchups</button>';
 			this.isInProgress = true;
 		} else if (this.isEnded && !this.finished) {
 			display += 'This team tournament has ended!';
@@ -140,7 +140,7 @@ class TeamTours extends Rooms.RoomGame {
 
 		for (let u in players) {
 			if (!this.teams[teamNum]) {
-				this.teams[teamNum] = {id: 'team'+ (teamNum + 1), name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
+				this.teams[teamNum] = {id: players[u], name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
 				continue;
 			}
 			if (this.teams[teamNum].players.length !== this.teamPlayerCap) {
@@ -311,9 +311,6 @@ class TeamTours extends Rooms.RoomGame {
 				this.addPlayer(Users.get(subIn));
 				team.players.splice(team.players.indexOf(subOut), 1);
 				team.players.push(subIn);
-				Users.get(subIn).opponent = Users.get(subOut).opponent;
-				delete Users.get(subOut).opponent;
-				Users.get(Users.get(subIn).opponent).opponent = subIn;
 				break;
 			}
 		}
@@ -422,7 +419,7 @@ class TeamTours extends Rooms.RoomGame {
 				if (this.teams[u].players.length === this.teams[u].wins || (this.teams[u].players.length / 2) + 0.5 === this.teams[u].wins) {
 					this.teams[u].busy = false;
 					win = true;
-					this.room.add(this.teams[u].name + ' has won all their matches for this round of the team tournament.').update();
+					this.room.add(`${this.teams[u].name} has won all their matches for this round of the team tournament.`).update();
 				}
 				break;
 			}
@@ -573,7 +570,7 @@ exports.commands = {
 	teamtour: {
 		display(target, room, user) {
 			if (!this.can('broadcast', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!this.runBroadcast()) return;
 			this.room.add(`|uhtml|teamTour-${room.teamTours.ttNum}|${room.teamTours.lastDisplay}`);
 		},
@@ -596,7 +593,7 @@ exports.commands = {
 
 		end(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (deleteTeamTour(room.roomid, this)) {
 				this.privateModAction(`(${user.name} forcibly ended a team tournament.)`);
 			}
@@ -605,20 +602,20 @@ exports.commands = {
 		begin: 'start',
 		start(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			room.teamTours.start(this);
 		},
 
 		dq: 'disqualify',
 		disqualify(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!target) return this.errorReply('/teamtour disqualify (team).');
 			room.teamTours.disqualifyTeam(toID(target), this);
 		},
 
 		join(target, room, user) {
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!user.named) return this.errorReply('Please log in first.');
 			if (room.teamTours.isStarted) return this.sendReply('The team tour already started.');
 			if (room.teamTours.addUser(user, this)) {
@@ -628,7 +625,7 @@ exports.commands = {
 		},
 
 		leave(target, room, user) {
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!room.teamTours.isStarted) {
 				let player = room.game.playerTable[user.id];
 				const playerIndex = room.game.players.indexOf(player);
@@ -653,20 +650,20 @@ exports.commands = {
 		sub: 'submember',
 		submember(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!room.teamTours.isStarted) return this.errorReply('This command only works if the Team Tour is started.');
 			if (!target) return this.errorReply('/teamtour submember (sub out), (sub in)');
 			let [subOut, subIn] = target.split(',').map(p => { return p.trim(); });
 			subOut = toID(subOut);
 			subIn = Users.get(toID(subIn));
 			if (!subOut) return this.errorReply('You need both a user to sub out!');
-			if (!subIn || !subIn.connected) return this.errorReply('Sub in user not online!');
+			if (!subIn || !subIn.connected) return this.errorReply(`${subin} is not online!`);
 			room.teamTours.subMember(subOut, subIn.id, this);
 		},
 
 		scout(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (Dex.getFormat(room.teamTours.format).team) return this.errorReply(`You cannot disable scouting for random tiers.`);
 			if (!target) return this.errorReply('/teamtour scout on/off');
 			if (this.meansNo(toID(target))) {
@@ -684,7 +681,7 @@ exports.commands = {
 
 		modjoin(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (room.teamTours.isStarted) return this.errorReply('This command only works if the Team Tour is not started.');
 			if (!target) return this.errorReply('/teamtour modjoin on/off');
 			if (this.meansNo(toID(target))) {
@@ -703,7 +700,7 @@ exports.commands = {
 		tl: 'teamlock',
 		teamlock(target, room, user) {
 			if (!this.can('mute', null, room)) return false;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (room.teamTours.isStarted) return this.errorReply('This command only works if the Team Tour is not started.');
 			if (Dex.getFormat(room.teamTours.format).team) return this.errorReply(`You cannot teamlock random tiers.`);
 			if (!target) return this.errorReply('/teamtour teamlock on/off');
@@ -722,7 +719,7 @@ exports.commands = {
 
 		matches(target, room, user) {
 			if (!this.runBroadcast()) return;
-			if (!room.teamTours) return this.errorReply('There is no team tour in this room!');
+			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!room.teamTours.isStarted) return this.errorReply('This command only works if the Team Tour is started.');
 			let display = '';
 			room.teamTours.setMatches.challenges.forEach((team1, team2) => {
@@ -732,7 +729,7 @@ exports.commands = {
 					if (room.teamTours.teams[u].players.indexOf(team1[0]) !== -1) team1Name = room.teamTours.teams[u].name;
 					if (room.teamTours.teams[u].players.indexOf(team2) !== -1) team2Name = room.teamTours.teams[u].name;
 				}
-				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${Server.nameColor(team1[0], true)} ${(team2 ? ` vs ${team2Name}: ${Server.nameColor(team2, true)}` : ' has proceeded to the next round!')}<br />`;
+				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${team1[0]} ${(team2 ? ` vs ${team2Name}: ${team2}` : ' has proceeded to the next round!')}<br />`;
 			});
 			return this.sendReplyBox(display);
 		},
@@ -749,19 +746,19 @@ exports.commands = {
 		'': 'help',
 		help(target, room, user) {
 			if (!this.runBroadcast()) return;
-			return this.sendReplyBox('<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require Room Operator unless otherwise specified.</center><br />' +
-			'<ul><li>/teamtour create (format), (team limit) - creates a new team tour. If no limit is specified the default is 16.</li><br />' +
-			'<li>/teamtour display - pushes down the team tour display. Requires room voice.</li><br />' +
-			'<li>/teamtour join - joins the team tour.</li><br />' +
-			'<li>/teamtour leave - leaves the team tour.</li><br />' +
-			'<li>/teamtour start - starts the team tour.</li><br />' +
-			'<li>/teamtour end - ends the team tour.</li><br />' +
-			'<li>/teamtour disqualify (team) - eliminates a team from the team tour.</li><br />' +
-			'<li>/teamtour submember (sub out), (sub in) - subs a member whos already in the tour out for a user not in the tour.</li><br />' +
-			'<li>/teamtour scout on/off - sets scouting rules for battles.</li><br />' +
-			'<li>/teamtour playerlimit (number) - sets a limit of players per team.</li><br />' +
-			'<li>/teamtour modjoin on/off - sets modjoin rules for battles.</li><br />' +
-			'<li>/teamtour teamlock on/off - sets teamlock for battles. </li></ul>');
+			return this.sendReplyBox(`<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require Room Operator unless otherwise specified.</center><br />` +
+			`<ul><li>/teamtour create (format), (team limit) - Creates a new Team Tour. If no limit is specified the default is 16.</li><br />` +
+			`<li>/teamtour display - Pushes down the Team Tour display. Requires Room Voice.</li><br />` +
+			`<li>/teamtour join - Joins the Team Tour.</li><br />` +
+			`<li>/teamtour leave - Leaves the Team Tour.</li><br />` +
+			`<li>/teamtour start - Starts the Team Tour.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour end - Ends the Team Tour.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour disqualify (team) - Eliminates a team from the Team Tour.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour submember (sub out), (sub in) - Subs a member who's already in the tour out for a user not in the tour.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour scout on/off - sets scouting rules for battles.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour playerlimit (number) - sets a limit of players per team.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour modjoin on/off - sets modjoin rules for battles.  Requires Room Driver.</li><br />` +
+			`<li>/teamtour teamlock on/off - sets teamlock for battles.  Requires Room Driver.</li></ul>`);
 		},
 	},
 };
