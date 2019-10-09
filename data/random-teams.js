@@ -296,8 +296,8 @@ class RandomTeams {
 	randomCCMTeam() {
 		let team = [];
 
-		let natures = Object.keys(this.data.Natures);
-		let items = Object.keys(this.data.Items);
+		let natures = Object.keys(this.dex.data.Natures);
+		let items = Object.keys(this.dex.data.Items);
 
 		let random6 = this.random6Pokemon();
 
@@ -310,7 +310,7 @@ class RandomTeams {
 			if (this.gen >= 2) {
 				do {
 					item = this.sample(items);
-				} while (this.getItem(item).gen > this.gen || this.data.Items[item].isNonstandard);
+				} while (this.dex.getItem(item).gen > this.gen || this.data.Items[item].isNonstandard);
 			}
 
 			// Make sure forme is legal
@@ -320,16 +320,16 @@ class RandomTeams {
 			}
 
 			// Make sure that a base forme does not hold any forme-modifier items.
-			let itemData = this.getItem(item);
-			if (itemData.forcedForme && species === this.getTemplate(itemData.forcedForme).baseSpecies) {
+			let itemData = this.dex.getItem(item);
+			if (itemData.forcedForme && species === this.dex.getTemplate(itemData.forcedForme).baseSpecies) {
 				do {
 					item = this.sample(items);
-					itemData = this.getItem(item);
-				} while (itemData.gen > this.gen || itemData.isNonstandard || itemData.forcedForme && species === this.getTemplate(itemData.forcedForme).baseSpecies);
+					itemData = this.dex.getItem(item);
+				} while (itemData.gen > this.gen || itemData.isNonstandard || itemData.forcedForme && species === this.dex.getTemplate(itemData.forcedForme).baseSpecies);
 			}
 
 			// Random legal ability
-			let abilities = Object.values(template.abilities).filter(a => this.getAbility(a).gen <= this.gen);
+			let abilities = Object.values(template.abilities).filter(a => this.dex.getAbility(a).gen <= this.gen);
 			/**@type {string} */
 			// @ts-ignore
 			let ability = this.gen <= 2 ? 'None' : this.sample(abilities);
