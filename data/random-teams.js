@@ -310,7 +310,7 @@ class RandomTeams {
 			if (this.gen >= 2) {
 				do {
 					item = this.sample(items);
-				} while (this.dex.getItem(item).gen > this.gen || this.data.Items[item].isNonstandard);
+				} while (this.dex.getItem(item).gen > this.gen || this.dex.data.Items[item].isNonstandard);
 			}
 
 			// Make sure forme is legal
