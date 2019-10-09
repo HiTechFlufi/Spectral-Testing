@@ -212,7 +212,7 @@ let BattleScripts = {
 			if (this.startNewTrickRoom !== "Trick Room") {
 				this.addPseudoWeather(toID(this.startNewTrickRoom), this.p1.pokemon[0], "[move]: " + this.startNewTrickRoom);
 			} else {
-				this.pseudoWeather["trickroom"] = {
+				this.field.pseudoWeather["trickroom"] = {
 					id: 'trickroom',
 					duration: 5,
 				};
