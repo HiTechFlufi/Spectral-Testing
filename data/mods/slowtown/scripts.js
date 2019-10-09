@@ -32,7 +32,7 @@ let BattleScripts = {
 
 				pokemon.trapped = pokemon.maybeTrapped = false;
 				this.runEvent('TrapPokemon', pokemon);
-				if (!pokemon.knownType || this.getImmunity('trapped', pokemon)) {
+				if (!pokemon.knownType || this.dex.getImmunity('trapped', pokemon)) {
 					this.runEvent('MaybeTrapPokemon', pokemon);
 				}
 				// Disable the faculty to cancel switches if a foe may have a trapping ability
@@ -59,7 +59,7 @@ let BattleScripts = {
 						}
 						let ability = this.dex.getAbility(abilityName);
 						if (banlistTable && ability.id in banlistTable) continue;
-						if (pokemon.knownType && !this.getImmunity('trapped', pokemon)) continue;
+						if (pokemon.knownType && !this.dex.getImmunity('trapped', pokemon)) continue;
 						this.singleEvent('FoeMaybeTrapPokemon',
 							ability, {}, pokemon, source);
 					}
