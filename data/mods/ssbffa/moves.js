@@ -734,4 +734,66 @@ exports.BattleMovedex = {
 		target: "normal",
 		type: "Dragon",
 	},
+	
+	//trees are cool
+	"mildvines": {
+		id: "mildvines",
+		name: "Mild Vines",
+		basePower: 75,
+		accuracy: 85,
+		pp: 10,
+		priority: 0,
+		flags: {
+			protect: 1,
+			mirror: 1,
+			contact: 1,
+		},
+		secondary: {
+			chance: 100,
+			onHit(target, source) {
+				let result = this.random(2);
+				if (result === 0) {
+					this.boost({atk: 1});
+				} else {
+					this.boost({accuracy: 1});
+				}
+			},
+		},
+		multihit: 2,
+		category: "Physical",
+		isNonstandard: true,
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Vine Whip", target);
+		},
+		target: "normal",
+		type: "Grass",
+		zMovePower: 100,
+	},
+	
+	//trees are cool
+	"spicyvines": {
+		id: "spicyvines",
+		name: "Spicy Vines",
+		basePower: 100,
+		accuracy: true,
+		pp: 1,
+		noPPBoosts: true,
+		priority: 0,
+		flags: {
+			contact: 1,
+		},
+		multihit: 2,
+		category: "Physical",
+		isNonstandard: true,
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Fire Lash", target);
+		},
+		isZ: "carniviumz",
+		drain: [1, 2],
+		secondary: null,
+		target: "normal",
+		type: "Grass",
+		ignoreImmunities: true,
+		// I don't think this deals damage under inverse rules but whatever
+	},
 };

@@ -58,6 +58,26 @@ let BattleAbilities = {
 			this.boost({accuracy: 1});
 		},
 	},
+	"honeypot": {
+		id: "honeypot",
+		name: "Honey Pot",
+		desc: "This Pokemon draws Bug moves to itself to raise Attack by 1; Bug immunity. Sets up Grassy Terrain, Trick Room, Leech Seed and Aqua Ring on switch-in.",
+		shortDesc: "Raise Attack by 1 when hit by Bug; Bug immunity. Grassy Terrain, Trick Room, Leech Seed, Aqua Ring on switch-in.",
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Bug') {
+				if (!this.boost({atk: 1})) {
+					this.add('-immune', target, '[from] ability: Honey Pot');
+				}
+				return null;
+			}
+		},
+		onStart(pokemon) {
+			this.useMove("grassyterrain", pokemon);
+			this.useMove("trickroom", pokemon);
+			this.useMove("leechseed", pokemon);
+			this.useMove("aquaring", pokemon);
+		},
+	},
 };
 
 exports.BattleAbilities = BattleAbilities;
