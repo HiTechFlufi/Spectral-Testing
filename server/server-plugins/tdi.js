@@ -237,6 +237,21 @@ exports.commands = {
 			return this.sendReplyBox(`<strong>The current prize money for this season of Total Drama Island is ${room.tdi.state === "signups" ? pot : room.tdi.prizeMoney} ${moneyPlural}${(room.tdi.state === "signups" ? ", and may continue to rise/fall." : ".")}</strong>`);
 		},
 
+		"team2": "teams",
+		"team1": "teams",
+		team: "teams",
+		teams(target, room, user, connection, cmd) {
+			if (!room.tdi || room.tdi.state === "signups") return this.errorReply(`There must be a started season of Total Drama Island to check the teams.`);
+			if (!this.runBroadcast()) return;
+			if (cmd === "team1") {
+				return this.sendReplyBox(`Team 1 has the following members: ${Chat.toListString((room.tdi.team1.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
+			} else (if cmd === "team2") {
+				return this.sendReplyBox(`Team 2 has the following members: ${Chat.toListString((room.tdi.team2.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
+			} else {
+				return this.sendReplyBox(`Team 1 has the following members: ${Chat.toListString((room.tdi.team1.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.<br />Team 2 has the following members: ${Chat.toListString((room.tdi.team2.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
+			}
+		},
+
 		"": "help",
 		help() {
 			this.parse(`/tdihelp`);
@@ -254,6 +269,9 @@ exports.commands = {
 		/tdi leave - Leaves a season of Total Drama Island.
 		/tdi players - Lists the players in the season of Total Drama Island.
 		/tdi prize - Shows the current prize money for this season of Total Drama Island.
+		/tdi team1 - Shows Team 1 of this season of Total Drama Island.
+		/tdi team2 - Shows Team 2 of this season of Total Drama Island.
+		/tdi teams - Shows both Team 1 and Team 2 of this season of Total Drama Island.
 		/tdi help - Displays this help command.`,
 	],
 };
