@@ -80,13 +80,13 @@ class GuessWho {
 	joinGuessWho(user) {
 		if (this.players.includes(user.id)) return user.sendTo(this.room, "You have already joined the session of Guess Who in this room.");
 		this.players.push(user.id);
-		user.sendTo(this.room, "You have joined the ongoing session of Guess Who in this room.");
+		this.room.add(`|html|${Server.nameColor(user.name, true, true)} have joined the ongoing session of Guess Who in this room.`);
 	}
 
 	leaveGuessWho(user) {
 		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
 		this.players.splice(this.players.indexOf(user.id), 1);
-		user.sendTo(this.room, `You have successfully left the ongoing session of Guess Who.`);
+		this.room.add(`|html|${Server.nameColor(user.name, true, true)} have successfully left the ongoing session of Guess Who.`);
 	}
 
 	giveHint(hint) {
@@ -137,7 +137,7 @@ exports.commands = {
 		players(target, room, user) {
 			if (!this.runBroadcast()) return;
 			if (!room.guesswho) return this.errorReply("There is no ongoing game of Guess Who in this room.");
-			return this.sendReplyBox(`<strong>Current Player Count: ${room.guesswho.players.length} ${((room.guesswho.players.length === 1) ? "user is" : "users are")} in this session of Guess Who.<br /> Players: ${room.guesswho.players}.`);
+			return this.sendReplyBox(`<strong>Current Player Count: ${room.guesswho.players.length} ${((room.guesswho.players.length === 1) ? "user is" : "users are")} in this session of Guess Who.<br /> Players: ${Chat.toListString((room.guesswho.players.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
 		},
 
 		forcestart: "start",
