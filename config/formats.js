@@ -2363,7 +2363,7 @@ let Formats = [
 		ruleset: ['Obtainable', 'Standard'],
 		banlist: ['Uber'],
 		onValidateSet: function (set) {
-			let template = this.getTemplate(set.species);
+			let template = this.dex.getTemplate(set.species);
 			let problems = [];
 			if (template.isNonstandard) {
 				problems.push(set.species + ' is not a real Pokemon.');
