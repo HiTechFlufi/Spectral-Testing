@@ -2365,16 +2365,51 @@ let Formats = [
 		onValidateSet: function (set) {
 			let template = this.dex.getTemplate(set.species);
 			let problems = [];
+
+      	let move1 = this.dex.getMove(set.moves[0]).gen;
+      	let move2 = this.dex.getMove(set.moves[1]).gen;
+      	let move3 = this.dex.getMove(set.moves[2]).gen;
+      	let move4 = this.dex.getMove(set.moves[3]).gen;
+
+      	// Ban all non-generation 1 moves
+      	if (move1 > '1' || move2 > '1' || move3 > '1' || move4 > '1') return [`Only moves from Generation 1 are allowed.`];
+
 			// Remove all held items
 			set.item = '';
 
 			// Remove all abilities
-			set.ability = 'None';
+			set.ability = 'No Ability';
 
-			// Nullify ability
+			// Nullify nature
 			set.nature = 'Serious';
 
 			return problems;
+		},
+    	// Remove special split
+    	onModifyTemplate: function (template, target, source) {
+			template = Object.assign({}, template);
+			template.baseStats = Object.assign({}, template.baseStats);
+			let stats = ['atk', 'def', 'spa', 'spd', 'spe'];
+      	let spattack = template.baseStats['spa'];
+      	let spdefense = template.baseStats['spd'];
+			// @ts-ignore
+			for (const stat of stats) {
+				// @ts-ignore
+        		if (spattack > spdefense) {
+			    	template.baseStats['spd'] = this.dex.clampIntRange(template.baseStats['spa'], 1, 255);
+		    	} else if (spdefense > spattack) {
+			    	template.baseStats['spa'] = this.dex.clampIntRange(template.baseStats['spd'], 1, 255);
+		    	}
+			}
+			return template;
+    	},
+    	// Change move categories according to type
+    	onModifyMove(move, pokemon) {
+			if (move.type === 'Fire' || move.type === 'Water' || move.type === 'Grass' || move.type === 'Electric' || move.type === 'Ice' || move.type === 'Psychic' || move.type === 'Dragon') {
+        		move.category = 'Special';
+      	} else {
+        		move.category = 'Physical';
+      	}
 		},
 	},
 	{

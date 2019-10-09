@@ -520,6 +520,11 @@ let BattleMovedex = {
 		inherit: true,
 		desc: "If this move is successful, the user must recharge on the following turn and cannot select a move, unless the target or its substitute was knocked out by this move.",
 		shortDesc: "Can't move next turn if target or sub is not KOed.",
+    onHit(pokemon, target, source) {
+			if (target && target.hp <= 0) {
+        if (pokemon.volatiles['mustrecharge']) pokemon.removeVolatile('mustrecharge');
+      }
+		},
 	},
 	jumpkick: {
 		inherit: true,
@@ -568,6 +573,11 @@ let BattleMovedex = {
 			},
 		},
 	},
+  leechlife: {
+    inherit: true,
+    basePower: 20,
+    pp: 15,
+  },
 	lightscreen: {
 		num: 113,
 		accuracy: true,

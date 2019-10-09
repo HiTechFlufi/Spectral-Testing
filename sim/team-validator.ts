@@ -800,7 +800,7 @@ export class TeamValidator {
 			}
 		}
 
-		if (allowEVs && capEVs && totalEV > 510) {
+		if (allowEVs && capEVs && totalEV > 510 && this.format.id !== "gen7genzero") {
 			problems.push(`${name} has more than 510 total EVs.`);
 		}
 

@@ -7,7 +7,7 @@ let BattleFormats = {
 		name: 'Obtainable',
 		desc: "Makes sure the team is possible to obtain in-game.",
 		ruleset: ['Obtainable Moves', 'Obtainable Abilities', 'Obtainable Formes', 'Obtainable Misc'],
-		banlist: ['Unreleased'],
+		banlist: ['Unreleased', 'Nonexistent'],
 	},
 	obtainablemoves: {
 		effectType: 'ValidatorRule',
@@ -16,7 +16,6 @@ let BattleFormats = {
 		banlist: [
 			'Chansey + Charm + Seismic Toss', 'Chansey + Charm + Psywave',
 			'Blissey + Charm + Seismic Toss', 'Blissey + Charm + Psywave',
-			'Shiftry + Leaf Blade + Sucker Punch',
 			'Kakuna + Poison Sting + Harden', 'Kakuna + String Shot + Harden',
 			'Beedrill + Poison Sting + Harden', 'Beedrill + String Shot + Harden',
 			'Nidoking + Fury Attack + Thrash',
