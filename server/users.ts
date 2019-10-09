@@ -1395,7 +1395,7 @@ export class User extends Chat.MessageContext {
 				}
 				let fail = false;
 				// @ts-ignore
-				if (ttRoom.teamTours.scout || this.useird === room.p1.id || this.id === room.p2.id) {
+				if (!ttRoom.teamTours.scout || this.useird !== room.p1.id || this.id !== room.p2.id) {
 					for (let u = 0; u < players.length; u++) {
 						// @ts-ignore
 						if (Users.get(players[u]).latestIp !== this.latestIp) {
