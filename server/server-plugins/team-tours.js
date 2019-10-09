@@ -91,7 +91,7 @@ class TeamTours extends Rooms.RoomGame {
 
 	start(stuff) {
 		if (this.isStarted) {
-			return stuff.sendReply('The team tour already began!');
+			return stuff.sendReply('The Team Tour already began!');
 		}
 		if (this.teamPlayerCap * 4 > this.playerPool.length) {
 			return stuff.sendReply('Not enough players!');
@@ -140,7 +140,7 @@ class TeamTours extends Rooms.RoomGame {
 
 		for (let u in players) {
 			if (!this.teams[teamNum]) {
-				this.teams[teamNum] = {id: players[u], name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
+				this.teams[teamNum] = {id: 'team'+ (teamNum + 1), name: 'Team #' + (teamNum + 1), players: [players[u]], invites: [], wins: 0, busy: false, captain: players[u], hasWon: false};
 				continue;
 			}
 			if (this.teams[teamNum].players.length !== this.teamPlayerCap) {
@@ -156,7 +156,7 @@ class TeamTours extends Rooms.RoomGame {
 		if (!this.isStarted) return false;
 		if (stuff) {
 			if (!team) {
-				return stuff.sendReply('No team selected');
+				return stuff.sendReply('No team selected.');
 			}
 			let notFound = true;
 			for (let u in this.teams) {
@@ -170,10 +170,10 @@ class TeamTours extends Rooms.RoomGame {
 				}
 			}
 			if (notFound) {
-				stuff.sendReply(`${team} is not a team in the team tournament.`);
+				stuff.sendReply(`${team} is not a team in the Team Tournament.`);
 				return false;
 			} else {
-				this.room.add(`${team} has been disqulified from the team tournament.`).update();
+				this.room.add(`${team} has been disqulified from the Team Tournament.`).update();
 				this.buildDisplay();
 				return true;
 			}
@@ -191,7 +191,7 @@ class TeamTours extends Rooms.RoomGame {
 				}
 			}
 			if (notFound) {
-				return this.room.add(`|html|${team} was not found in the team tournament. This is an error please report it to an admin!<br/> <strong><span class="notice message-error">Err Code: onDisqualifyTeam(): Line 191 <em>"Not Found"</em></span></strong>`).update();
+				return this.room.add(`|html|${team} was not found in the Team Tournament. This is an error please report it to an admin!<br/> <strong><span class="notice message-error">Err Code: onDisqualifyTeam(): Line 191 <em>"Not Found"</em></span></strong>`).update();
 			} else {
 				return true;
 			}
@@ -311,15 +311,18 @@ class TeamTours extends Rooms.RoomGame {
 				this.addPlayer(Users.get(subIn));
 				team.players.splice(team.players.indexOf(subOut), 1);
 				team.players.push(subIn);
+				Users.get(subIn).opponent = Users.get(subOut).opponent;
+				delete Users.get(subOut).opponent;
+				Users.get(Users.get(subIn).opponent).opponent = subIn;
 				break;
 			}
 		}
 		if (busy) stuff.errorReply('The players teams are mid-battle!');
 
 		if (alreadyIn) {
-			stuff.errorReply(`${subIn} is already in the team tournament!`);
+			stuff.errorReply(`${subIn} is already in the Team Tournament!`);
 		} else {
-			return this.room.add(`|html|${Server.nameColor(subIn, true, true)} has subbed for ${Server.nameColor(subOut, true, true)} in this team tour.`).update();
+			return this.room.add(`|html|${Server.nameColor(subIn, true, true)} has subbed for ${Server.nameColor(subOut, true, true)} in this Team Tour.`).update();
 		}
 	}
 
@@ -353,7 +356,7 @@ class TeamTours extends Rooms.RoomGame {
 				if (this.teams[u].players.length === this.teams[u].wins || (this.teams[u].players.length / 2) + 0.5 === this.teams[u].wins) {
 					this.teams[u].busy = false;
 					win = true;
-					this.room.add(`${this.teams[u].name} has won all their matches for this round of the team tournament.`).update();
+					this.room.add(`${this.teams[u].name} has won all their matches for this round of the Team Tournament.`).update();
 					this.teams[u].hasWon = true;
 				}
 				break;
@@ -373,9 +376,9 @@ class TeamTours extends Rooms.RoomGame {
 			}
 		}
 		if (from.id === winner) {
-			this.room.add(`|html|${Server.nameColor(from.name, true, true)} has won the match against ${Server.nameColor(to.name, true, true)} in the team tournament.`).update();
+			this.room.add(`|html|${Server.nameColor(from.name, true, true)} has won the match against ${Server.nameColor(to.name, true, true)} in the Team Tournament.`).update();
 		} else {
-			this.room.add(`|html|${Server.nameColor(to.name, true, true)} has won the match against ${Server.nameColor(from.name, true, true)} in the team tournament.`).update();
+			this.room.add(`|html|${Server.nameColor(to.name, true, true)} has won the match against ${Server.nameColor(from.name, true, true)} in the Team Tournament.`).update();
 		}
 
 		this.haveBattled.push(from.id, to.id);
@@ -437,7 +440,7 @@ class TeamTours extends Rooms.RoomGame {
 			this.remaining++;
 		}
 
-		this.room.add(Users.get(winner).name + ' has forcibly won the match against ' + loser + ' in the team tournament.').update();
+		this.room.add(`${Users.get(winner).name} has forcibly won the match against ${loser} in the Team Tournament.`).update();
 
 		this.winners.push(winner);
 
@@ -467,7 +470,7 @@ class TeamTours extends Rooms.RoomGame {
 			}
 			break;
 		}
-		this.room.add(`The winning Team, ${name}, has also received ${(this.size * 3)} ${moneyPlural} each for winning the team tournament!`);
+		this.room.add(`The winning Team, ${name}, has also received ${(this.size * 3)} ${moneyPlural} each for winning the Team Tournament!`);
 
 		deleteTeamTour(this.id);
 	}
@@ -595,7 +598,7 @@ exports.commands = {
 			if (!this.can('mute', null, room)) return false;
 			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (deleteTeamTour(room.roomid, this)) {
-				this.privateModAction(`(${user.name} forcibly ended a team tournament.)`);
+				this.privateModAction(`(${user.name} forcibly ended the Team Tournament.)`);
 			}
 		},
 
@@ -617,7 +620,7 @@ exports.commands = {
 		join(target, room, user) {
 			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!user.named) return this.errorReply('Please log in first.');
-			if (room.teamTours.isStarted) return this.sendReply('The team tour already started.');
+			if (room.teamTours.isStarted) return this.sendReply('The Team Tour has already started.');
 			if (room.teamTours.addUser(user, this)) {
 				room.teamTours.buildDisplay();
 				return room.add(`|html|${Server.nameColor(user.name, true, true)} has joined the team tournament.`).update();
@@ -669,11 +672,11 @@ exports.commands = {
 			if (this.meansNo(toID(target))) {
 				if (!room.teamTours.scout) return this.errorReply(`It's already disabled!`);
 				room.teamTours.scout = false;
-				room.add('Scouting is not allowed in the team tour!');
+				room.add('Scouting is not allowed in the Team Tour!');
 			} else if (this.meansYes(toID(target))) {
 				if (room.teamTours.scout) return this.errorReply(`It's already enabled!`);
 				room.teamTours.scout = true;
-				room.add('Scouting is allowed in the team tour!');
+				room.add('Scouting is allowed in the Team Tour!');
 			} else {
 				return this.errorReply("Must be a yes or no value.");
 			}
@@ -687,11 +690,11 @@ exports.commands = {
 			if (this.meansNo(toID(target))) {
 				if (!room.teamTours.modjoin) return this.errorReply(`It's already disabled!`);
 				room.teamTours.modjoin = false;
-				room.add('Modjoining is not allowed in the team tour!');
+				room.add('Modjoining is not allowed in the Team Tour!');
 			} else if (this.meansYes(toID(target))) {
 				if (room.teamTours.modjoin) return this.errorReply(`It's already enabled!`);
 				room.teamTours.modjoin = true;
-				room.add('Modjoining is allowed in the team tour!');
+				room.add('Modjoining is allowed in the Team Tour!');
 			} else {
 				return this.errorReply("Must be a yes or no value.");
 			}
@@ -707,11 +710,11 @@ exports.commands = {
 			if (this.meansNo(toID(target))) {
 				if (!room.teamTours.teamLock) return this.errorReply(`It's already disabled!`);
 				room.teamTours.teamLock = false;
-				room.add('Team switching is allowed in the team tour!');
+				room.add('Team switching is allowed in the Team Tour!');
 			} else if (this.meansYes(toID(target))) {
 				if (room.teamTours.teamLock) return this.errorReply(`It's already enabled!`);
 				room.teamTours.teamLock = true;
-				room.add('Team switching is not allowed in the team tour!');
+				room.add('Team switching is not allowed in the Team Tour!');
 			} else {
 				return this.errorReply("Must be a yes or no value.");
 			}
@@ -729,7 +732,7 @@ exports.commands = {
 					if (room.teamTours.teams[u].players.indexOf(team1[0]) !== -1) team1Name = room.teamTours.teams[u].name;
 					if (room.teamTours.teams[u].players.indexOf(team2) !== -1) team2Name = room.teamTours.teams[u].name;
 				}
-				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${team1[0]} ${(team2 ? ` vs ${team2Name}: ${team2}` : ' has proceeded to the next round!')}<br />`;
+				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${Server.nameColor(team1[0], true)} ${(team2 ? ` vs ${team2Name}: ${Server.nameColor(team2, true)}` : ' has proceeded to the next round!')}<br />`;
 			});
 			return this.sendReplyBox(display);
 		},
@@ -746,19 +749,19 @@ exports.commands = {
 		'': 'help',
 		help(target, room, user) {
 			if (!this.runBroadcast()) return;
-			return this.sendReplyBox(`<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require Room Operator unless otherwise specified.</center><br />` +
+			return this.sendReplyBox(`<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require Room Operator, unless otherwise specified.</center><br />` +
 			`<ul><li>/teamtour create (format), (team limit) - Creates a new Team Tour. If no limit is specified the default is 16.</li><br />` +
 			`<li>/teamtour display - Pushes down the Team Tour display. Requires Room Voice.</li><br />` +
 			`<li>/teamtour join - Joins the Team Tour.</li><br />` +
 			`<li>/teamtour leave - Leaves the Team Tour.</li><br />` +
-			`<li>/teamtour start - Starts the Team Tour.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour end - Ends the Team Tour.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour disqualify (team) - Eliminates a team from the Team Tour.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour submember (sub out), (sub in) - Subs a member who's already in the tour out for a user not in the tour.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour scout on/off - sets scouting rules for battles.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour playerlimit (number) - sets a limit of players per team.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour modjoin on/off - sets modjoin rules for battles.  Requires Room Driver.</li><br />` +
-			`<li>/teamtour teamlock on/off - sets teamlock for battles.  Requires Room Driver.</li></ul>`);
+			`<li>/teamtour start - Starts the Team Tour.</li><br />` +
+			`<li>/teamtour end - Ends the Team Tour.</li><br />` +
+			`<li>/teamtour disqualify (team) - Eliminates a team from the Team Tour.</li><br />` +
+			`<li>/teamtour submember (sub out), (sub in) - Subs a member who's already in the tour out for a user not in the tour.</li><br />` +
+			`<li>/teamtour scout on/off - sets scouting rules for battles.</li><br />` +
+			`<li>/teamtour playerlimit (number) - sets a limit of players per team.</li><br />` +
+			`<li>/teamtour modjoin on/off - sets modjoin rules for battles.</li><br />` +
+			`<li>/teamtour teamlock on/off - sets teamlock for battles.</li></ul>`);
 		},
 	},
 };
