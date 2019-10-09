@@ -245,7 +245,7 @@ exports.commands = {
 			if (!this.runBroadcast()) return;
 			if (cmd === "team1") {
 				return this.sendReplyBox(`Team 1 has the following members: ${Chat.toListString((room.tdi.team1.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
-			} else (if cmd === "team2") {
+			} else if (cmd === "team2") {
 				return this.sendReplyBox(`Team 2 has the following members: ${Chat.toListString((room.tdi.team2.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
 			} else {
 				return this.sendReplyBox(`Team 1 has the following members: ${Chat.toListString((room.tdi.team1.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.<br />Team 2 has the following members: ${Chat.toListString((room.tdi.team2.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.`);
