@@ -103,16 +103,19 @@ exports.commands = {
 		if (!this.runBroadcast()) return;
 		let credits = `<font size=5 color=#F7189F><u><strong>${Config.serverName} Credits:</strong></u></font><br />` +
 			`<hr />` +
-			`<u><strong>Server Maintainers:</u></strong><br />` +
-			`- ${Server.nameColor('Roughskull', true)} (Owner, Sysadmin, Developer)<br />` +
-			`- ${Server.nameColor('RaginInfernape', true)} (Head Owner, Host, Main Developer)<br />` +
-			`- ${Server.nameColor('Volco', true)} (Sysadmin, and Emergency Developer)<br />` +
+			`<u><strong>Owners:</u></strong><br />` +
+			`- ${Server.nameColor('Roughskull', true)} (Owner, Sysadmin, Developer, Policy Lead)<br />` +
+			`- ${Server.nameColor('RaginInfernape', true)} (Head Owner, Host, Main Developer, Sysadmin, Technical/Policy Lead)<br />` +
+			`- ${Server.nameColor('Volco', true)} (Sysadmin, Technical Lead)<br />` +
 			`<hr />` +
 			`<u><strong>Major Contributors:</strong></u><br />` +
-			`- ${Server.nameColor('AlfaStorm', true)} (Developer)<br />` +
+			`- ${Server.nameColor('AlfaStorm', true)} (Developer, Technical Lead)<br />` +
 			`- ${Server.nameColor('Back At My Day', true)} (Developer)<br />` +
-			`- ${Server.nameColor('flufi', true)} (Developer)<br />` +
-			`- ${Server.nameColor('Chanter', true)} (Developer of our CSS)<br />` +
+			`- ${Server.nameColor('Chanter', true)} ([Retired], CSS Developer)<br />` +
+			`- ${Server.nameColor('Chandie', true)} (Developer, Policy Lead)<br />` +
+			`- ${Server.nameColor('flufi', true)} (Developer, Sysadmin, Technical/Policy Lead)<br />` +
+			`- ${Server.nameColor('Lady Kakizaki', true)} (Design Developer)<br />` +
+			`- ${Server.nameColor('Tactician Loki', true)} (Design Developer, Policy Lead)<br />` +
 			`<hr />` +
 			`<u><strong>Special Thanks:</strong></u><hr />` +
 			`- Our Staff Members<br />` +
@@ -125,7 +128,7 @@ exports.commands = {
 	customcommands(target, room, user) {
 		if (!this.runBroadcast()) return;
 		let display = `<div class="infobox-limited"><strong><h1>Custom Commands on ${Config.serverName}</h1></strong>`;
-		display += `<h2>Game Commands:</h2><ul>`;
+		display += `<details><summary><h2>Game Commands:</h2></summary><ul>`;
 		display += `<li><button class="button" name="send" value="/ambushhelp">Ambush</button></li>`;
 		display += `<li><button class="button" name="send" value="/dicegamehelp">Dice Game</button></li>`;
 		display += `<li><button class="button" name="send" value="/draft">Draft</button></li>`;
@@ -138,10 +141,10 @@ exports.commands = {
 		display += `<li><button class="button" name="send" value="/sentencehelp">Sentence Game</button></li>`;
 		display += `<li><button class="button" name="send" value="/slotshelp">Slots</button></li>`;
 		display += `<li><button class="button" name="send" value="/tdihelp">TDI</button></li>`;
-		display += `</ul>`;
-		display += `<h2>Chat Features:</h2><ul>`;
+		display += `<li><button class="button" name="send" value="/teamtourhelp">Team Tours</button></li>`;
+		display += `</ul></details>`;
+		display += `<details><summary><h2>Chat Features:</h2></summary><ul>`;
 		display += `<li><button class="button" name="send" value="/advertisehelp">Advertise A Room</button></li>`;
-		display += `<li><button class="button" name="send" value="/animehelp">Anime</button></li>`;
 		display += `<li><button class="button" name="send" value="/awayhelp">Away</button></li>`;
 		display += `<li><button class="button" name="send" value="/psgohelp">Cards</button></li>`;
 		display += `<li><button class="button" name="send" value="/committeehelp">Committee</button></li>`;
@@ -156,7 +159,6 @@ exports.commands = {
 		display += `<li><button class="button" name="send" value="/genrequesthelp">Gen Requests</button></li>`;
 		display += `<li><button class="button" name="send" value="/hexhelp">Hex Code</button></li>`;
 		display += `<li><button class="button" name="send" value="/lastactivehelp">Last Active</button></li>`;
-		display += `<li><button class="button" name="send" value="/mangahelp">Manga</button></li>`;
 		display += `<li><button class="button" name="send" value="/meme">Meme Randomizer</button></li>`;
 		display += `<li><button class="button" name="send" value="/serverannouncementshelp">News</button></li>`;
 		display += `<li><button class="button" name="send" value="/ontimehelp">Ontime</button></li>`;
@@ -176,11 +178,11 @@ exports.commands = {
 		display += `<li><button class="button" name="send" value="/taskshelp">Tasks</button></li>`;
 		display += `<li><button class="button" name="send" value="/tellhelp">Tells</button></li>`;
 		display += `<li><button class="button" name="send" value="/urbandefinehelp">Urban Define</button></li>`;
-		display += `</ul>`;
-		display += `<h2>Social Medias/Links:</h2><ul>`;
+		display += `</ul></details>`;
+		display += `<details><summary><h2>Social Medias/Links:</h2></summary><ul>`;
 		display += `<li><a href="https://discord.gg/chZgHQZ" target="_blank"><button style="cursor: url(&quot;&quot;), auto;">Discord</button></a>`;
 		display += `<li><a href="https://github.com/DeathlyPlays/Spectral" target="_blank"><button style="cursor: url(&quot;&quot;), auto;">GitHub</button></a>`;
-		display += `</ul>`;
+		display += `</ul></details>`;
 		if (user.isStaff && !this.broadcasting) {
 			display += `<h2>Staff Commands:</h2>`;
 			display += `<details><summary>Global Drivers (%) Commands:</summary>`;
