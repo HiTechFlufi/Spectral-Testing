@@ -54,7 +54,7 @@ class TeamTours extends Rooms.RoomGame {
 	buildDisplay() {
 		let display = `<center><div class="infobox"><font size="5">${this.title}</font><br />`;
 		if (!this.isStarted && !this.isEnded) {
-			display += `Joined Users: ${Chat.toListString(this.playerPool.map(u => {return Server.nameColor(u, true, true); }))}<br />`;
+			if (this.playerPool.length > 0) display += `Joined Users: ${Chat.toListString(this.playerPool.map(u => {return Server.nameColor(u, true, true); }))}<br />`;
 			display += `<br /><strong> Please note if a team does not have enough players, the last few people will be removed so every team is full. </strong><br />`;
 			display += `<br /><button name="send" value="/tt join">Join</button> | <button name="send" value="/tt leave">Leave</button><br />`;;
 		} else if (this.isStarted && !this.isEnded && !this.isInProgress) {
@@ -68,7 +68,7 @@ class TeamTours extends Rooms.RoomGame {
 				}
 				if (display.indexOf(playerTeam) === -1) display += `Team ${playerTeam} ${(oppTeam ? ` vs Team ${oppTeam}` : ' has proceeded to the next round!')}<br />`;
 				if (p2[0]) {
-					Users.get(p1).sendTo(this.room, `|c|~Spectral Server|/html ${Server.nameColor(Users.get(p1).name, true, true)} press this button to challenge your opponent <button class="button" name="parseCommand" value="/challenge ${p2[0]}, ${this.format}">Challenge!</button>`);
+					Users.get(p1).sendTo(this.room, `|c|~${Config.serverName} Server|/html ${Server.nameColor(Users.get(p1).name, true, true)} press this button to challenge your opponent <button class="button" name="parseCommand" value="/challenge ${p2[0]}, ${this.format}">Challenge!</button>`);
 					Users.get(p1).opponent = p2[0];
 				}
 			});
@@ -462,7 +462,8 @@ class TeamTours extends Rooms.RoomGame {
 		for (let u in this.teams) {
 			name = this.teams[u].name;
 			for (let i in this.teams[u].players) {
-				Db.money.set(toID(i), Db.money.get(toID(i), 0) + (this.size * 3));
+				Economy.writeMoney(toID(i), this.size * 3);
+				Economy.logTransaction(`${i} has won ${(this.size * 3)} ${moneyPlural} for winning the Team Tours in ${this.room.title}.`);
 			}
 			break;
 		}
@@ -728,7 +729,7 @@ exports.commands = {
 					if (room.teamTours.teams[u].players.indexOf(team1[0]) !== -1) team1Name = room.teamTours.teams[u].name;
 					if (room.teamTours.teams[u].players.indexOf(team2) !== -1) team2Name = room.teamTours.teams[u].name;
 				}
-				if (display.indexOf(team1[0]) === -1) display += `Team ${team1Name}: ${team1[0]} ${(team2 ? ` vs Team ${team2Name}: ${team2}` : ' has proceeded to the next round!')}<br />`;
+				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${team1[0]} ${(team2 ? ` vs ${team2Name}: ${team2}` : ' has proceeded to the next round!')}<br />`;
 			});
 			return this.sendReplyBox(display);
 		},
@@ -745,7 +746,7 @@ exports.commands = {
 		'': 'help',
 		help(target, room, user) {
 			if (!this.runBroadcast()) return;
-			return this.sendReplyBox('<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require room operator unless otherwise specified.</center><br />' +
+			return this.sendReplyBox('<center><strong><font size="7">TEAM TOURS!</font></strong><br />All commands require Room Operator unless otherwise specified.</center><br />' +
 			'<ul><li>/teamtour create (format), (team limit) - creates a new team tour. If no limit is specified the default is 16.</li><br />' +
 			'<li>/teamtour display - pushes down the team tour display. Requires room voice.</li><br />' +
 			'<li>/teamtour join - joins the team tour.</li><br />' +
