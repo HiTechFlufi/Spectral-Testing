@@ -2398,7 +2398,7 @@ let Formats = [
 			battle: 1,
 		},
 		ruleset: ['Obtainable', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
-	},/*
+	},
 	{
 		name: "[Gen 7] Slowtown",
 		desc: `Trick room is constantly active for the duration of the battle and will reapply itself every 5 turns. Concept by Lycanium Z. Coded by Insist.`,
@@ -2423,7 +2423,7 @@ let Formats = [
 				this.add(`-message`, `Starting next turn, the battle will set another 5 rounds of ${this.startNewTrickRoom}!`);
 			}
 		},
-	},*/
+	},
 	{
 		name: "[Gen 7] Scalemons",
 		desc: `Every Pok&eacute;mon's stats, barring HP, are scaled to give them a BST as close to 600 as possible. Use /scale to view each Pok&eacute;mon's stats.`,
