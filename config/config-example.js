@@ -195,7 +195,7 @@ exports.allowrequestingties = true;
  *   This feature can lag larger servers - turn this off if your server is
  *   getting more than 80 or so users.
  */
-exports.reportjoins = true;
+exports.reportjoins = false;
 
 /**
  * report joins and leaves periodically - sends silent join and leave messages in batches
@@ -210,7 +210,7 @@ exports.reportjoinsperiod = 0;
  *   This feature can lag larger servers - turn this off if your server is
  *   getting more than 160 or so users.
  */
-exports.reportbattles = true;
+exports.reportbattles = false;
 
 /**
  * report joins and leaves in battle - shows messages like "<USERNAME> joined" in battle
@@ -347,7 +347,7 @@ exports.inactiveuserthreshold = 1000 * 60 * 60;
  * in lockdown mode and the final battle finishes.  This is potentially useful
  * to prevent forgetting to restart after a lockdown where battles are finished.
  */
-exports.autolockdown = true;
+exports.autolockdown = false;
 
 /**
  * Custom avatars.
@@ -425,8 +425,18 @@ exports.defineKey = "";
 // Time for tells to expire if unopened (defaults to 7 days)
 exports.tellsexpiryage = 1000 * 60 * 60 * 24 * 7;
 
+// The rank for sending tells
+exports.tellrank = " ";
+
 // Enables or disabled /poof messages
 exports.poofOff = false;
+
+// github webhook info
+exports.github = {
+	secret: "DankMemes",
+	port: "8001",
+	rooms: ["development"]
+};
 
 /**
  * permissions and groups:
@@ -498,6 +508,20 @@ exports.poofOff = false;
 
 exports.grouplist = [
 	{
+		symbol: "☢",
+		id: "breakinggod",
+		name: "Breaking God",
+		root: true,
+		globalonly: true,
+	},
+	{
+		symbol: "⚔",
+		id: "sword",
+		name: "Admin but with a Sword Symbol",
+		root: true,
+		globalonly: true,
+	},
+	{
 		symbol: '~',
 		id: "admin",
 		name: "Administrator",
@@ -533,6 +557,7 @@ exports.grouplist = [
 		name: "Room Owner",
 		inherit: '@',
 		jurisdiction: 'u',
+		roomleader: true,
 		roombot: true,
 		roommod: true,
 		roomdriver: true,
@@ -541,6 +566,26 @@ exports.grouplist = [
 		addhtml: true,
 		roomonly: true,
 		gamemanagement: true,
+	},
+	{
+		symbol: "&",
+		id: "leader",
+		name: "Leader",
+		jurisdiction: "@u",
+		promote: "u",
+		roomleader: true,
+		roombot: true,
+		roommod: true,
+		roomdriver: true,
+		forcewin: true,
+		gdeclare: true,
+		declare: true,
+		modchatall: true,
+		rangeban: true,
+		editroom: true,
+		makeroom: true,
+		upperstaff: true,
+		exportinputlog: true,
 	},
 	{
 		symbol: '\u2605',
@@ -574,6 +619,7 @@ exports.grouplist = [
 		ban: true,
 		modchat: true,
 		modchatall: true,
+		roomop: true,
 		roomvoice: true,
 		forcerename: true,
 		ip: true,
@@ -628,15 +674,30 @@ exports.grouplist = [
 		exportinputlog: true,
 	},
 	{
+		symbol: "$",
+		id: "op",
+		name: "Operator",
+		jurisdiction: "u",
+		warn: '\u2606u',
+		kick: true,
+		mute: '\u2606u',
+	},
+	{
 		symbol: '+',
 		id: "voice",
 		name: "Voice",
 		inherit: ' ',
 		alts: 's',
 		broadcast: true,
+		minigame: true,
+		game: true,
+		gamemoderation: true,
+		gamemanagement: true,
+		tournaments: true,
 	},
 	{
 		symbol: ' ',
+		ip: 's',
 	},
 	{
 		name: 'Locked',
