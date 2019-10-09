@@ -1631,14 +1631,18 @@ let BattleAliases = {
 	"merutan": "Meltan",
 	"merumetaru": "Melmetal",
 
-	// Our Stuff :)
+	// Our Formats
 	"fakemonsrandbats": "[Gen 7] Fakemons Random Battles",
 	"ff": "[Gen 7] Frantic Fusions",
+	"metronomecc1v1": "[Gen 7] Metronome Challenge Cup 1v1",
 	"sp": "[Gen 7] Swapping Powers",
 	"ssbffa": "[Gen 7] Super Staff Bros Free For All",
 	"sssb": "[Gen 7] Spectral Super Staff Bros",
 	"tms": "[Gen 7] TMS Boss Rush",
 	"tmsdoubles": "[Gen 7] Doubles TMS Boss Rush",
+	// Our Pokemon Aliases
+	"azure": "Trubbish",
+	"spectral": "Marshadow",
 };
 
 exports.BattleAliases = BattleAliases;
