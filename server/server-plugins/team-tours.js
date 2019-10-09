@@ -383,6 +383,8 @@ class TeamTours extends Rooms.RoomGame {
 
 		this.haveBattled.push(from.id, to.id);
 		this.winners.push(winner);
+		delete from.opponent;
+		delete to.opponent;
 		if (win) this.remaining++;
 
 		if (this.teams.length === 1) {
@@ -658,10 +660,10 @@ exports.commands = {
 			if (!target) return this.errorReply('/teamtour submember (sub out), (sub in)');
 			let [subOut, subIn] = target.split(',').map(p => { return p.trim(); });
 			subOut = toID(subOut);
-			subIn = Users.get(toID(subIn));
+			subIn = toID(subIn);
 			if (!subOut) return this.errorReply('You need both a user to sub out!');
-			if (!subIn || !subIn.connected) return this.errorReply(`${subIn} is not online!`);
-			room.teamTours.subMember(subOut, subIn.id, this);
+			if (!Users.get(subIn) || !Users.get(subIn).connected) return this.errorReply(`${subIn} is not online!`);
+			room.teamTours.subMember(subOut, subIn, this);
 		},
 
 		scout(target, room, user) {
