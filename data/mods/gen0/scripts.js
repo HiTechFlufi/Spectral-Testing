@@ -8,8 +8,8 @@
 
 /**@type {ModdedBattleScriptsData} */
 let BattleScripts = {
-	inherit: 'gen2',
-	gen: 1,
+	inherit: 'gen1',
+	gen: 7,
 	debug(activity) {
 		if (this.format.debug) {
 			this.add('debug', activity);
