@@ -49,8 +49,8 @@ let BattleScripts = {
 							// to run it again.
 							continue;
 						}
-						let banlistTable = this.getFormat().banlistTable;
-						if (banlistTable && !('illegal' in banlistTable) && !this.getFormat().team) {
+						let banlistTable = this.dex.getFormat().banlistTable;
+						if (banlistTable && !('illegal' in banlistTable) && !this.dex.getFormat().team) {
 							// hackmons format
 							continue;
 						} else if (abilitySlot === 'H' && template.unreleasedHidden) {
@@ -122,7 +122,7 @@ let BattleScripts = {
 			this.sides[i].faintedLastTurn = this.sides[i].faintedThisTurn;
 			this.sides[i].faintedThisTurn = false;
 		}
-		let banlistTable = this.getFormat().banlistTable;
+		let banlistTable = this.dex.getFormat().banlistTable;
 		if (banlistTable && 'Rule:endlessbattleclause' in banlistTable) {
 			if (oneStale) {
 				let activationWarning = '<br />If all active Pok&eacute;mon go in an endless loop, Endless Battle Clause will activate.';
