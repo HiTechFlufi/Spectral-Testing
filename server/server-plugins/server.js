@@ -1279,6 +1279,8 @@ exports.commands = {
 		} else if (random === 2) {
 			rand = y;
 		}
+		// Lazy fix but it's a fix
+		if (rand > 1050) rand = 1050;
 		let tarPoke = Object.keys(Pokedex)[rand];
 		let pokeData = Pokedex[tarPoke];
 		if (!pokeData) Rooms.get('development').add(`Randp Crash Info: Randomly Generated Pokemon index: ${rand} | User: ${user.name}`);
