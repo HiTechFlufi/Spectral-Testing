@@ -80,13 +80,13 @@ class GuessWho {
 	joinGuessWho(user) {
 		if (this.players.includes(user.id)) return user.sendTo(this.room, "You have already joined the session of Guess Who in this room.");
 		this.players.push(user.id);
-		this.room.add(`|html|${Server.nameColor(user.name, true, true)} have joined the ongoing session of Guess Who in this room.`);
+		this.room.add(`|html|${Server.nameColor(user.name, true, true)} has joined the ongoing session of Guess Who in this room.`);
 	}
 
 	leaveGuessWho(user) {
 		if (!this.players.includes(user.id)) return user.sendTo(this.room, `You are not currently in the session of Guess Who in this room.`);
 		this.players.splice(this.players.indexOf(user.id), 1);
-		this.room.add(`|html|${Server.nameColor(user.name, true, true)} have successfully left the ongoing session of Guess Who.`);
+		this.room.add(`|html|${Server.nameColor(user.name, true, true)} has left the ongoing session of Guess Who.`);
 	}
 
 	giveHint(hint) {
