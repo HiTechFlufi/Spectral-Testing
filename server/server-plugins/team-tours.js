@@ -276,14 +276,14 @@ class TeamTours extends Rooms.RoomGame {
 			return;
 		}
 
-		/*for (const otherPlayer of this.players) {
+		for (const otherPlayer of this.players) {
 			if (!otherPlayer) continue;
 			const otherUser = Users.get(otherPlayer.id);
 			if (otherUser && otherUser.latestIp === user.latestIp) {
 				stuff.sendReply('You have already joined this game on another alt.');
 				return;
 			}
-		}*/
+		}
 		const player = this.addPlayer(user);
 		if (!player) return false;
 		this.playerPool.push(user.id);
