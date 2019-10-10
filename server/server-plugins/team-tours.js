@@ -62,10 +62,10 @@ class TeamTours extends Rooms.RoomGame {
 			this.setMatches.challenges.forEach((p2, p1) => {
 				let oppTeam = 'noMatch';
 				let playerTeam = 'noMatch';
-				for (let u in this.teams) {
-					if (this.teams[u].players.indexOf(p2[0]) !== -1) oppTeam = this.teams[u].name;
-					if (this.teams[u].players.indexOf(p1) !== -1) playerTeam = this.teams[u].name;
-				}
+
+				oppTeam = this.getUserTeam(p2[0]).name;
+				playerTeam = this.getUserTeam(p1).name;
+
 				if (display.indexOf(playerTeam) === -1) display += `Team ${playerTeam} ${(oppTeam ? ` vs Team ${oppTeam}` : ' has proceeded to the next round!')}<br />`;
 				if (p2[0]) {
 					Users.get(p1).sendTo(this.room, `|c|~${Config.serverName} Server|/html ${Server.nameColor(Users.get(p1).name, true, true)} press this button to challenge your opponent <button class="button" name="parseCommand" value="/challenge ${p2[0]}, ${this.format}">Challenge!</button>`);
@@ -276,14 +276,14 @@ class TeamTours extends Rooms.RoomGame {
 			return;
 		}
 
-		for (const otherPlayer of this.players) {
+		/*for (const otherPlayer of this.players) {
 			if (!otherPlayer) continue;
 			const otherUser = Users.get(otherPlayer.id);
 			if (otherUser && otherUser.latestIp === user.latestIp) {
 				stuff.sendReply('You have already joined this game on another alt.');
 				return;
 			}
-		}
+		}*/
 		const player = this.addPlayer(user);
 		if (!player) return false;
 		this.playerPool.push(user.id);
@@ -296,28 +296,30 @@ class TeamTours extends Rooms.RoomGame {
 			return stuff.sendReply('Missing the sub out user or the sub in user');
 		}
 		let alreadyIn = false;
-		let busy = false;
+		//let busy = false;
 		for (let team of this.teams) {
 			if (team.players.indexOf(subIn) !== -1) {
 				alreadyIn = true;
 				break;
 			}
 			if (team.players.indexOf(subOut) !== -1 && team.players.indexOf(subIn) === -1) {
-				if (team.busy) {
+				/*if (team.busy) {
 					busy = true;
 					break;
-				}
-				this.players[Users.get(subOut).id].destroy();
-				this.addPlayer(Users.get(subIn));
-				team.players.splice(team.players.indexOf(subOut), 1);
-				team.players.push(subIn);
-				Users.get(subIn).opponent = Users.get(subOut).opponent;
-				delete Users.get(subOut).opponent;
-				Users.get(Users.get(subIn).opponent).opponent = subIn;
+				}*/
+				subIn = Users.get(subIn);
+				subOut = Users.get(subOut);
+				this.removePlayer(subOut);
+				this.addPlayer(subIn);
+				team.players.splice(team.players.indexOf(subOut.id), 1);
+				team.players.push(subIn.id);
+				subIn.opponent = subOut.opponent;
+				delete subOut.opponent;
+				Users.get(subIn.opponent).opponent = subIn.id;
 				break;
 			}
 		}
-		if (busy) stuff.errorReply('The players teams are mid-battle!');
+		//if (busy) stuff.errorReply('The players teams are mid-battle!');
 
 		if (alreadyIn) {
 			stuff.errorReply(`${subIn} is already in the Team Tournament!`);
@@ -334,18 +336,11 @@ class TeamTours extends Rooms.RoomGame {
 		let to = room.p2;
 		let winner = winnerid;
 		let loserTeamName = 'notNamed';
-		for (let u in this.teams) {
-			if (from.id === winnerid) {
-				if (this.teams[u].players.indexOf(to.id) !== -1) {
-					loserTeamName = this.teams[u].name;
-					break;
-				}
-			} else if (to.id === winnerid) {
-				if (this.teams[u].players.indexOf(from.id) !== -1) {
-					loserTeamName = this.teams[u].name;
-					break;
-				}
-			}
+
+		if (from.id === winnerid) {
+			loserTeamName = this.getUserTeam(to.id).name;
+		} else if (to.id === winnerid) {
+			loserTeamName = this.getUserTeam(from.id).name;
 		}
 
 		let win = false;
@@ -475,6 +470,17 @@ class TeamTours extends Rooms.RoomGame {
 		this.room.add(`The winning Team, ${name}, has also received ${(this.size * 3)} ${moneyPlural} each for winning the Team Tournament!`);
 
 		deleteTeamTour(this.id);
+	}
+
+	getUserTeam(userid) {
+		let team;
+		for (let u = 0; u < this.teams.length; u++) {
+			if (this.teams[u].players.indexOf(userid) !== -1) {
+				team = this.teams[u];
+				break;
+			}
+		}
+		return team;
 	}
 }
 
@@ -726,16 +732,17 @@ exports.commands = {
 			if (!this.runBroadcast()) return;
 			if (!room.teamTours) return this.errorReply('There is no Team Tour in this room!');
 			if (!room.teamTours.isStarted) return this.errorReply('This command only works if the Team Tour is started.');
-			let display = '';
-			room.teamTours.setMatches.challenges.forEach((team1, team2) => {
-				let team1Name = 'noMatch';
-				let team2Name = 'noMatch';
-				for (let u in room.teamTours.teams) {
-					if (room.teamTours.teams[u].players.indexOf(team1[0]) !== -1) team1Name = room.teamTours.teams[u].name;
-					if (room.teamTours.teams[u].players.indexOf(team2) !== -1) team2Name = room.teamTours.teams[u].name;
+			let display = `<center><table style="border: 1px solid black;"><tr><th>Team</th><th>User</th><th>VS</th><th>Team</th><th>User</th></tr>`;
+
+			for (let team of room.teamTours.teams) {
+				for (let u = 0; u < team.players.length; u++) {
+					let player = Users.get(team.players[u]);
+					let opponent = player.opponent;
+					if (display.indexOf(player.name) === -1) display += `<tr><td style="padding: 15px; border-spacing: 5px;">${room.teamTours.getUserTeam(player.id).name}</td><td>${Server.nameColor(player.id, true)}</td><td>VS</td><td>${room.teamTours.getUserTeam(opponent).name}</td><td>${Server.nameColor(opponent, true)}</td><br /></tr>`;
 				}
-				if (display.indexOf(team1[0]) === -1) display += `${team1Name}: ${Server.nameColor(team1[0], true)} ${(team2 ? ` vs ${team2Name}: ${Server.nameColor(team2, true)}` : ' has proceeded to the next round!')}<br />`;
-			});
+			}
+
+			display += `</table></center>`;
 			return this.sendReplyBox(display);
 		},
 
