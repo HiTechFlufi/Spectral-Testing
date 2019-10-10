@@ -2435,6 +2435,21 @@ let Formats = [
 		ruleset: ['Obtainable', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 	},
 	{
+		name: "[Gen 7] Random Battle 3v3",
+		desc: `Randomized teams of level-balanced Pok&eacute;mon with sets that are generated to be competitively viable. Select 3 Pok&eacute;mon to bring to battle.`,
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3591157/">Sets and Suggestions</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3616946/">Role Compendium</a>`,
+		],
+		mod: 'gen7',
+		team: 'random',
+		teamLength: {
+			validate: [3, 6],
+			battle: 3,
+		},
+		ruleset: ['PotD', 'Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+	},
+	{
 		name: "[Gen 7] Slowtown",
 		desc: `Trick room is constantly active for the duration of the battle and will reapply itself every 5 turns. Concept by Lycanium Z. Coded by Insist.`,
 		threads: [
