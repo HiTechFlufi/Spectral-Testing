@@ -1765,7 +1765,6 @@ export class TeamValidator {
 			}
 
 			// also check to see if the mon's prevo or freely switchable formes can learn this move
-			template = this.learnsetParent(template);
 			if (template.species === 'Lycanroc-Dusk') {
 				template = dex.getTemplate('Rockruff-Dusk');
 			} else if (template.prevo) {
