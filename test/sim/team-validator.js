@@ -165,6 +165,14 @@ describe('Team Validator', function () {
 		illegal = TeamValidator.get('gen7ou').validateTeam(team);
 		assert(illegal);
 
+		team = [
+			{species: 'mamoswine', ability: 'oblivious', moves: ['tackle', 'iceshard', 'amnesia', 'furyattack'], evs: {hp: 1}},
+		];
+		illegal = TeamValidator.get('gen5ou').validateTeam(team);
+		assert(illegal);
+		illegal = TeamValidator.get('gen7ou').validateTeam(team);
+		assert.strictEqual(illegal, null);
+
 		// male-only hidden abilities are incompatible with egg moves in Gen 5
 
 		team = [
