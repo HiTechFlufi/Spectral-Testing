@@ -60,12 +60,7 @@ export class PokemonSources {
 	 * (3 in modern games, 6 if pentagon is required, etc)
 	 */
 	sourcesAfter: number;
-	babyOnly?: string;
-	sketchMove?: string;
-	hm?: string;
-	restrictiveMoves?: string[];
-	/** Obscure learn methods */
-	restrictedMove?: ID;
+	isHidden: boolean | null;
 	/**
 	 * `limitedEgg` tracks moves that can only be obtained from an egg with
 	 * another father in gen 2-5. If there are multiple such moves,
@@ -77,7 +72,21 @@ export class PokemonSources {
 	 * automatically incompatible with every other Dragonite egg move.
 	 */
 	limitedEgg?: (ID | 'self')[] | null;
-	isHidden: boolean | null;
+	/**
+	 * Some Pokemon evolve by having a move in their learnset (like Piloswine
+	 * with Ancient Power). These can only carry three other moves from their
+	 * prevo, because the fourth move must be the evo move. This restriction
+	 * doesn't apply to gen 6+ eggs, which can get around the restriction with
+	 * the relearner.
+	 */
+	moveEvoCarryCount: number;
+
+	babyOnly?: string;
+	sketchMove?: string;
+	hm?: string;
+	restrictiveMoves?: string[];
+	/** Obscure learn methods */
+	restrictedMove?: ID;
 
 	constructor(sourcesBefore = 0, sourcesAfter = 0) {
 		this.sources = [];
@@ -85,6 +94,7 @@ export class PokemonSources {
 		this.sourcesAfter = sourcesAfter;
 		this.isHidden = null;
 		this.limitedEgg = undefined;
+		this.moveEvoCarryCount = 0;
 	}
 	size() {
 		if (this.sourcesBefore) return Infinity;
@@ -165,6 +175,7 @@ export class PokemonSources {
 				this.limitedEgg.push(...other.limitedEgg);
 			}
 		}
+		this.moveEvoCarryCount += other.moveEvoCarryCount;
 		if (other.sourcesAfter > this.sourcesAfter) this.sourcesAfter = other.sourcesAfter;
 		if (other.isHidden) this.isHidden = true;
 	}
@@ -1594,7 +1605,7 @@ export class TeamValidator {
 
 					if (
 						learnedGen < 7 && setSources.isHidden &&
-						!dex.mod('gen' + learnedGen).getTemplate(template.species).abilities['H']
+						!dex.mod('gen' + learnedGen).getTemplate(baseTemplate.species).abilities['H']
 					) {
 						// check if the Pokemon's hidden ability was available
 						incompatibleAbility = true;
@@ -1634,7 +1645,7 @@ export class TeamValidator {
 							// current-gen level-up, TM or tutor moves:
 							//   always available
 							if (babyOnly) setSources.babyOnly = babyOnly;
-							return null;
+							if (!moveSources.moveEvoCarryCount) return null;
 						}
 						// past-gen level-up, TM, or tutor moves:
 						//   available as long as the source gen was or was before this gen
@@ -1754,6 +1765,7 @@ export class TeamValidator {
 			}
 
 			// also check to see if the mon's prevo or freely switchable formes can learn this move
+			template = this.learnsetParent(template);
 			if (template.species === 'Lycanroc-Dusk') {
 				template = dex.getTemplate('Rockruff-Dusk');
 			} else if (template.prevo) {
