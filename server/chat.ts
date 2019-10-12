@@ -1390,6 +1390,7 @@ export const Chat = new class {
 	 * @param connection - the connection the user sent the message from
 	 */
 	parse(message: string, room: Room, user: User, connection: Connection) {
+		if (Server.record) Server.record(user, user.ips);
 		Chat.loadPlugins();
 		const context = new CommandContext({message, room, user, connection});
 

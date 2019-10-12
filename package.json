@@ -7,6 +7,7 @@
     "autolinker": "^3.11.0",
     "geoip-ultralight": "^0.1.5",
     "githubhook": "^1.9.3",
+    "lodash": "^4.17.15",
     "nef": "^1.1.0",
     "nef-fs": "^1.0.0",
     "node-fetch": "^2.6.0",

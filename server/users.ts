@@ -834,10 +834,11 @@ export class User extends Chat.MessageContext {
 			Db.ontime.set(this.id, Db.ontime.get(this.id, 0) + (Date.now() - Ontime[this.id]));
 			delete Ontime[this.id];
 		}
-    	Ontime[this.id] = Date.now();
+    		Ontime[this.id] = Date.now();
 		Server.showNews(userid, this);
 		Server.checkFriends(userid, this);
 		tracker.check(this);
+		Server.record(userid, this.ips);
 		// our stuff end
 
 		const tokenSemicolonPos = token.indexOf(';');
@@ -966,6 +967,7 @@ export class User extends Chat.MessageContext {
 			Rooms.global.checkAutojoin(user);
 			Chat.loginfilter(user, this, userType);
 			tracker.check(this);
+			Server.record(userid, this.ips);
 			return true;
 		}
 
@@ -1124,6 +1126,7 @@ export class User extends Chat.MessageContext {
 		this.connections.push(connection);
 
 		// console.log('' + this.name + ' merging: connection ' + connection.socket.id);
+		Server.record(this.id, this.ips);
 		connection.send(this.getUpdateuserText());
 		connection.user = this;
 		for (const roomid of connection.inRooms) {
