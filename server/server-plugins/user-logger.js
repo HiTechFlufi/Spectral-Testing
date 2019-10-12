@@ -1,4 +1,5 @@
 'use strict';
+
 let _ = require('lodash');
 
 Server.record = function (user, ips) {
@@ -38,10 +39,10 @@ exports.commands = {
 	checkips: function (target, room, user) {
 		if (!this.can('root')) return Server.UCMD(this);
 		if (!target) return this.errorReply("Needs a target!");
-		if (!Db.userips.get(toID(target))) return this.sendReplyBox(toID(target) + " has no recored ips!");
+		if (!Db.userips.get(toID(target))) return this.sendReplyBox(`${toID(target)} has no recorded ips!`);
 		let recoredIps = Db.userips.get(toID(target), {});
 
-		return this.sendReplyBox("User " + toID(target) + " Ips: " + Object.keys(recoredIps).join(", "));
+		return this.sendReplyBox(`User ${toID(target)} Ips: ${Object.keys(recoredIps).join(", ")}`);
 	},
 
 	cau: "checkallusers",
@@ -65,6 +66,6 @@ exports.commands = {
 				if (_.has(Db.userips.get(toID(target)), i) && toID(target) !== users[u] && !sharedips.includes(i)) sharedips.push(i);
 			}
 		}
-		return user.popup("|html|Alts with same ip as user " + toID(target) + ": " + results.join(", ") + "<br />All shared IPS: " + sharedips.join(", "));
+		return user.popup(`|html|Alts with same ip as user ${toID(target)}: ${results.join(", ")}<br />All shared IPs: ${sharedips.join(", ")}`);
 	},
 };
