@@ -311,6 +311,32 @@ exports.commands = {
 			return this.sendReplyBox(`Almost done, time to publish "${channels[channelId].lastTitle}"! <button class="button" name="send" value="/dewtube publish">Publish the Video!</button>`);
 		},
 
+    cc: "changecategory",
+    changecat: "changecategory",
+		changecategory(target, room, user) {
+			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
+      let [video, newCategory] = target.split(",").map(p => p.trim());
+      let channelId = toID(getChannel(user.id));
+      let vid = channels[channelId].uploadedVideos[video];
+      let videos = channels[channelId].uploadedVideos;
+			if (!Object.keys(videos).length) return this.errorReply(`Your channel doesn't have any videos yet.`);
+			if (!vid) return this.errorReply(`You don't appear to have a video titled "${video}".`);
+      let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
+      let changeCategory = `Select a category to change your video to: `;
+      if (!newCategory) {
+        for (let category of categories) {
+          changeCategory += `<br><button class="button" name="send" value="/dewtube changecategory ${video}, ${category}">${category}</button></br>`;
+        }
+        return this.sendReplyBox(changeCategory);
+      } else if (!categories.includes(newCategory)) {
+        return this.errorReply(`"${newCategory}" is not a valid category.`);
+      } else {
+        vid.category = newCategory;
+        return this.sendReply(`Your video "${vid.name}" has been moved to the ${newCategory} category.`);
+      }
+			write();
+		},
+
 		pub: "publish",
 		upload: "publish",
 		publish(target, room, user) {
@@ -880,6 +906,7 @@ exports.commands = {
 			display += `<table border="1" cellspacing ="0" cellpadding="8"><tr style="font-weight: bold"><td>Title:</td><td>Category:</td><td>Views:</td><td>Likes:</td><td>Dislikes:</td><td>Subscribers:</td><td>Unsubs:</td><td>Monetized:</td><td>Uploaded:</td><td>View:</td></tr>`;
 			for (let video of sortedVids) {
 				let curVideo = videos[video];
+        if (!curVideo.category) curVideo.category = 'None';
 				display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.name}</td>`;
         display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.category}</td>`;
 				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.views.toLocaleString()}</td>`;
