@@ -286,24 +286,25 @@ exports.commands = {
 			return this.sendReplyBox(`Next, "${channels[channelId].lastTitle}" needs a category! <button class="button" name="send" value="/dewtube category list">Choose a Category!</button>`);
 		},
 
-    cat: "category",
+    	cat: "category",
 		category(target, room, user) {
 			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
 			let channelId = toID(getChannel(user.id));
-      	let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
+     		let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
 			let videoProgress = channels[channelId].vidProgress;
       	if (target === "list") {
         		if (videoProgress !== "edited" && videoProgress !== "recorded") {
           		return this.errorReply(`You haven't recorded any new footage yet.`);
-			} else {
-         	let chooseCategory = `Select a category for your video: `;
-         	for (let category of categories) {
-            	chooseCategory += `<br><button class="button" name="send" value="/dewtube category ${category}">${category}</button></br>`;
-          	}
-          	return this.sendReplyBox(chooseCategory);
-       	}
+        		} else {
+          		let chooseCategory = `Select a category for your video: `;
+          		for (let category of categories) {
+            		chooseCategory += `<br><button class="button" name="send" value="/dewtube category ${category}">${category}</button></br>`;
+          		}
+          		return this.sendReplyBox(chooseCategory);
+        		}
+			}
 			if (videoProgress !== "edited" && videoProgress !== "recorded") return this.errorReply(`You haven't recorded any new footage yet.`);
-     		if (!target) return this.errorReply(`Please provide a category. Use "/dewtube category list" to view available categories.`);
+      	if (!target) return this.errorReply(`Please provide a category. Use "/dewtube category list" to view available categories.`);
       	if (!categories.includes(target)) return this.errorReply(`${target} isn't a valid category. Use "/dewtube category list" to view available categories.`);
       	channels[channelId].lastCategory = target;
 			write();
