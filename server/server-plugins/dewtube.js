@@ -142,14 +142,14 @@ exports.commands = {
 				isMonetized: false,
 				lastTitle: null,
 				lastThumbnail: null,
-        lastCategory: null,
+				lastCategory: null,
 				allowingDrama: false,
 				lastDrama: null,
 				strikes: 0,
 				pendingCollab: null,
 				profilepic: null,
 				banner: null,
-        fontColor: "black",
+				fontColor: "black",
 				uploadedVideos: {},
 			};
 			write();
@@ -171,7 +171,7 @@ exports.commands = {
 		},
 
 		"!dashboard": true,
-    dash: "dashboard",
+    	dash: "dashboard",
 		channelpage: "dashboard",
 		channel: "dashboard",
 		dashboard(target, room, user) {
@@ -191,7 +191,7 @@ exports.commands = {
 			if (channels[channelId].likes > 0) display += `<font color="${channels[channelId].fontColor}"><strong>Like Count:</strong> ${channels[channelId].likes.toLocaleString()}</font><br />`;
 			if (channels[channelId].dislikes > 0) display += `<font color="${channels[channelId].fontColor}"><strong>Dislike Count:</strong> ${channels[channelId].dislikes.toLocaleString()}</font><br />`;
 			if (channels[channelId].lastTitle && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Latest Video:</strong> ${channels[channelId].lastTitle}</font><br />`;
-      if (channels[channelId].lastCategory && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Video Category:</strong> ${channels[channelId].lastCategory}</font><br />`;
+      	if (channels[channelId].lastCategory && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Video Category:</strong> ${channels[channelId].lastCategory}</font><br />`;
 			if (channels[channelId].lastThumbnail && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Video Thumbnail:</strong></font><br /><img src="${channels[channelId].lastThumbnail}" width="250" height="140"><br />`;
 			if (channels[channelId].videos > 0) display += `<font color="${channels[channelId].fontColor}"><strong>Total Videos Uploaded:</strong> ${channels[channelId].videos.toLocaleString()}</font><br />`;
 			if (channels[channelId].allowingDrama) display += `<font color="${channels[channelId].fontColor}"><small><strong>(Allowing Drama: [&#9745;])</strong></small></font>`;
@@ -290,50 +290,49 @@ exports.commands = {
 		category(target, room, user) {
 			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
 			let channelId = toID(getChannel(user.id));
-      let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
+      	let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
 			let videoProgress = channels[channelId].vidProgress;
-      if (target === "list") {
-        if (videoProgress !== "edited" && videoProgress !== "recorded") {
-          return this.errorReply(`You haven't recorded any new footage yet.`);
-        } else {
-          let chooseCategory = `Select a category for your video: `;
-          for (let category of categories) {
-            chooseCategory += `<br><button class="button" name="send" value="/dewtube category ${category}">${category}</button></br>`;
-          }
-          return this.sendReplyBox(chooseCategory);
-        }
-      }
+      	if (target === "list") {
+        		if (videoProgress !== "edited" && videoProgress !== "recorded") {
+          		return this.errorReply(`You haven't recorded any new footage yet.`);
+			} else {
+         	let chooseCategory = `Select a category for your video: `;
+         	for (let category of categories) {
+            	chooseCategory += `<br><button class="button" name="send" value="/dewtube category ${category}">${category}</button></br>`;
+          	}
+          	return this.sendReplyBox(chooseCategory);
+       	}
 			if (videoProgress !== "edited" && videoProgress !== "recorded") return this.errorReply(`You haven't recorded any new footage yet.`);
-      if (!target) return this.errorReply(`Please provide a category. Use "/dewtube category list" to view available categories.`);
-      if (!categories.includes(target)) return this.errorReply(`${target} isn't a valid category. Use "/dewtube category list" to view available categories.`);
-      channels[channelId].lastCategory = target;
+     		if (!target) return this.errorReply(`Please provide a category. Use "/dewtube category list" to view available categories.`);
+      	if (!categories.includes(target)) return this.errorReply(`${target} isn't a valid category. Use "/dewtube category list" to view available categories.`);
+      	channels[channelId].lastCategory = target;
 			write();
 			return this.sendReplyBox(`Almost done, time to publish "${channels[channelId].lastTitle}"! <button class="button" name="send" value="/dewtube publish">Publish the Video!</button>`);
 		},
 
-    cc: "changecategory",
-    changecat: "changecategory",
+    	cc: "changecategory",
+    	changecat: "changecategory",
 		changecategory(target, room, user) {
 			if (!getChannel(user.id)) return this.errorReply(`You do not have a DewTube channel yet.`);
-      let [video, newCategory] = target.split(",").map(p => p.trim());
-      let channelId = toID(getChannel(user.id));
-      let vid = channels[channelId].uploadedVideos[video];
-      let videos = channels[channelId].uploadedVideos;
+      	let [video, newCategory] = target.split(",").map(p => p.trim());
+      	let channelId = toID(getChannel(user.id));
+      	let vid = channels[channelId].uploadedVideos[video];
+      	let videos = channels[channelId].uploadedVideos;
 			if (!Object.keys(videos).length) return this.errorReply(`Your channel doesn't have any videos yet.`);
 			if (!vid) return this.errorReply(`You don't appear to have a video titled "${video}".`);
-      let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
-      let changeCategory = `Select a category to change your video to: `;
-      if (!newCategory) {
-        for (let category of categories) {
-          changeCategory += `<br><button class="button" name="send" value="/dewtube changecategory ${video}, ${category}">${category}</button></br>`;
-        }
-        return this.sendReplyBox(changeCategory);
-      } else if (!categories.includes(newCategory)) {
-        return this.errorReply(`"${newCategory}" is not a valid category.`);
-      } else {
-        vid.category = newCategory;
-        return this.sendReply(`Your video "${vid.name}" has been moved to the ${newCategory} category.`);
-      }
+      	let categories = ["Film & Animation", "Music", "Animals", "Sports", "Gaming", "People & Blogs", "Comedy", "Entertainment", "News & Politics", "Howto & Style", "Education", "Science & Technology"];
+      	let changeCategory = `Select a category to change your video to: `;
+      	if (!newCategory) {
+        		for (let category of categories) {
+          		changeCategory += `<br><button class="button" name="send" value="/dewtube changecategory ${video}, ${category}">${category}</button></br>`;
+        		}
+        		return this.sendReplyBox(changeCategory);
+     		} else if (!categories.includes(newCategory)) {
+        		return this.errorReply(`"${newCategory}" is not a valid category.`);
+      	} else {
+        		vid.category = newCategory;
+        		return this.sendReply(`Your video "${vid.name}" has been moved to the ${newCategory} category.`);
+      	}
 			write();
 		},
 
@@ -862,31 +861,31 @@ exports.commands = {
 		},
 
 		color: "fontcolor",
-    textcolor: "fontcolor",
-    tc: "fontcolor",
+    	textcolor: "fontcolor",
+    	tc: "fontcolor",
 		fc: "fontcolor",
 		fontcolor(target, room, user) {
 			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!target) return this.parse(`/dewtubehelp`);
-      let targetCap = target.charAt(0).toUpperCase() + target.slice(1);
+      	let targetCap = target.charAt(0).toUpperCase() + target.slice(1);
 			channels[channelId].fontColor = targetCap;
 			write();
 			return this.sendReplyBox(`Your dashboard's font color has been set to <b><font color="${target}">${targetCap}</font></b>.`);
 		},
 
-    reply: "comment",
+    	reply: "comment",
 		com: "comment",
 		comment(target, room, user) {
 			let [channel, video, comment] = target.split(",").map(p => { return p.trim(); });
-      let generatedComments = [];
+      	let generatedComments = [];
 			if (!video || !channel || !comment) return this.sendReply("/dewtube comment [channel], [video], [comment] - Leave a comment on a specific channel's video.");
-      let userChannel = toID(getChannel(user.id));
+      	let userChannel = toID(getChannel(user.id));
 			let channelId = toID(channel);
 			if (!channels[channelId]) return this.errorReply(`"${channel}" does not appear to be a channel.`);
-      let vid = channels[channelId].uploadedVideos[video];
+      	let vid = channels[channelId].uploadedVideos[video];
 			if (!vid) return this.errorReply(`${channels[channelId].name} appears to not have a video titled "${video}".`);
-      vid.comments.push(`${channels[userChannel].name}: ${comment}`);
+      	vid.comments.push(`<b>${channels[userChannel].name}</b>: ${comment}`);
 			write();
 			return this.sendReply(`Successfully left the comment "${comment}" on ${channel}'s video, ${video}.`);
 		},
@@ -964,16 +963,19 @@ exports.commands = {
 		/dewtube record [title], [optional thumbnail link] - Films a DewTube video with the title [title] and thumbnail if included.
 		/dewtube edit - Edits a DewTube video.
 		/dewtube publish - Publishs a DewTube video.
+		/dewtube changecategory [video] - Change the category of one of our videos.
 		/dewtube collab [channel] - Requests to collaborate with the specified channel.
 		/dewtube accept [channel] - Accepts a collaboration request from the specified channel.
 		/dewtube deny [channel] - Declines a collaboration request from the specified channel.
 		/dewtube cancel [channel] - Cancels a collaboration request that you sent the specified channel.
+		/dewtube comment [channel], [video], [comment] - Leave a comment on a specified channel's video.
 		/dewtube monetization - Toggles monetization on your DewTube videos. Must have 1,000 subscribers.
 		/dewtube drama [channel name] - Starts drama against the other channel. Both parties must have drama enabled.
 		/dewtube toggledrama - Toggles on/off starting/being a target of drama.
 		/dewtube notify - Toggles on/off notifications for when your cooldowns are finished.
 		/dewtube pfp [image] - Sets your DewTube channel profile picture as [image].
 		/dewtube banner [image] - Sets your DewTube channel banner as [image].
+		/dewtube fontcolor [color/hex] - Sets the font color on your channel's dashboard.
 		/dewtube dashboard [channel name] - Shows the channel's dashboard; defaults to yourself.
 		/dewtube videos [channel name] - Shows the channel's uploaded videos; defaults to yourself.
 		/dewtube view [channel name], [video] - Shows [channel]'s video [video]'s analytics.
