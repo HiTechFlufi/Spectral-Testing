@@ -192,8 +192,7 @@ let BattleItems = {
 			if (target.getMoveHitData(move).typeMod > 0) {
 				this.debug('Ghoulish Rag resist');
 				return this.chainModify(0.25);
-			}
-			if (target.getMoveHitData(move).typeMod === 2) {
+			} else {
 				this.debug('Ghoulish Rag weaken');
 				return this.chainModify(4);
 			}
@@ -201,11 +200,11 @@ let BattleItems = {
 		// Double defenses
 		onModifyDefPriority: 2,
 		onModifyDef(def, pokemon) {
-			return this.chainModify(2);
+			return this.chainModify(1.5);
 		},
 		onModifySpDPriority: 2,
 		onModifySpD(spd, pokemon) {
-			return this.chainModify(2);
+			return this.chainModify(1.5);
 		},
 		// Ghost-type power boost
 		onBasePowerPriority: 6,
@@ -214,8 +213,8 @@ let BattleItems = {
 				return this.chainModify([0x1333, 0x1000]);
 			}
 		},
-		desc: "The holder swaps weaknesses and resistances, receives 2x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
-		shortDesc: "2x Def/Spd, swaps weaks/resists, Ghost-type moves have x1.2 power.",
+		desc: "The holder swaps weaknesses and resistances, receives 1.5x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
+		shortDesc: "1.5x Def/Spd, swaps weaks/resists, Ghost-type moves have x1.2 power.",
 	},
 
 	// Lady Kakizaki
