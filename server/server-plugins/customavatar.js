@@ -46,7 +46,7 @@ function loadCustomAvatars() {
 			});
 	});
 }
-
+Server.loadCustomAvatars = loadCustomAvatars;
 loadCustomAvatars();
 
 exports.commands = {
