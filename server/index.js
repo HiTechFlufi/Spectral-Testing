@@ -81,6 +81,7 @@ if (Config.watchconfig) {
 			global.Config = ConfigLoader.load(true);
 			if (global.Users) Users.cacheGroupData();
 			Monitor.notice('Reloaded ../config/config.js');
+			Server.loadCustomAvatars();
 		} catch (e) {
 			Monitor.adminlog("Error reloading ../config/config.js: " + e.stack);
 		}
