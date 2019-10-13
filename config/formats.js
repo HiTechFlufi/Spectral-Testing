@@ -2608,7 +2608,7 @@ let Formats = [
 		],
 
 		mod: 'gen7',
-		ruleset: ['[Gen 7] OU'],
+		ruleset: ['[Gen 7] OU', '!Obtainable Abilities'],
 		banlist: ['Slaking', 'Regigigas'],
 		restrictedMoves: ['Assist', 'Baneful Bunker', 'Block', 'Copycat', 'Destiny Bond', 'Detect', 'Mat Block', 'Mean Look', 'Metronome', 'Nature Power', 'Protect', 'Roar', 'Skill Swap', 'Spider Web', 'Spiky Shield', 'Substitute', 'Whirlwind'],
 		onValidateTeam(team, format, teamHas) {
