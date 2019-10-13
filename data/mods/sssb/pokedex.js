@@ -17,7 +17,7 @@ let BattlePokedex = {
 	},
 	oricoriosensu: {
 		inherit: true,
-		baseStats: {hp: 85, atk: 70, def: 80, spa: 108, spd: 80, spe: 123},
+		baseStats: {hp: 75, atk: 70, def: 85, spa: 108, spd: 85, spe: 108},
 	},
 	flygon: {
 		inherit: true,
