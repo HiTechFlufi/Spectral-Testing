@@ -39,7 +39,6 @@ let BattleAbilities = {
 	"noability": {
 		shortDesc: "Does nothing.",
 		id: "noability",
-		isNonstandard: "Past",
 		name: "No Ability",
 		rating: 0.1,
 		num: 0,
