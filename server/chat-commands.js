@@ -3789,6 +3789,7 @@ const commands = {
 			return this.errorReply(`Crash while rebuilding: ${stderr}`);
 		}
 		this.sendReply(`Rebuilt.`);
+		Server.loadCustomAvatars();
 		Monitor.updateServerLock = false;
 	},
 
