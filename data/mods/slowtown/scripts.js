@@ -207,7 +207,7 @@ let BattleScripts = {
 		}
 		this.add('turn', this.turn);
 		if (this.turn % 5 === 0 || this.turn === 1) {
-			if (this.trickroom) this.removePseudoWeather(toID(this.trickroom));
+			if (this.trickroom) this.field.removePseudoWeather(toID(this.trickroom));
 			this.add("-message", this.startNewTrickRoom + " started!");
 			if (this.startNewTrickRoom !== "Trick Room") {
 				this.addPseudoWeather(toID(this.startNewTrickRoom), this.p1.pokemon[0], "[move]: " + this.startNewTrickRoom);
