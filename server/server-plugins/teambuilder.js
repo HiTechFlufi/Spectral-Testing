@@ -7,7 +7,7 @@
 
 const FS = require("../../.lib-dist/fs").FS;
 
-// add new tier name here
+// add new tier name here make sure it matches the mod folder's name
 let tiersList = [];
 
 /*
@@ -16,8 +16,9 @@ let tiersList = [];
  */
 
 /*
- * add the tier name and dex in here
- * {tierName1: dexVariable1, tierName2: dexVariable2...}
+ * add the tier id  and dex in here
+ * tier id must match the mod folder's name
+ * {tierid1: dexVariable1, tierid2: dexVariable2...}
  */ 
 let tierDexList = {};
 
@@ -496,7 +497,7 @@ exports.commands = {
 			let [tier, pkmn] = target.split(',').map(p => {
 				return p.trim();
 			});
-			if (!tier || !pkmn) return this.parse(`/help teambuilder species`);
+			if (!tier || !pkmn) return this.parse(`/help teambuilder addmon`);
 			tier = toID(tier);
 			if (!tiersList.includes(tier)) return this.errorReply(`${toID(tier)} is not a custom teambuilder tier. Available tiers: ${tiersList.join(',')}`);
 			if (!user.named) return this.errorReply('You need a name!');
