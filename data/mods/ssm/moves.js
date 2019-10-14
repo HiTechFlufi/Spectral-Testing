@@ -74,7 +74,7 @@ let BattleMovedex = {
 		shortDesc: "User switches out after damaging the target. Changes target's type to water.",
 		id: "douseanddip",
 		isViable: true,
-		name: "Douse & Dip",
+		name: "Douse and Dip",
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
