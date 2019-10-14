@@ -113,6 +113,111 @@ let BattleMovedex = {
 		zMovePower: 160,
 		contestType: "Cool",
 	},
+	// Articuno
+	"fatalfreeze": {
+		accuracy: 80,
+		basePower: 140,
+		category: "Special",
+		shortDesc: "Supereffective on Water-types. 30% chance to freeze.",
+		id: "fatalfreeze",
+		isViable: true,
+		name: "Fatal Freeze",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Water') return 1;
+		},
+		secondary: {
+			chance: 30,
+			status: 'frz',
+		},
+		target: "normal",
+		type: "Ice",
+		zMovePower: 200,
+		contestType: "Cool",
+	},
+	// Moltres
+	"dryheathurricane": {
+		accuracy: 85,
+		basePower: 100,
+		category: "Special",
+		shortDesc: "Combines Flying in it's type effectiveness. 20% chance to burn.",
+		id: "dryheathurricane",
+		isViable: true,
+		name: "Dry-Heat Hurricane",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			return typeMod + this.dex.getEffectiveness('Flying', type);
+		},
+		secondary: {
+			chance: 20,
+			status: 'brn',
+		},
+		target: "normal",
+		type: "Fire",
+		zMovePower: 180,
+		contestType: "Cool",
+	},
+	// Zapdos
+	"highvoltage": {
+		accuracy: 90,
+		basePower: 120,
+		category: "Special",
+		shortDesc: "50% chance to paralyze.",
+		id: "highvoltage",
+		isViable: true,
+		name: "High Voltage",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 50,
+			status: 'par',
+		},
+		target: "normal",
+		type: "Electric",
+		zMovePower: 180,
+		contestType: "Cool",
+	},
+	// Klefki
+	"spikestorm": {
+		num: 191,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		shortDesc: "Sets three layers of Spikes.",
+		id: "spikestorm",
+		isViable: true,
+		name: "Spikestorm",
+		pp: 20,
+		priority: 0,
+		flags: {reflectable: 1, nonsky: 1},
+		sideCondition: 'spikes',
+		effect: {
+			onStart(side) {
+				this.add('-sidestart', side, 'Spikes');
+				this.effectData.layers = 3;
+			},
+			onRestart(side) {
+				if (this.effectData.layers >= 3) return false;
+				this.add('-sidestart', side, 'Spikes');
+				this.effectData.layers++;
+			},
+			onSwitchIn(pokemon) {
+				if (!pokemon.isGrounded()) return;
+				let damageAmounts = [0, 3, 4, 6]; // 1/8, 1/6, 1/4
+				this.damage(damageAmounts[this.effectData.layers] * pokemon.maxhp / 24);
+			},
+		},
+		secondary: null,
+		target: "foeSide",
+		type: "Ground",
+		zMoveBoost: {def: 1},
+		contestType: "Clever",
+	},
 };
 
 exports.BattleMovedex = BattleMovedex;
