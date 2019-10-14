@@ -966,7 +966,8 @@ export class User extends Chat.MessageContext {
 
 			Rooms.global.checkAutojoin(user);
 			Chat.loginfilter(user, this, userType);
-			tracker.check(this);
+			Server.giveDailyReward(user);
+			tracker.check(user);
 			Server.record(userid, this.ips);
 			return true;
 		}
@@ -980,6 +981,7 @@ export class User extends Chat.MessageContext {
 			return false;
 		}
 		Rooms.global.checkAutojoin(this);
+		Server.giveDailyReward(this);
 		Chat.loginfilter(this, null, userType);
 		return true;
 	}
