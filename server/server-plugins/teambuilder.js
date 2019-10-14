@@ -957,7 +957,7 @@ exports.commands = {
 		/teambuilder edit (tier), (mon slot) - Edit a mon in the teambuiler. Mon slot is 1-6
 		/teambuilder monlist (tier) - displays the list of usable pokemon for the chosen custom tier.
 		/teambuilder itemlist (tier) - displays the item list of the chosen custom tier.
-		/teambuilder addmon (tier), (mon species), (current team count plus 1) - Adds a new mon to the teambuilder. Example: /teambuilder addmon Shruman, 2.
+		/teambuilder addmon (tier), (mon species), (current team count plus 1) - Adds a new mon to the teambuilder. Example: /teambuilder addmon fakeMonName, 2.
 		/teambuilder removemon (tier), (mon slot) - Removes a mon from the teambuilder with the selected number. Mon slot is 1-6. Note: Cannot remove if only 1 mon left!
 		/teambuilder details main (tier), (mon slot) - Pulls up detail menu to be editted. Mon slot is 1-6.
 		/teambuilder stats main (tier), (mon slot) - Pulls up stat menu to be editted. Mon slot is 1-6.
