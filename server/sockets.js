@@ -43,8 +43,8 @@ if (cluster.isMaster) {
 			case '*': {
 				// *socketid, ip, protocol
 				// connect
-				const [socketid, ip, protocol] = data.substr(1).split('\n');
-				Users.socketConnect(worker, id, socketid, ip, protocol);
+				const [socketid, ip, protocol, useragent] = data.substr(1).split('\n');
+				Users.socketConnect(worker, id, socketid, ip, protocol, userAgent);
 				break;
 			}
 
@@ -650,7 +650,7 @@ if (cluster.isMaster) {
 		}
 
 		// @ts-ignore
-		process.send(`*${socketid}\n${socketip}\n${socket.protocol}`);
+		process.send(`*${socketid}\n${socketip}\n${socket.protocol}\n${socket.headers["user-agent"]}`);
 
 		socket.on('data', message => {
 			// drop empty messages (DDoS?)
