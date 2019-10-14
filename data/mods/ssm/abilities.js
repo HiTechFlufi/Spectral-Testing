@@ -79,4 +79,15 @@ exports.BattleAbilities = {
 		rating: 4.5,
 		num: -1012,
 	},
+
+	"impenetrableshell": {
+		shortDesc: "The user takes halfed damage from attacks.",
+		onSourceModifyDamage(damage, source, target, move) {
+			return this.chainModify(0.5);
+		},
+		id: "impenetrableshell",
+		name: "Impenetrable Shell",
+		rating: 4.5,
+		num: -1013,
+	},
 };

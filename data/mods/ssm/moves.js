@@ -65,6 +65,54 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Steel",
 	},
+	// Rotom-Wash
+	"douseanddip": {
+		accuracy: 90,
+		basePower: 60,
+		category: "Special",
+		desc: "If this move is successful and the user has not fainted, the user switches out even if it is trapped and is replaced immediately by a selected party member. The user does not switch out if there are no unfainted party members, or if the target switched out using an Eject Button or through the effect of the Emergency Exit or Wimp Out Abilities. The target's typing is changed to Water.",
+		shortDesc: "User switches out after damaging the target. Changes target's type to water.",
+		id: "douseanddip",
+		isViable: true,
+		name: "Douse & Dip",
+		pp: 20,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(target) {
+			if (target.getTypes().join() === 'Water' || !target.setType('Water')) {
+				// Soak should animate even when it fails.
+				// Returning false would suppress the animation.
+				this.add('-fail', target);
+				return null;
+			}
+			this.add('-start', target, 'typechange', 'Water');
+		},
+		selfSwitch: true,
+		secondary: null,
+		target: "normal",
+		type: "Water",
+		zMovePower: 120,
+		contestType: "Cool",
+	},
+	// Blastoise
+	"hydraulicmaelstrom": {
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		shortDesc: "Traps and damages the target for 4-5 turns.",
+		id: "hydraulicmaelstrom",
+		isViable: true,
+		name: "Hydraulic Maelstrom",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		volatileStatus: 'partiallytrapped',
+		secondary: null,
+		target: "normal",
+		type: "Water",
+		zMovePower: 160,
+		contestType: "Cool",
+	},
 };
 
 exports.BattleMovedex = BattleMovedex;
