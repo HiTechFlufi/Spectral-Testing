@@ -584,7 +584,7 @@ let BattleMovedex = {
 		category: "Physical",
 		onPrepareHit(target, source) {
 			this.add('-anim', source, 'Earthquake', target);
-			this.add(`c|$shademaura ⌐⚡_|Oh ur SSB is so good`);
+			this.add(`c|%shademaura ⌐⚡_|Oh ur SSB is so good`);
 		},
 		flags: {protect: 1, mirror: 1},
 		volatileStatus: 'taunt',
@@ -606,7 +606,7 @@ let BattleMovedex = {
 		category: "Special",
 		onPrepareHit(target, source) {
 			this.add('-anim', source, 'Tri Attack', target);
-			this.add(`c|+Lady Kakizaki|LoVE MEeeeEE!!!!!!!!!!!`);
+			this.add(`c|%Lady Kakizaki|LoVE MEeeeEE!!!!!!!!!!!`);
 		},
 		flags: {protect: 1, mirror: 1},
 		secondaries: [

@@ -184,8 +184,8 @@ let BattleItems = {
 	// Auroura
 	"ghoulishrag": {
 		id: "ghoulishrag",
-		desc: "Holder's weaknesses and resistances are inverted, Defense and Special Defense are doubled and Ghost attacks have 1.2x power.",
-		shortDesc: "Holder has inverted weaknesses/resistances, doubled Def/SpD and 1.2x power to Ghost attacks.",
+		desc: "The holder swaps weaknesses and resistances, receives 1.5x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
+		shortDesc: "1.5x Def/Spd, swaps weaks/resists, Ghost-type moves have x1.2 power.",
 		name: "Ghoulish Rag",
 		// Weaknesses to Resistances (and vice versa)
 		onSourceModifyDamage(damage, source, target, move) {
@@ -213,8 +213,6 @@ let BattleItems = {
 				return this.chainModify([0x1333, 0x1000]);
 			}
 		},
-		desc: "The holder swaps weaknesses and resistances, receives 1.5x Defense and Sp.Defense, and Ghost-type moves receive x1.2 power.",
-		shortDesc: "1.5x Def/Spd, swaps weaks/resists, Ghost-type moves have x1.2 power.",
 	},
 
 	// Lady Kakizaki

@@ -160,16 +160,16 @@ let BattleStatuses = {
 	shademaura: {
 		noCopy: true,
 		onStart() {
-			this.add(`c|$shademaura ⌐⚡_|Get ready for a sub-optimal performance`);
+			this.add(`c|%shademaura ⌐⚡_|Get ready for a sub-optimal performance`);
 		},
 		onSwitchOut() {
-			this.add(`c|$shademaura ⌐⌐⚡_|Thats good for now`);
+			this.add(`c|%shademaura ⌐⌐⚡_|Thats good for now`);
 		},
 		onFaint() {
-			this.add(`c|$shademaura ⌐⚡_|fuck`);
+			this.add(`c|%shademaura ⌐⚡_|fuck`);
 		},
 		onSourceFaint() {
-			this.add(`c|$shademaura ⌐⚡_|PogChamp`);
+			this.add(`c|%shademaura ⌐⚡_|PogChamp`);
 		},
 	},
 
@@ -192,16 +192,16 @@ let BattleStatuses = {
 	ladykakizaki: {
 		noCopy: true,
 		onStart() {
-			this.add(`c|+Lady Kakizaki|WELCOME TO DIE!!!1!!`);
+			this.add(`c|%Lady Kakizaki|WELCOME TO DIE!!!1!!`);
 		},
 		onSwitchOut() {
-			this.add(`c|+Lady Kakizaki|I'll be back, bitches`);
+			this.add(`c|%Lady Kakizaki|I'll be back, bitches`);
 		},
 		onFaint() {
-			this.add(`c|+Lady Kakizaki|Welp, I guess it's time to go do something else.`);
+			this.add(`c|%Lady Kakizaki|Welp, I guess it's time to go do something else.`);
 		},
 		onSourceFaint() {
-			this.add(`c|+Lady Kakizaki|I killed you, because that's how much I love you ^w^ `);
+			this.add(`c|%Lady Kakizaki|I killed you, because that's how much I love you ^w^ `);
 		},
 	},
 

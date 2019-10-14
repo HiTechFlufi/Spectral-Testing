@@ -236,8 +236,22 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Modest",
 			},
-			// Operators
-			"$shademaura ⌐⚡_": {
+			"%Lady✨Kakizaki": {
+				species: "Suicune",
+				item: "Dumplings",
+				ability: "Chaotic Aura",
+				gender: "F",
+				moves: ["Calm Mind", "Substitute", "Extrasensory"],
+				baseSignatureMove: "yandereblitz",
+				signatureMove: "Yandere Blitz",
+				evs: {
+					hp: 252,
+					spa: 252,
+					spd: 4,
+				},
+				nature: "Modest",
+			},
+			"%shademaura ⌐⚡_": {
 				species: "Regigigas",
 				item: "Pixie Plate",
 				ability: "Slow Pixilate",
@@ -252,6 +266,7 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Jolly",
 			},
+			// Operators
 			// Voices
 			"+Revival Clair": {
 				species: "Garchomp",
@@ -281,21 +296,6 @@ class RandomSSSBTeams extends RandomTeams {
 					spd: 216,
 				},
 				nature: "Impish",
-			},
-			"+Lady✨Kakizaki": {
-				species: "Suicune",
-				item: "Dumplings",
-				ability: "Chaotic Aura",
-				gender: "F",
-				moves: ["Calm Mind", "Substitute", "Extrasensory"],
-				baseSignatureMove: "yandereblitz",
-				signatureMove: "Yandere Blitz",
-				evs: {
-					hp: 252,
-					spa: 252,
-					spd: 4,
-				},
-				nature: "Modest",
 			},
 			"+Revival Rawk": {
 				species: "Tapu Fini",
