@@ -239,9 +239,9 @@ function updateSearches() {
 			updatedSearches[user.id] = Rooms.global.RPS.searches[userid];
 		} else {
 			// return bucks if it's a search for bucks
-			if (updatedSearches[user.id] === "bucks") {
+			if (updatedSearches[userid] === "bucks") {
 				Economy.writeMoney(userid, 3);
-				Economy.logTransaction(`${user.name} was refunded their join fee of 3 ${moneyPlural} from their RPS buy-in matches.`);
+				Economy.logTransaction(`${userid} was refunded their join fee of 3 ${moneyPlural} from their RPS buy-in matches.`);
 			}
 		}
 	}
