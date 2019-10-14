@@ -5,7 +5,7 @@
  * ****************************************************************************************/
 'use strict';
 
-const fs = require('fs');
+const FS = require("../../.lib-dist/fs").FS;
 
 // add new tier name here
 let tiersList = [];
@@ -23,7 +23,7 @@ let tierDexList = {};
 
 
 function writeTB() {
-	fs.writeFileSync('config/teambuilder.json', JSON.stringify(Server.TB));
+	FS("config/chat-plugins/teambuilder.json").write(JSON.stringify((Server.TB ? Server.TB : {})));
 }
 Server.writeTB = writeTB;
 
@@ -351,19 +351,20 @@ class TeamBuilder {
 exports.TeamBuilder = TeamBuilder;
 
 try {
-	fs.accessSync('config/teambuilder.json', fs.F_OK);
+	FS("config/chat-plugins/teambuilder.json").readIfExistsSync();
 } catch (e) {
-	fs.writeFile('config/teambuilder.json', '{}', function (err) {
+	FS("config/chat-plugins/teambuilder.json").write("{}", function (err) {
 		if (err) {
 			console.error('Error while loading teambuilder.json ' + err);
 			Server.TB = {};
 		} else {
-			console.log('config/teambuilder.json is not found, making a new one');
+			console.log('config/chat-plugins/teambuilder.json is not found, making a new one');
 		}
 	});
 }
+
 try {
-	let raw = JSON.parse(fs.readFileSync('config/teambuilder.json', 'utf8'));
+	let raw = JSON.parse(FS('config/chat-plugins/teambuilder.json').readFileSync());
 	Server.TB = {};
 	for (let first in raw) {
 		for (let u in raw[first].monArray) {
