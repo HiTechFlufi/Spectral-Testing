@@ -44,7 +44,7 @@ if (cluster.isMaster) {
 				// *socketid, ip, protocol
 				// connect
 				const [socketid, ip, protocol, useragent] = data.substr(1).split('\n');
-				Users.socketConnect(worker, id, socketid, ip, protocol, userAgent);
+				Users.socketConnect(worker, id, socketid, ip, protocol, useragent);
 				break;
 			}
 
