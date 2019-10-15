@@ -365,7 +365,7 @@ try {
 }
 
 try {
-	let raw = JSON.parse(FS('config/chat-plugins/teambuilder.json').readFileSync());
+	let raw = JSON.parse(FS('config/chat-plugins/teambuilder.json').readSync());
 	Server.TB = {};
 	for (let first in raw) {
 		for (let u in raw[first].monArray) {
