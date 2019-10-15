@@ -63,7 +63,7 @@ function postAds() {
 
 let monData;
 try {
-	monData = FS("data/ssb-data.txt").readIfExistsSync().toString().split("\n\n");
+	monData = FS("data/mods/sssb/ssb-data.txt").readIfExistsSync().toString().split("\n\n");
 } catch (e) {
 	console.error(e);
 }
@@ -585,17 +585,19 @@ exports.commands = {
 		if (!this.runBroadcast()) return false;
 		if (!target || target === "help") return this.parse("/help sssb");
 		let targetId = toID(target);
-		if (targetId === "as" || targetId === "alfa") target = "alfastorm";
-		if (targetId === "bamd") target = "backatmyday";
-		if (targetId === "horrific") target = "horrific17";
-		if (targetId === "kakizaki") target = "ladykakizaki";
-		if (targetId === "insist" || targetId === "infernape") target = "ragininfernape";
-		if (targetId === "clair") target = "revivalclair";
-		if (targetId === "xfloatz") target = "revivalxfloatz";
-		if (targetId === "mewth") target = "roughskull";
-		if (targetId === "maura") target = "shademaura";
-		if (targetId === "bk" || targetId === "loki" || targetId === "bloodedkitten") target = "tacticianloki";
-		if (targetId === "arrays") target = "volco";
+		if (targetId === "as" || targetId === "alfa") targetId = "alfastorm";
+		if (targetId === "bamd") targetId = "backatmyday";
+		if (targetId === "horrific") targetId = "horrific17";
+		if (targetId === "kakizaki") targetId = "ladykakizaki";
+		if (targetId === "insist" || targetId === "infernape") targetId = "ragininfernape";
+		if (targetId === "clair") targetId = "revivalclair";
+		if (targetId === "revivalxfloatz") targetId = "xfloatz";
+		if (targetId === "mewth") targetId = "roughskull";
+		if (targetId === "skye") targetId = "shadelynnskye";
+		if (targetId === "maura") targetId = "shademaura";
+		if (targetId === "draco") targetId = "sundraco4680";
+		if (targetId === "bk" || targetId === "loki" || targetId === "bloodedkitten") targetId = "tacticianloki";
+		if (targetId === "arrays") targetId = "volco";
 		let targetData = getMonData(targetId);
 		if (!targetData) return this.errorReply(`The staffmon "${target}" could not be found.`);
 		return this.sendReplyBox(targetData);

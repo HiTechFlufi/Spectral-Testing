@@ -23,8 +23,6 @@ let BattleMovedex = {
 			let gitGud =
 				 `${Config.serverName}'s Github's:<br />` +
 				 `- Language: JavaScript (Node.js)<br />` +
-				`- <a href="https://github.com/DeathlyPlays/Spectral">${Config.serverName}'s Server Code</a><br />` +
-				`- <a href="https://github.com/DeathlyPlays/Spectral/commits/master">What's new?</a><br />` +
 				`- <a href="https://github.com/Zarel/Pokemon-Showdown">Main's source code</a><br />` +
 				`- <a href="https://github.com/Zarel/Pokemon-Showdown-Client">Client source code</a><br />` +
 				`- <a href="https://github.com/Zarel/Pokemon-Showdown-Dex">Dex source code</a>`;
@@ -445,11 +443,11 @@ let BattleMovedex = {
 				if (target.activeTurns && !this.willMove(target)) {
 					this.effectData.duration++;
 				}
-				this.add('-start', target, 'move: Taunt');
+				this.add('-start', target, 'move: Inescapable Curse');
 			},
 			onResidualOrder: 12,
 			onEnd(target) {
-				this.add('-end', target, 'move: Taunt');
+				this.add('-end', target, 'move: Inescapable Curse');
 			},
 			onDisableMove(pokemon) {
 				for (const moveSlot of pokemon.moveSlots) {
@@ -461,12 +459,12 @@ let BattleMovedex = {
 			onBeforeMovePriority: 5,
 			onBeforeMove(attacker, defender, move) {
 				if (!move.isZ && move.category === 'Status') {
-					this.add('cant', attacker, 'move: Taunt', move);
+					this.add('cant', attacker, 'move: Inescapable Curse', move);
 					return false;
 				}
 			},
 			onStart(pokemon, source) {
-				this.add('-start', pokemon, 'Curse', '[of] ' + source);
+				this.add('-start', pokemon, 'Inescapable Curse', '[of] ' + source);
 			},
 			onResidualOrder: 10,
 			onResidual(pokemon) {
@@ -477,15 +475,7 @@ let BattleMovedex = {
 			return target.addVolatile('trapped', source, move, 'trapper');
 		},
 		onPrepareHit(target, source, move) {
-			if (move.type === 'Fire') {
-				this.add('-anim', source, 'Searing Shot', target);
-			} else if (move.type === 'Water') {
-				this.add('-anim', source, 'Brine', target);
-			} else if (move.type === 'Ice') {
-				this.add('-anim', source, 'Icy Wind', target);
-			} else {
-				this.add('-anim', source, 'Swift', target);
-			}
+			this.add('-anim', source, 'Curse', target);
 		},
 		target: "normal",
 		type: "Ghost",
@@ -659,6 +649,45 @@ let BattleMovedex = {
 		secondary: null,
 		target: "normal",
 		type: "Psychic",
+	},
+
+	// shade lynn skye
+	"leafhurricane": {
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		desc: "Effects of Reflect, Light Screen, Aurora Veil, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the user's side, the user has a 30% chance to make the target flinch or become confused.",
+		shortDesc: "Clears the user's side's hazards, 30% chance to flinch or confuse.",
+		id: "leafhurricane",
+		isViable: true,
+		name: "Leaf Hurricane",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, authentic: 1},
+		onHit(target, source, move) {
+			let success = false;
+			let removeTarget = ['reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb'];
+			let removeAll = ['spikes', 'toxicspikes', 'stealthrock', 'stickyweb'];
+			for (const sideCondition of removeAll) {
+				if (source.side.removeSideCondition(sideCondition)) {
+					this.add('-sideend', source.side, this.getEffect(sideCondition).name, '[from] move: Leaf Hurricane', '[of] ' + source);
+					success = true;
+				}
+			}
+			return success;
+		},
+		secondaries: [
+			{
+				chance: 30,
+				status: 'confusion',
+			}, {
+				chance: 30,
+				status: 'flinch',
+			},
+		],
+		target: "normal",
+		type: "Flying",
+		contestType: "Cool",
 	},
 };
 

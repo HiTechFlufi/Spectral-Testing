@@ -115,7 +115,7 @@ Ability: Unholy Preservation
 EVs: 252 HP / 4 SpD / 252 Spe
 Moves: Shadow Ball, Roost, Teeter Dance
 Signature Move: Inescapable Curse
-- Ghost-type, Special, 40 BP, 100% accuracy, 16 PP. Traps, taunts, curses, torments, and uses Embargo on the target, 
+	- Ghost-type, Special, 40 BP, 100% accuracy, 16 PP. Traps, Taunts, Curses, Torments, and uses Embargo on the target, 
 Timid Nature
 
 Spectral Bot
@@ -138,15 +138,15 @@ Ability: Emergency Actions
 EVs: 76 HP / 212 SpA / 220 Spe
 Moves: Ice Beam/Earth Power, Giga Drain, Steam Eruption
 Signature Move: Volcanic Flares
-	- Fire-type, Special, 130 BP, 95% Accuracy, 16 PP. 30% chance of burning or boosting SpD by 1 stage.
+	- Fire-type, Special, 130 BP, 95% Accuracy, 16 PP. 30% chance of burning or boosting Special Defense by 1 stage.
 Modest Nature
 
-Revival xFloatz
+xFloatz
 (Male Scizor-Mega)
 @ Leftovers
 Ability: XFZ
-	- This Pokemon's Status moves have priority raised by 1.
-EVs: 252 HP, 40 Def, 216 SpD
+	- This Pokemon's Status moves have priority raised by 1, and this Pokemon's Steel-type Physical moves get boosted by 1.5x.
+EVs: 252 HP / 40 Def / 216 SpD
 Moves: Rest, Toxic, Cosmic Power, Iron Head
 Impish Nature
 
@@ -175,7 +175,7 @@ Jolly Nature
 Lady✨Kakizaki
 (Female Suicune)
 @ Dumplings
-	- Restore 1/6 of max HP per turn and become Water/Ice-type.
+	- Restores 1/6 of max HP per turn and become Water/Ice-type.
 Ability: Chaotic Aura
 	- Status moves receive +1 priority, a random stat is raised every turn by two stages and a random stat is lowered every turn by one stage.
 EVs: 252 HP / 252 SpA / 4 SpD
@@ -187,7 +187,7 @@ Modest Nature
 HiTechFlufi
 (Metang)
 @ Titanium Core
-	- Doubles the holder's Defense and SpDefense, and Steel attacks have x1.2 power.
+	- Doubles the holder's Defense and Special Defense, and Steel attacks have x1.2 power.
 Ability: Adaptation
 	- May burn or paralyse foe or reduce foe's special attack, special defense or speed by 1 stage or heal 1/3 of max HP on switch-in. Status moves have +1 priority.
 EVs: 252 HP / 96 Def / 156 SpD
@@ -206,3 +206,15 @@ Moves: Defog, Nature's Madness, Scald
 Signature Move: The Nappening
  - Psychic-type, Status, 100% Accuracy, 16 PP. Puts both the user and foe to sleep. The user recovers HP and status and wakes up after 1 turn.
 Bold Nature
+
+shade lynn skye
+(Shiny Female Shaymin-Sky)
+@ Expert Metronome
+	- Moves that are supereffective get boosted by 1.2x, and moves that are used consecutively get boosted (maxes out at 2x after 5 uses)
+Ability: Serene Tailwind
+	- The user's moves that have secondary effects get their chances doubled, and the user uses Tailwind upon entry.
+EVs: 252 SpA / 4 HP / 252 Spe
+Moves: Tail Glow, Moonblast, Searing Shot
+Signature Move: Leaf Hurricane
+	- Flying-type, Special, 100 BP, 100% accuracy, Blows away hazards and screens, 30% chance to confuse, 30% chance to flinch, 24 PP.
+Modest Nature

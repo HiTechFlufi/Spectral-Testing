@@ -277,7 +277,7 @@ let BattleAbilities = {
 		id: "toughskin",
 		name: "Tough Skin",
 		desc: "Neutral damage from Ice attacks.",
-		shortDesc: "1x damage from Ice.",
+		shortDesc: "Neutral damage from Ice.",
 		onSourceModifyAtkPriority: 6,
 		onSourceModifyAtk(atk, attacker, defender, move) {
 			if (move.type === 'Ice') {
@@ -306,16 +306,23 @@ let BattleAbilities = {
 		},
 	},
 
-	// Revival xFloatz
+	// xFloatz
 	"xfz": {
 		id: "xfz",
 		name: "XFZ",
-		desc: "Status moves gain +1 priority.",
-		shortDesc: "+1 priority on Status.",
+		desc: "Status moves gain +1 priority, and Physical Steel type moves do 1.5x more damage",
+		shortDesc: "+1 priority on Status, Steel type moves do 1.5x more.",
 		onModifyPriority(priority, pokemon, target, move) {
 			if (move && move.category === 'Status') {
 				move.xfzBoosted = true;
 				return priority + 1;
+			}
+		},
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Steel') {
+				this.debug('XFZ boost');
+				return this.chainModify(1.5);
 			}
 		},
 	},
@@ -515,6 +522,26 @@ let BattleAbilities = {
 			if (move.ignoreImmunity !== true) {
 				move.ignoreImmunity['Ghost'] = true;
 			}
+		},
+	},
+
+	// shade lynn skye
+	"serenetailwind": {
+		id: "serenetailwind",
+		name: "Serene Tailwind",
+		desc: "The user uses Tailwind upon entry, and moves with secondary chances have the chances doubled.",
+		shortDesc: "Uses Tailwind on entry and doubles secondary chances.",
+		onModifyMovePriority: -2,
+		onModifyMove(move) {
+			if (move.secondaries) {
+				this.debug('doubling secondary chance');
+				for (const secondary of move.secondaries) {
+					if (secondary.chance) secondary.chance *= 2;
+				}
+			}
+		},
+		onStart(pokemon) {
+			this.useMove("tailwind", pokemon);
 		},
 	},
 };

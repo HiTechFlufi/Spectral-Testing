@@ -236,6 +236,46 @@ let BattleItems = {
 		desc: "Holder restores 1/6 max HP at the end of every turn. Holder's type changes to Water/Ice on switch-in.",
 		shortDesc: "Heals 1/6 HP per turn; Changes type to Water/Ice.",
 	},
+
+	// shade lynn skye
+	"expertmetronome": {
+		id: "expertmetronome",
+		name: "Expert Metronome",
+		onModifyDamage(damage, source, target, move) {
+			if (move && target.getMoveHitData(move).typeMod > 0) {
+				return this.chainModify([0x1333, 0x1000]);
+			}
+		},
+		onStart(pokemon) {
+			pokemon.addVolatile('expertmetronome');
+		},
+		effect: {
+			onStart(pokemon) {
+				this.effectData.numConsecutive = 0;
+				this.effectData.lastMove = '';
+			},
+			onTryMovePriority: -2,
+			onTryMove(pokemon, target, move) {
+				if (!pokemon.hasItem('expertmetronome')) {
+					pokemon.removeVolatile('expertmetronome');
+					return;
+				}
+				if (this.effectData.lastMove === move.id) {
+					this.effectData.numConsecutive++;
+				} else {
+					this.effectData.numConsecutive = 0;
+				}
+				this.effectData.lastMove = move.id;
+			},
+			onModifyDamage(damage, source, target, move) {
+				let numConsecutive = this.effectData.numConsecutive > 5 ? 5 : this.effectData.numConsecutive;
+				let dmgMod = [0x1000, 0x1333, 0x1666, 0x1999, 0x1CCC, 0x2000];
+				return this.chainModify([dmgMod[numConsecutive], 0x1000]);
+			},
+		},
+		desc: "Holder's attacks that are super effective against the target do 1.2x damage, and damage increases if moves are used consecutively.  Maxes out at 2x after 5 consecutive uses.",
+		shortDesc: "Supereffective attacks from the user do 1.2x more, and damage increases with consecutive moves.",
+	},
 };
 
 exports.BattleItems = BattleItems;
