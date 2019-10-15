@@ -67,14 +67,14 @@ let checkEvade = function (user) {
 		let time = lockedUserAgents[agent].time;
 		if (MAX_AUTO_SHADOWBAN_TIME === true || Date.now() - time <= MAX_AUTO_SHADOWBAN_TIME * 3600000) {
 			Monitor.log("[SecretEvaderMonitor] " + user.name + " was automatically shadow banned - evading alt of " + lockedUserAgents[agent].userid + ".");
-			Rooms.get("upperstaff").add().update("[SecretEvaderMonitor] " + user.name + " was automatically shadow banned - evading alt of " + lockedUserAgents[agent].userid + ".");
+			Rooms.get("upperstaff").add(`[SecretEvaderMonitor] ${user.name} was automatically shadow banned - evading alt of ${lockedUserAgents[agent].userid}.`).update();
 			Users.ShadowBan.addUser(user);
 			// update the times
 			lockUserAgent(user);
 		} else {
 			// just warn staff room & Upper Staff
-			Monitor.log("[SecretEvaderMonitor] " + user.name + " suspected of being evading alt of " + lockedUserAgents[agent].userid + ".");
-			Rooms.get("upperstaff").add().update("[SecretEvaderMonitor] " + user.name + " suspected of being evading alt of " + lockedUserAgents[agent].userid + ".");
+			Monitor.log(`[SecretEvaderMonitor] ${user.name} suspected of being evading alt of ${lockedUserAgents[agent].userid}.`);
+			Rooms.get("upperstaff").add(`[SecretEvaderMonitor] ${user.name} suspected of being evading alt of ${lockedUserAgents[agent].userid}.`).update();
 		}
 		// mark user as caught
 		user.caughtEvading = true;
