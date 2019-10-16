@@ -544,6 +544,32 @@ let BattleAbilities = {
 			this.useMove("tailwind", pokemon);
 		},
 	},
+	
+	// SunDraco4680
+	"dragonicsoul": {
+		id: "dragonicsoul",
+		name: "Dragonic Soul",
+		desc: "This Pokemon's Attack and Special Attack are raised by 2 stages for each of its stats that is lowered by a foe and same-type attack bonus (STAB) is 2 instead of 1.5.",
+		shortDesc: "Atk/SpA are raised by 2 for each stat lowered by a foe, 2x STAB.",
+		onModifyMove(move) {
+			move.stab = 2;
+		},
+		onAfterEachBoost(boost, target, source) {
+			if (!source || target.side === source.side) {
+				return;
+			}
+			let statsLowered = false;
+			for (let i in boost) {
+				// @ts-ignore
+				if (boost[i] < 0) {
+					statsLowered = true;
+				}
+			}
+			if (statsLowered) {
+				this.boost({atk: 2, spa: 2}, target, target, null, true);
+			}
+		},
+	},
 };
 
 exports.BattleAbilities = BattleAbilities;

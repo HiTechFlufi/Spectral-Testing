@@ -657,7 +657,7 @@ let BattleMovedex = {
 		basePower: 90,
 		category: "Special",
 		desc: "Effects of Reflect, Light Screen, Aurora Veil, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the user's side, the user has a 30% chance to make the target flinch or become confused.",
-		shortDesc: "Clears the user's side's hazards, 30% chance to flinch or confuse.",
+		shortDesc: "Clears the user's side's hazards and screens, 30% chance to flinch or confuse.",
 		id: "leafhurricane",
 		isViable: true,
 		name: "Leaf Hurricane",
@@ -688,6 +688,30 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Flying",
 		contestType: "Cool",
+	},
+	
+	// SunDraco4680
+	"einsol": {
+		id: "einsol",
+		name: "Ein Sol",
+		basePower: 100,
+		basePowerCallback(pokemon, target, move) {
+			return move.basePower + 20 * pokemon.positiveBoosts();
+		},
+		accuracy: 100,
+		desc: "Damages target based on Defense, not Special Defense, +20 power for each of the user's stat boosts, 30% chance to burn the target.",
+		shortDesc: "Damages based on Def, +20 BP for each stat boost, 30% chance to burn.",
+		pp: 10,
+		priority: 0,
+		category: "Special",
+		defensiveCategory: "Physical",
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 30,
+			status: 'brn',
+		},
+		target: "normal",
+		type: "Fire",
 	},
 };
 

@@ -216,5 +216,16 @@ Ability: Serene Tailwind
 EVs: 252 SpA / 4 HP / 252 Spe
 Moves: Tail Glow, Moonblast, Searing Shot
 Signature Move: Leaf Hurricane
-	- Flying-type, Special, 100 BP, 100% accuracy, Blows away hazards and screens, 30% chance to confuse, 30% chance to flinch, 24 PP.
+	- Flying-type, Special, 100 BP, 100% Accuracy, 24 PP. Blows away hazards and screens, 30% chance to confuse, 30% chance to flinch, 24 PP.
 Modest Nature
+
+SunDraco4680
+(Shiny Male Zoroark)
+@ Leftovers
+Ability: Dragonic Soul
+	- User's Atk/SpA are raised by 2 stages for every stat that is lowered by the opponent. This Pokemon's same-type attack bonus (STAB) is 2 instead of 1.5.
+EVs: 252 SpA / 4 SpD / 252 Spe
+Moves: Nasty Plot, Dark Pulse, Sludge Bomb
+Signature Move: Ein Sol
+	- Fire-type, Special, 100 BP, 100% Accuracy, 16 PP. Damages target based on Defense, not Sp. Def, +20 power for each of the user's stat boosts, 30% chance to burn the target.
+Timid Nature

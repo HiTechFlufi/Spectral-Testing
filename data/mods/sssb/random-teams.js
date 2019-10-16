@@ -328,6 +328,21 @@ class RandomSSSBTeams extends RandomTeams {
 				},
 				nature: "Impish",
 			},
+			"+SunDraco4680": {
+				species: "Zoroark",
+				item: "Leftovers",
+				ability: "Dragonic Soul",
+				gender: "M",
+				shiny: true,
+				moves: ["Nasty Plot", "Dark Pulse", "Sludge Bomb"],
+				signatureMove: "Ein Sol",
+				evs: {
+					spa: 252,
+					spd: 4,
+					spe: 252,
+				},
+				nature: "Timid",
+			},
 		};
 		let pool = this.dex.shuffle(Object.keys(sets));
 		/** @type {{[type: string]: number}} */
