@@ -16,8 +16,8 @@ let config = {
 };
 
 let template = {
-  insult: "You are mom is gay bitch dumbass fucker",
-  compliment: "You are pretty nice sweet cute cool like",
+  insult: "youaremomisgaybitchdumbassfucker",
+  compliment: "youareprettynicesweetcutecoollike",
 };
 
 // Variables
@@ -35,7 +35,7 @@ let containsCompliment;
 let response;
 let randomUser;
 
-let esp = ['.', '..', '...', '!'];
+let esp = ['.', '..', '!'];
 
 let answers = {
   yesNo: ["Yes", "Yup", "Yep", "Yeah", "No", "Nope", "Nah", "Beats me", "I don't know", "How would I know", "No idea"],
@@ -43,6 +43,7 @@ let answers = {
   retaliation: ["That's not nice", "That hurt my feelings", "Why would you say something so rude", "Right back at you", "Right back at you, shithead", "Right back at you, asshole", "nou"],
   thankYou: ["Thanks", "Thank you", "I appreciate it", "Don't make me blush", "Thanks a lot"],
   greetings: ["Hey", "Hi", "Hello", "Howdy", "Sup", "Wassup", "What's up", "Hiya", "Heya", "Yo", "Bonjour", "Konichiwa", "Hola", "Ciao", "Hii", "Heyy"],
+  noMessage: ["What?", "Were you gonna say something?", "...Yes?", "Did you say something?", "Are you gonna talk?", "Words."],
 };
 
 // Functions
@@ -64,52 +65,53 @@ function analyzeType(message) {
 function findResponse(message) {
   let firstWord = message.replace(/ .*/,'');
   // Easter Eggs & Specific Statements
+  if (!message) return response = answers.noMessage[Math.floor(Math.random() * answers.noMessage.length)];
   if (message === "who made you" || message === "who are you" ||message.includes("creator")) return response = "I'm a chat AI, and created me. Not very well though; Sorry if I can't reply to your basic English sentences.";  
   if (message === "what is the meaning of life" || message === "the meaning of life" || message === "meaning of life" || message.includes("meaning") && message.includes("life")) return response = "There is none.";
   if (message === "what is your name") return response = "I'm Paige. Nice to meet you.";  
-  if (questionType === "other") {
-    // Find Similarities
-    let alphabet = "abcdefghijklmnopqrstuvwxyz";
-    let insultTotal = 0;
-    let compTotal = 0;
-    // Insult?
-    for (let insult of insultId) {
-      if (message.includes(insult)) containsInsult = true;
+  // Question Types
+  if (questionType === "yesNo") {
+    response = answers.yesNo[Math.floor(Math.random() * answers.yesNo.length)] + esp[Math.floor(Math.random() * esp.length)];
+  } else if (questionType === "who") {
+    let userList = [];
+    let users = Rooms.get("lobby").users;
+    let user;
+    for (user in users) {
+      userList.push(Rooms.get("lobby").users[user].name);
     }
-    for (let ch of alphabet) {
-      if (message.indexOf(ch) > -1 && template.insult.indexOf(ch) > -1) insultTotal++;
-    }
-    // Compliment?
-    for (let comp of complimentId) {
-      if (message.includes(comp)) containsCompliment = true;
-    }
-    for (let ch of alphabet) {
-      if (message.indexOf(ch) > -1 && template.compliment.indexOf(ch) > -1) compTotal++;
-    }
-    // Set Responses
-    if (insultTotal >= 8 || containsInsult === true) {
-      response = answers.retaliation[Math.floor(Math.random() * answers.retaliation.length)] + esp[Math.floor(Math.random() * esp.length)];
-    } else if (compTotal >= 6 || containsCompliment === true) {
-      response = answers.thankYou[Math.floor(Math.random() * answers.thankYou.length)] + esp[Math.floor(Math.random() * esp.length)];
-    } else {
-      response = answers.dontUnderstand[Math.floor(Math.random() * answers.dontUnderstand.length)];
-    }
+    let randomUser = userList[Math.floor(Math.random() * userList.length)];
+    let whoAnswers = [`It was ${randomUser}`, `I'm pointing my finger at ${randomUser}`, `${randomUser}, probably`, `Maybe it was ${randomUser}`, `It was definitely ${randomUser}`, `Blame ${randomUser}`, `Always blame ${randomUser}`];
+    response = whoAnswers[Math.floor(Math.random() * whoAnswers.length)] + esp[Math.floor(Math.random() * esp.length)];
+  } else if (questionType === "greeting") {
+    response = answers.greetings[Math.floor(Math.random() * answers.greetings.length)] + esp[Math.floor(Math.random() * esp.length)];
   } else {
-    // Other Question Types
-    if (questionType === "yesNo") {
-      response = answers.yesNo[Math.floor(Math.random() * answers.yesNo.length)] + esp[Math.floor(Math.random() * esp.length)];
-    } else if (questionType === "who") {
-      let userList = [];
-      let users = Rooms.get("lobby").users;
-      let user;
-      for (user in users) {
-        userList.push(Rooms.get("lobby").users[user].id);
+    if (questionType === "other") {
+      // Find Similarities
+      let alphabet = "abcdefghijklmnopqrstuvwxyz";
+      let insultTotal = 0;
+      let compTotal = 0;
+      // Insult?
+      for (let insult of insultId) {
+        if (message.includes(insult)) containsInsult = true;
       }
-      let randomUser = userList[Math.floor(Math.random() * userList.length)];
-      let whoAnswers = [`It was ${randomUser}`, `I'm pointing my finger at ${randomUser}`, `${randomUser}, probably`, `Maybe it was ${randomUser}`, `It was definitely ${randomUser}`, `Blame ${randomUser}`, `Always blame ${randomUser}`];
-      response = whoAnswers[Math.floor(Math.random() * whoAnswers.length)] + esp[Math.floor(Math.random() * esp.length)];
-    } else if (questionType === "greeting") {
-      response = answers.greetings[Math.floor(Math.random() * answers.greetings.length)] + esp[Math.floor(Math.random() * esp.length)];
+      for (let ch of alphabet) {
+        if (message.indexOf(ch) > -1 && template.insult.indexOf(ch) > -1) insultTotal++;
+      }
+      // Compliment?
+      for (let comp of complimentId) {
+        if (message.includes(comp)) containsCompliment = true;
+      }
+      for (let ch of alphabet) {
+        if (message.indexOf(ch) > -1 && template.compliment.indexOf(ch) > -1) compTotal++;
+      }
+      // Set Responses
+      if (insultTotal >= 8 || containsInsult === true) {
+        response = answers.retaliation[Math.floor(Math.random() * answers.retaliation.length)] + esp[Math.floor(Math.random() * esp.length)];
+      } else if (compTotal >= 6 || containsCompliment === true) {
+        response = answers.thankYou[Math.floor(Math.random() * answers.thankYou.length)] + esp[Math.floor(Math.random() * esp.length)];
+      } else {
+        response = answers.dontUnderstand[Math.floor(Math.random() * answers.dontUnderstand.length)];
+      }
     }
   }
   return response;
