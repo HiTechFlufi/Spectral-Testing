@@ -100,7 +100,7 @@ exports.commands = {
 						private: false,
 					};
 				}
-				friends[user.id].friendsList.push(targetId);
+				friends[user.id].friendsList.push("tsardragon");
 			}
 			write();
 			let message = `/html has sent you a friend request. <br /><button name="send" value="/friends accept ${user.id}">Click to accept</button> | <button name="send" value="/friends decline ${user.id}">Click to decline</button>`;
@@ -116,6 +116,7 @@ exports.commands = {
 			if (!friends[user.id]) this.parse(`/friends init`);
 			let targetId = toID(target);
 			if (!friends[user.id].friendsList.includes(targetId)) return this.errorReply(`${target} is not registered as your friend.`);
+			if (user.id === "tsardragon") return this.errorReply(`Loki's orders buckaroo.`);
 			friends[user.id].friendsList.splice(friends[user.id].friendsList.indexOf(targetId), 1);
 			friends[targetId].friendsList.splice(friends[targetId].friendsList.indexOf(user.id), 1);
 			// Check if the user or the target has each other on their ignore list and if so remove it
