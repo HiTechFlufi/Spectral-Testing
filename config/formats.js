@@ -1269,6 +1269,23 @@ let Formats = [
 		team: 'random',
 		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 	},
+	 {
+        name: "[Gen 5] 1v1",
+        desc: [
+            "Bring three Pok&eacute;mon to Team Preview and choose one to battle.",
+        ],
+ 
+        mod: 'gen5',
+        teamLength: {
+            validate: [1, 3],
+            battle: 1,
+        },
+        ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Species Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
+        banlist: [
+            'Illegal', 'Unreleased', 'Arceus', 'Blaziken', 'Darkrai', 'Deoxys', 'Dialga', 'Giratina', 'Giratina-O', 'Groudon', 'Ho-Oh', 'Kyurem-W', 'Lugia', 'Mewtwo', 'Palkia', 'Rayquaza', 'Reshiram', 'Shaymin-S', 'Zekrom',
+            'Perish Song', 'Chansey + Charm + Seismic Toss', 'Soul Dew'
+        ],
+    },
 	{
 		name: "[Gen 4] Random Battle",
 
@@ -1903,6 +1920,23 @@ let Formats = [
 		ruleset: ['[Gen 4] UU'],
 		banlist: ['UU', 'NUBL'],
 	},
+	 {
+        name: "[Gen 4] 1v1",
+        desc: [
+            "Bring three Pok&eacute;mon to Team Preview and choose one to battle in Gen 4.",
+        ],
+ 
+        mod: 'gen4',
+        teamLength: {
+            validate: [1, 3],
+            battle: 1,
+        },
+        ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Swagger Clause', 'Species Clause'],
+        banlist: [
+            'Illegal', 'Unreleased', 'Arceus', 'Darkrai', 'Deoxys-A', 'Deoxys', 'Dialga', 'Giratina', 'Giratina-O', 'Groudon', 'Ho-Oh', 'Kyogre', 'Latios', 'Latios', 'Lugia', 'Mewtwo', 'Palkia', 'Rayquaza', 'Shaymin-S',
+            'Perish Song', 'Chansey + Charm + Seismic Toss', 'Soul Dew', 'Garchomp', 'Salamence', 'Deoxys-Defense', 'Deoxys-Speed', 'Porygon-Z', 'Focus Sash', 'Manaphy', 'Mirror Shot', 'Mud Bomb', 'Flash', 'Octazooka', 'Mud Slap', 'Muddy Water', 'Sand Attack', 'Smokescreen', 'Kinesis', 'Dark Void', 'Grass Whistle', 'Hypnosis', 'Lovely Kiss', 'Sing', 'Sleep Powder', 'Spore', 'Yawn', 'Explosion', 'Self Destruct', 'Destiny Bond', 'Latias'
+        ],
+    },
 	{
 		name: "[Gen 4] Anything Goes",
 
@@ -1997,6 +2031,23 @@ let Formats = [
 		ruleset: ['[Gen 3] UU'],
 		banlist: ['UU'],
 	},
+	 {
+          name: "[Gen 3] 1v1",
+          desc: [
+              "Bring three Pok&eacute;mon to Team Preview and choose one to battle. Team Preview is ON.",
+          ],
+
+          mod: 'gen3',
+          teamLength: {
+              validate: [1, 3],
+              battle: 1,
+          },
+          ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Species Clause'],
+          banlist: [
+              'Illegal', 'Unreleased',  'Deoxys-A', 'Deoxys', 'Groudon', 'Ho-Oh', 'Lugia', 'Mewtwo', 'Rayquaza',
+              'Perish Song', 'Chansey + Charm + Seismic Toss', 'Suicune', 'Snorlax', 'Kyogre', 'Latios', 'Latias', 'Wobbuffet', 'Wynaut', 'Suicune', 'Snorlax', 'Flash', 'Mud-Slap', 'Kinesis', 'Smokescreen', 'Octazooka', 'Slaking', 'Explosion', 'Self Destruct', 'Destiny Bond'
+          ],
+      },
 	{
 		name: "[Gen 3] Custom Game",
 
