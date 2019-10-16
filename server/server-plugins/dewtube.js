@@ -822,7 +822,6 @@ exports.commands = {
 		endcollab: "cancelcollab",
 		cancel: "cancelcollab",
 		cancelcollab(target, room, user) {
-			if (!target) return this.parse(`/dewtubehelp`);
 			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!channels[channelId].pendingCollab) return this.errorReply(`You do not have a pending collaboration request.`);
@@ -904,9 +903,9 @@ exports.commands = {
 			display += `<table border="1" cellspacing ="0" cellpadding="8"><tr style="font-weight: bold"><td>Title:</td><td>Category:</td><td>Views:</td><td>Likes:</td><td>Dislikes:</td><td>Subscribers:</td><td>Unsubs:</td><td>Monetized:</td><td>Uploaded:</td><td>View:</td></tr>`;
 			for (let video of sortedVids) {
 				let curVideo = videos[video];
-        if (!curVideo.category) curVideo.category = 'None';
+				if (!curVideo.category) curVideo.category = 'None';
 				display += `<tr><td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.name}</td>`;
-        display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.category}</td>`;
+				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.category}</td>`;
 				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.views.toLocaleString()}</td>`;
 				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.likes.toLocaleString()}</td>`;
 				display += `<td style="border: 2px solid #000000; width: 20%; text-align: center">${curVideo.dislikes.toLocaleString()}</td>`;
