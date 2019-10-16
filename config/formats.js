@@ -1914,7 +1914,7 @@ let Formats = [
             validate: [1, 3],
             battle: 1,
         },
-        ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Swagger Clause', 'Species Clause'],
+        ruleset: ['Standard', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Swagger Clause', 'Species Clause'],
         banlist: [
             'Illegal', 'Unreleased', 'Arceus', 'Darkrai', 'Deoxys-A', 'Deoxys', 'Dialga', 'Giratina', 'Giratina-O', 'Groudon', 'Ho-Oh', 'Kyogre', 'Latios', 'Latios', 'Lugia', 'Mewtwo', 'Palkia', 'Rayquaza', 'Shaymin-S',
             'Perish Song', 'Chansey + Charm + Seismic Toss', 'Soul Dew', 'Garchomp', 'Salamence', 'Deoxys-Defense', 'Deoxys-Speed', 'Porygon-Z', 'Focus Sash', 'Manaphy', 'Mirror Shot', 'Mud Bomb', 'Flash', 'Octazooka', 'Mud Slap', 'Muddy Water', 'Sand Attack', 'Smokescreen', 'Kinesis', 'Dark Void', 'Grass Whistle', 'Hypnosis', 'Lovely Kiss', 'Sing', 'Sleep Powder', 'Spore', 'Yawn', 'Explosion', 'Self Destruct', 'Destiny Bond', 'Latias'
@@ -2025,7 +2025,7 @@ let Formats = [
               validate: [1, 3],
               battle: 1,
           },
-          ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Species Clause'],
+          ruleset: ['Standard', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Species Clause'],
           banlist: [
               'Illegal', 'Unreleased',  'Deoxys-A', 'Deoxys', 'Groudon', 'Ho-Oh', 'Lugia', 'Mewtwo', 'Rayquaza',
               'Perish Song', 'Chansey + Charm + Seismic Toss', 'Suicune', 'Snorlax', 'Kyogre', 'Latios', 'Latias', 'Wobbuffet', 'Wynaut', 'Suicune', 'Snorlax', 'Flash', 'Mud-Slap', 'Kinesis', 'Smokescreen', 'Octazooka', 'Slaking', 'Explosion', 'Self Destruct', 'Destiny Bond'
