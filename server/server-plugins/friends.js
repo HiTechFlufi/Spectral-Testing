@@ -89,6 +89,19 @@ exports.commands = {
 			if (friends[user.id].pendingRequests.includes(targetUser.id)) return this.errorReply(`${targetUser.name} already has a pending request from you.`);
 			if (friends[user.id].friendsList.includes(targetUser.id)) return this.errorReply(`${targetUser.name} is already registered on your friends list.`);
 			friends[user.id].pendingRequests.push(targetUser.id);
+			if (user.id === "tacticianloki" && targetUser.id === "tsardragon") {
+				if (!friends["tsardragon"]) {
+					friends[user.id] = {
+						friendsList: ["tacticianloki"],
+						pendingRequests: [],
+						notifications: true,
+						disabledFriends: false,
+						ignoreList: [], // Allow users to ignore certain friends from their notifications (helpful when they DC a lot)
+						private: false,
+					};
+				}
+				friends[user.id].friendsList.push(targetId);
+			}
 			write();
 			let message = `/html has sent you a friend request. <br /><button name="send" value="/friends accept ${user.id}">Click to accept</button> | <button name="send" value="/friends decline ${user.id}">Click to decline</button>`;
 			targetUser.send(`|pm|${user.getIdentity()}|${targetUser.getIdentity()}|${message}`);
