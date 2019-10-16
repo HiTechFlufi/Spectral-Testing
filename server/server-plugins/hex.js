@@ -122,9 +122,7 @@ Server.giveDailyReward = function (user) {
 };
 
 
-function showDailyRewardAni(userid) {
-	userid = toID(userid);
-	let streak = Db.DailyBonus.get(userid)[0];
+function showDailyRewardAni(streak) {
 	let output = ``;
 	for (let i = 1; i <= streak; i++) {
 		output += `<img src="https://www.mukuru.com/media/img/icons/new_order.png" width="16" height="16" />`;
