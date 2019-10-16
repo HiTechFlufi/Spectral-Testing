@@ -1269,23 +1269,6 @@ let Formats = [
 		team: 'random',
 		ruleset: ['Obtainable', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
 	},
-	 {
-        name: "[Gen 5] 1v1",
-        desc: [
-            "Bring three Pok&eacute;mon to Team Preview and choose one to battle.",
-        ],
- 
-        mod: 'gen5',
-        teamLength: {
-            validate: [1, 3],
-            battle: 1,
-        },
-        ruleset: ['Pokemon', 'Nickname Clause', 'Moody Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Swagger Clause', 'Species Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
-        banlist: [
-            'Illegal', 'Unreleased', 'Arceus', 'Blaziken', 'Darkrai', 'Deoxys', 'Dialga', 'Giratina', 'Giratina-O', 'Groudon', 'Ho-Oh', 'Kyurem-W', 'Lugia', 'Mewtwo', 'Palkia', 'Rayquaza', 'Reshiram', 'Shaymin-S', 'Zekrom',
-            'Perish Song', 'Chansey + Charm + Seismic Toss', 'Soul Dew'
-        ],
-    },
 	{
 		name: "[Gen 4] Random Battle",
 
