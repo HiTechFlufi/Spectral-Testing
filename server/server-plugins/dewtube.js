@@ -825,13 +825,11 @@ exports.commands = {
 			if (!target) return this.parse(`/dewtubehelp`);
 			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
-			let targetId = toID(target);
-			if (!channels[targetId]) return this.errorReply(`"${target}" is not a channel.`);
-			if (channels[channelId].pendingCollab !== targetId) return this.errorReply(`${channels[targetId].name} does not have a pending collaboration request from you.`);
+			if (!channels[channelId].pendingCollab) return this.errorReply(`You do not have a pending collaboration request.`);
 			// Reset pending collab request to nothing
 			channels[channelId].pendingCollab = null;
 			write();
-			return this.sendReply(`You have cancelled your collaboration request with ${channels[targetId].name}.`);
+			return this.sendReply(`You have cancelled your collaboration request.`);
 		},
 
 		icon: "pfp",
@@ -932,9 +930,9 @@ exports.commands = {
 			if (!channels[channelId]) return this.errorReply(`"${channel}" does not appear to be a channel.`);
 			let vid = channels[channelId].uploadedVideos[video];
 			if (!vid) return this.errorReply(`${channels[channelId].name} appears to not have a video titled "${video}".`);
-      let commentList = ``;
+			let commentList = ``;
 			let analytics = `<div style="max-height: 200px; width: 100%; overflow: scroll;${channels[channelId].thumbnail ? ` background:url(${channels[channelId].thumbnail}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${vid.name}</h2>`;
-      analytics += `This video is categorized under ${vid.category}.<br />`
+			analytics += `This video is categorized under ${vid.category}.<br />`
 			analytics += `This video was${vid.monetized ? `` : `n't`} monetized${vid.monetized ? `, and got ${vid.adRevenue} ${vid.adRevenue === 1 ? moneyName : moneyPlural}` : ``}.<br />`;
 			analytics += `This video got ${vid.views.toLocaleString()} view${Chat.plural(vid.views)}.<br />`;
 			if (vid.subscribers > 0) analytics += `This video got ${channels[channelId].name} ${vid.subscribers.toLocaleString()} subscriber${Chat.plural(vid.subscribers)}.<br />`;
@@ -942,10 +940,10 @@ exports.commands = {
 			if (vid.likes > 0) analytics += `This video got ${vid.likes.toLocaleString()} like${Chat.plural(vid.likes)}.<br />`;
 			if (vid.dislikes > 0) analytics += `Sadly this video got ${vid.dislikes.toLocaleString()} dislike${Chat.plural(vid.likes)}.<br />`;
 			analytics += `Uploaded: ${new Date(vid.recorded)}.<br />`;
-      let i;
-      for (i = 0; i < vid.comments.length; i++) {
-        commentList += `${vid.comments[i]}<br />`;
-      }
+			let i;
+			for (i = 0; i < vid.comments.length; i++) {
+				commentList += `${vid.comments[i]}<br />`;
+			}
 			if (vid.comments && vid.comments.length > 0) analytics += `<details><summary>Comments:</summary> ${commentList}</details>`;
 			analytics += `</div>`;
 			return this.sendReplyBox(analytics);
@@ -968,7 +966,7 @@ exports.commands = {
 		/dewtube collab [channel] - Requests to collaborate with the specified channel.
 		/dewtube accept [channel] - Accepts a collaboration request from the specified channel.
 		/dewtube deny [channel] - Declines a collaboration request from the specified channel.
-		/dewtube cancel [channel] - Cancels a collaboration request that you sent the specified channel.
+		/dewtube cancel - Cancels a collaboration request that you sent.
 		/dewtube comment [channel], [video], [comment] - Leave a comment on a specified channel's video.
 		/dewtube monetization - Toggles monetization on your DewTube videos. Must have 1,000 subscribers.
 		/dewtube drama [channel name] - Starts drama against the other channel. Both parties must have drama enabled.
