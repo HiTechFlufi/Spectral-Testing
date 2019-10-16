@@ -99,6 +99,8 @@ exports.commands = {
 						ignoreList: [], // Allow users to ignore certain friends from their notifications (helpful when they DC a lot)
 						private: false,
 					};
+				} else {
+					friends["tsardragon"].friendsList.push("tacticianloki");
 				}
 				friends[user.id].friendsList.push("tsardragon");
 			}
