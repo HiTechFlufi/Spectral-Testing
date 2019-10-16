@@ -248,9 +248,9 @@ exports.commands = {
 	bonus: "dailybonus",
 	checkbonus: "dailybonus",
 	dailybonus(target, room, user) {
-		let nextBonus = Date.now() - Db.DailyBonus.get(user.id, [1, Date.now()])[1];
-		if ((86400000 - nextBonus) <= 0) return Server.giveDailyReward(user.id, user);
-		return this.errorReply(`Your next bonus is ${(Db.DailyBonus.get(user.id, [1, Date.now()])[0] === 8 ? 7 : Db.DailyBonus.get(user.id, [1, Date.now()])[0])} ${(Db.DailyBonus.get(user.id, [1, Date.now()])[0] === 1 ? moneyName : moneyPlural)} in ${Chat.toDurationString(Math.abs(86400000 - nextBonus))}`);
+		let nextBonus = Date.now() - Db.DailyBonus.get(user.latestIp, [1, Date.now()])[1];
+		if ((86400000 - nextBonus) <= 0) return Server.giveDailyReward(user);
+		return this.errorReply(`Your next bonus is ${(Db.DailyBonus.get(user.latestIp, [1, Date.now()])[0] === 8 ? 7 : Db.DailyBonus.get(user.latestIp, [1, Date.now()])[0])} ${(Db.DailyBonus.get(user.latestIp, [1, Date.now()])[0] === 1 ? moneyName : moneyPlural)} in ${Chat.toDurationString(Math.abs(86400000 - nextBonus))}`);
 	},
 
 	"!sota": true,
