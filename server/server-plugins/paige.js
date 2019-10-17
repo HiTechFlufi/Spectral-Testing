@@ -23,7 +23,7 @@ let template = {
 // Variables
 
 const paige = `|html|<font color="#943B5E"><strong>Paige:</strong></font>`;
-let yesNoId = ["is", "are", "can", "then", "will", "did"];
+let yesNoId = ["is", "are", "can", "then", "will", "did", "does", "do"];
 let insultId = ["bitch", "dumbass", "fucker", "motherfucker", "cunt", "asshole", "cretin", "pleb", "shithead", "fuckhead", "assface", "asshat"];
 let complimentId = ["nice", "awesome", "great", "epic", "cool", "cute", "beautiful", "adorable", "amazing", "incredible"];
 let greetingId = ["hey", "hi", "hello", "howdy", "sup", "wassup", "whats up", "hiya", "heya", "yo", "bonjour", "konichiwa", "hola", "ciao", "hii", "heyy"];
