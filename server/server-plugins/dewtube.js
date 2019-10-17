@@ -56,7 +56,7 @@ Server.getChannel = getChannel;
 // Plugin Optimization
 let config = {
 	version: "2.2.2",
-	changes: ["Categories", "Channel font colors", "Leave comments on other people's videos", "Generated usernames in comments", "Some formatting changed to be more mobile-friendly"],
+	changes: ["Categories", "Channel font colors", "Leave comments on other people's videos", "Generated usernames in comments", "Some formatting changed to be more mobile-friendly", "Aesthethic fixes to the view command and limits broadcasting to the past 20 videos"],
 	// Basic Filter for Instant Demonetization
 	filter: ["nsfw", "porn", "sex", "shooting"],
 };
@@ -193,7 +193,7 @@ exports.commands = {
 			if (channels[channelId].lastTitle && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Latest Video:</strong> ${channels[channelId].lastTitle}</font><br />`;
       	if (channels[channelId].lastCategory && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Video Category:</strong> ${channels[channelId].lastCategory}</font><br />`;
 			if (channels[channelId].lastThumbnail && vidProgress === "notStarted") display += `<font color="${channels[channelId].fontColor}"><strong>Video Thumbnail:</strong></font><br /><img src="${channels[channelId].lastThumbnail}" width="250" height="140"><br />`;
-			if (channels[channelId].videos > 0) display += `<font color="${channels[channelId].fontColor}"><strong>Total Videos Uploaded:</strong> ${channels[channelId].videos.toLocaleString()}</font><br />`;
+			if (channels[channelId].videos > 0) display += `<font color="${channels[channelId].fontColor}"><strong>Total Videos Uploaded:</strong> <button name="send" value="/dewtube videos ${channels[channelId].id}">${channels[channelId].videos.toLocaleString()}</font><br />`;
 			if (channels[channelId].allowingDrama) display += `<font color="${channels[channelId].fontColor}"><small><strong>(Allowing Drama: [&#9745;])</strong></small></font>`;
 			display += `</center>${channels[channelId].banner ? `</div>` : ``}`;
 			return this.sendReplyBox(display);
@@ -866,10 +866,10 @@ exports.commands = {
 			let channelId = toID(getChannel(user.id));
 			if (!channels[channelId]) return this.errorReply(`You do not currently own a DewTube channel.`);
 			if (!target) return this.parse(`/dewtubehelp`);
-      	let targetCap = target.charAt(0).toUpperCase() + target.slice(1);
-			channels[channelId].fontColor = targetCap;
+			if (target.charAt(0) !== "#") return this.errorReply(`The color needs to be a hex starting with "#".`);
+			channels[channelId].fontColor = target;
 			write();
-			return this.sendReplyBox(`Your dashboard's font color has been set to <b><font color="${target}">${targetCap}</font></b>.`);
+			return this.sendReplyBox(`Your dashboard's font color has been set to <b><font color="${target}">${target}</font></b>.`);
 		},
 
     	reply: "comment",
@@ -899,6 +899,7 @@ exports.commands = {
 			let sortedVids = Object.keys(videos).sort(function (a, b) {
 				return videos[b].recorded - videos[a].recorded;
 			});
+			if (sortedVideos.length > 20 && this.broadcasting) sortedVideos.splice(0, 20);
 			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;${channels[channelId].banner ? ` background:url(${channels[channelId].banner}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${channels[channelId].name}'${channels[channelId].name.endsWith("s") ? `` : `s`} Videos:</h2>`;
 			display += `<table border="1" cellspacing ="0" cellpadding="8"><tr style="font-weight: bold"><td>Title:</td><td>Category:</td><td>Views:</td><td>Likes:</td><td>Dislikes:</td><td>Subscribers:</td><td>Unsubs:</td><td>Monetized:</td><td>Uploaded:</td><td>View:</td></tr>`;
 			for (let video of sortedVids) {
@@ -930,7 +931,7 @@ exports.commands = {
 			let vid = channels[channelId].uploadedVideos[video];
 			if (!vid) return this.errorReply(`${channels[channelId].name} appears to not have a video titled "${video}".`);
 			let commentList = ``;
-			let analytics = `<div style="max-height: 200px; width: 100%; overflow: scroll;${channels[channelId].thumbnail ? ` background:url(${channels[channelId].thumbnail}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${vid.name}</h2>`;
+			let analytics = `<div style="max-height: 200px; width: 100%; overflow: scroll;${vid.thumbnail ? ` background:url(${vid.thumbnail}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${vid.name} by ${channels[channelId].name}</h2>`;
 			analytics += `This video is categorized under ${vid.category}.<br />`
 			analytics += `This video was${vid.monetized ? `` : `n't`} monetized${vid.monetized ? `, and got ${vid.adRevenue} ${vid.adRevenue === 1 ? moneyName : moneyPlural}` : ``}.<br />`;
 			analytics += `This video got ${vid.views.toLocaleString()} view${Chat.plural(vid.views)}.<br />`;
@@ -976,7 +977,7 @@ exports.commands = {
 		/dewtube fontcolor [color/hex] - Sets the font color on your channel's dashboard.
 		/dewtube dashboard [channel name] - Shows the channel's dashboard; defaults to yourself.
 		/dewtube videos [channel name] - Shows the channel's uploaded videos; defaults to yourself.
-		/dewtube view [channel name], [video] - Shows [channel]'s video [video]'s analytics.
+		/dewtube view [channel name], [video] - Shows [channel]'s video [video]'s analytics.  If broadcasted, only shows the last 20.
 		/dewtube info - Shows the DewTube version and recent changes.
 		/dewtube discover - Shows all of the DewTube channels.
 		/dewtube help - Displays this help command.`,
