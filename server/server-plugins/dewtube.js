@@ -899,7 +899,7 @@ exports.commands = {
 			let sortedVids = Object.keys(videos).sort(function (a, b) {
 				return videos[b].recorded - videos[a].recorded;
 			});
-			if (sortedVideos.length > 20 && this.broadcasting) sortedVideos.splice(0, 20);
+			if (sortedVids.length > 20 && this.broadcasting) sortedVideos.splice(0, 20);
 			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;${channels[channelId].banner ? ` background:url(${channels[channelId].banner}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${channels[channelId].name}'${channels[channelId].name.endsWith("s") ? `` : `s`} Videos:</h2>`;
 			display += `<table border="1" cellspacing ="0" cellpadding="8"><tr style="font-weight: bold"><td>Title:</td><td>Category:</td><td>Views:</td><td>Likes:</td><td>Dislikes:</td><td>Subscribers:</td><td>Unsubs:</td><td>Monetized:</td><td>Uploaded:</td><td>View:</td></tr>`;
 			for (let video of sortedVids) {
