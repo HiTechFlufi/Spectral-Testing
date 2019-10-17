@@ -654,7 +654,7 @@ exports.commands = {
 			// Check if both user's are available to record a video and collab
 			if (Date.now() - channels[channelId].lastCollabed < COLLAB_COOLDOWN) return this.errorReply(`You are on collaboration cooldown.`);
 			if (Date.now() - channels[targetId].lastCollabed < COLLAB_COOLDOWN) return this.errorReply(`${channels[targetId].name} is on collaboration cooldown.`);
-      if (Date.now() - channels[channelId].lastRecorded < RECORD_COOLDOWN) return this.errorReply(`You are on record cooldown.`);
+			if (Date.now() - channels[channelId].lastRecorded < RECORD_COOLDOWN) return this.errorReply(`You are on record cooldown.`);
 			if (Date.now() - channels[targetId].lastRecorded < RECORD_COOLDOWN) return this.errorReply(`${channels[targetId].name} is on record cooldown.`);
 			if (channels[channelId].pendingCollab) return this.errorReply(`You already have a pending collaboration request.`);
 			// Add a check to allow the collaboration if the user is the other channel's pending collaboration just have them accept it
@@ -899,7 +899,7 @@ exports.commands = {
 			let sortedVids = Object.keys(videos).sort(function (a, b) {
 				return videos[b].recorded - videos[a].recorded;
 			});
-			if (sortedVids.length > 20 && this.broadcasting) sortedVids.splice(0, 20);
+			if (sortedVids.length > 20 && this.broadcasting) sortedVids = sortedVids.splice(0, 20);
 			let display = `<div style="max-height: 200px; width: 100%; overflow: scroll;${channels[channelId].banner ? ` background:url(${channels[channelId].banner}); background-size: 100% 100%;` : ``}"><h2 style="font-weight: bold; text-align: center">${channels[channelId].name}'${channels[channelId].name.endsWith("s") ? `` : `s`} Videos:</h2>`;
 			display += `<table border="1" cellspacing ="0" cellpadding="8"><tr style="font-weight: bold"><td>Title:</td><td>Category:</td><td>Views:</td><td>Likes:</td><td>Dislikes:</td><td>Subscribers:</td><td>Unsubs:</td><td>Monetized:</td><td>Uploaded:</td><td>View:</td></tr>`;
 			for (let video of sortedVids) {
