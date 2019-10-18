@@ -58,6 +58,7 @@ function pColor(user) {
 }
 
 exports.commands = {
+	devs: "dev",
 	dev: {
 		give(target, room, user) {
 			if (!this.can("hotpatch")) return false;
@@ -512,6 +513,42 @@ exports.commands = {
 		/nature help - Displays information about Profile Nature commands.`,
 	],
 
+	gender: {
+		add: "set",
+		set(target, room, user) {
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
+			if (!target) return this.parse("/genderhelp");
+			let possibleGenders = ["M", "F"];
+			target = target.toUpperCase();
+			if (target.length > 1) return this.errorReply(`Your gender should be either "M" or "F".`);
+			if (!possibleGenders.includes(target)) return this.errorReply(`Your gender should be either "M" or "F".`);
+			profile.gender = target;
+			Db.profile.set(user.id, profile);
+			return this.sendReply(`You have successfully set your gender as "${target}".`);
+		},
+
+		del: "delete",
+		take: "delete",
+		remove: "delete",
+		delete(target, room, user) {
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
+			if (!profile.gender) return this.errorReply("Your gender has not been set.");
+			delete profile.gender;
+			Db.profile.set(user.id, profile);
+			return this.sendReply("Your gender has been deleted from your profile.");
+		},
+
+		"": "help",
+		help() {
+			this.parse("/genderhelp");
+		},
+	},
+	genderhelp: [
+		`/gender set [nature] - Sets your Profile Gender.  Must be "M" or "F".
+		/gender delete - Removes your Profile Gender.
+		/gender help - Displays information about Profile Gender commands.`,
+	],
+
 	"!lastactive": true,
 	checkactivity: "lastactive",
 	lastactive(target, room, user) {
@@ -573,6 +610,7 @@ exports.commands = {
 		}
 		profileData += `<div style="display: inline-block; width: 6.5em; height: 100%; vertical-align: top"><img src="${avatar}" height="80" width="80" align="left"></div>`;
 		profileData += `<div style="display: inline-block">&nbsp;${pColor(userid)}<strong>Name:</strong></font> ${Server.nameColor(username, true)}&nbsp;`;
+		if (profile.gender) profileData += ` ${profile.gender === "M" ? `&#9794;` : `&#9792;`}`;
 		if (Users.get(userid) && ip && ip !== null) {
 			profileData += ` <img src="http://flags.fmcdn.net/data/flags/normal/${ip.toLowerCase()}.png" alt="${ip}" title="${ip}" width="20" height="10">`;
 		}
@@ -610,6 +648,8 @@ exports.commands = {
 		/type delete - Delete your favorite type.
 		/nature set [nature] - Set your nature.
 		/nature delete - Delete your nature.
+		/gender set [gender] - Sets your gender.  Must be "M" or "F".
+		/gender delete - Deletes your gender.
 		/music set [user], [song], [title] - Sets a user's profile song. Requires % or higher.
 		/music take [user] - Removes a user's profile song. Requires % or higher.
 		/bg set [user], [link] - Sets the user's profile background. Requires % or higher.
