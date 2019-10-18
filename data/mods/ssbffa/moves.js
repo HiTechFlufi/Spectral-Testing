@@ -796,4 +796,31 @@ exports.BattleMovedex = {
 		ignoreImmunities: true,
 		// I don't think this deals damage under inverse rules but whatever
 	},
+	
+	//Shade Bones
+	"waitwtf": {
+		id: "waitwtf",
+		name: "Wait WTF",
+		basePower: 0,
+		accuracy: true,
+		pp: 10,
+		priority: 0,
+		flags: {
+			mystery: 1,
+		},
+		onHit(target, pokemon) {
+			if (!pokemon.transformInto(target)) {
+				return false;
+			}
+		},
+		category: "Status",
+		isNonstandard: true,
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Transform", target);
+		},
+		secondary: null,
+		target: "normal",
+		type: "normal",
+		zMoveEffect: 'heal',
+	},
 };
