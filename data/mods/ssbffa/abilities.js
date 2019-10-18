@@ -2,21 +2,6 @@
 
 /**@type {{[k: string]: ModdedAbilityData}} */
 let BattleAbilities = {
-	"hazardsson": {
-		id: "hazardsson",
-		name: "Hazards Son",
-		desc: "(Tries to) set up a variety of hazards upon entry.",
-		onStart(pokemon) {
-			this.useMove("spikes", pokemon);
-			this.useMove("spikes", pokemon);
-			this.useMove("spikes", pokemon);
-			this.useMove("stealthrock", pokemon);
-			this.useMove("leechseed", pokemon);
-			this.useMove("toxicspikes", pokemon);
-			this.useMove("toxicspikes", pokemon);
-			this.useMove("stickyweb", pokemon);
-		},
-	},
 	"fsubs": {
 		id: "fsubs",
 		name: "F Subs",
@@ -46,18 +31,19 @@ let BattleAbilities = {
 			this.useMove("topsyturvy", pokemon);
 		},
 	},
+
 	"warriorsdance": {
 		id: "warriorsdance",
 		name: "Warrior's Dance",
-		desc: "Taunts the foe and boosts SpA/Acc/Spe by 1 stage.",
+		desc: "Taunts the foe and boosts Speed/Accuracy by 1 stage.",
 		shortDesc: "Taunt, +1 SpA/Acc/Spe",
 		onStart(pokemon) {
 			this.useMove("taunt", pokemon);
-			this.boost({spa: 1});
 			this.boost({spe: 1});
 			this.boost({accuracy: 1});
 		},
 	},
+
 	"honeypot": {
 		id: "honeypot",
 		name: "Honey Pot",
@@ -76,6 +62,88 @@ let BattleAbilities = {
 			this.useMove("trickroom", pokemon);
 			this.useMove("leechseed", pokemon);
 			this.useMove("aquaring", pokemon);
+		},
+	},
+
+	"memeguard": {
+		id: "memeguard",
+		name: "Meme Guard",
+		desc: "Raises the user's Defense by 3 stages on switch-in, this Pokemon can only be damaged by direct attacks and Status moves have their priority raised by 1.",
+		shortDesc: "Raise Defense by 3 on switch-in, immune to indirect attacks and +1 priority to Status.",
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onStart(pokemon) {
+			this.boost({def: 3});
+		},
+		onModifyPriority(priority, pokemon, target, move) {
+			if (move && move.category === 'Status') {
+				move.memeguardBoosted = true;
+				return priority + 1;
+			}
+		},
+	},
+
+	"ghidorahbond": {
+		id: "ghidorahbond",
+		name: "Ghidorah Bond",
+		desc: "This Pokemon's damaging moves hit thrice. The second and third hit have their damage quartered.",
+		shortDesc: "Hits thrice, 0.25x damage on second and third.",
+		onPrepareHit(source, target, move) {
+			if (['iceball', 'rollout'].includes(move.id)) return;
+			if (move.category !== 'Status' && !move.selfdestruct && !move.multihit && !move.flags['charge'] && !move.spreadHit && !move.isZ) {
+				move.multihit = 3;
+				move.multihitType = 'ghidorahbond';
+			}
+		},
+		onBasePowerPriority: 8,
+		onBasePower(basePower, pokemon, target, move) {
+			if (move.multihitType === 'ghidorahbond' && move.hit > 1) return this.chainModify(0.25);
+		},
+		onSourceModifySecondaries(secondaries, target, source, move) {
+			if (move.multihitType === 'ghidorahbond' && move.id === 'secretpower' && move.hit < 2) {
+				// hack to prevent accidentally suppressing King's Rock/Razor Fang
+				return secondaries.filter(effect => effect.volatileStatus === 'flinch');
+			}
+		},
+	},
+
+	"regenheirator": {
+		id: "regenheirator",
+		name: "Regen-heir-ator",
+		desc: "If this Pokemon eats an item, it heals the user by 1/3rd of their max HP.  This Pokemon also will not be OHKO'ed.",
+		shortDesc: "If the user eats an item, it heals HP by 1/3rd; cannot be OHKO'ed",
+		onEatItem(item, pokemon) {
+			this.heal(pokemon.maxhp / 3);
+		},
+		onTryHit(pokemon, target, move) {
+			if (move.ohko) {
+				this.add('-immune', pokemon, '[from] ability: Regen-heir-ator');
+				return null;
+			}
+		},
+		onDamagePriority: -100,
+		onDamage(damage, target, source, effect) {
+			if (target.hp === target.maxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
+				this.add('-ability', target, 'Regen-heir-ator');
+				return target.hp - 1;
+			}
+		},
+	},
+
+	"kingsblessing": {
+		id: "kingsblessing",
+		name: "King's Blessing",
+		shortDesc: "This Pokemon's Special Defense is doubled, and uses Curse on entry.",
+		onModifySpDPriority: 6,
+		onModifySpD(spd) {
+			return this.chainModify(2);
+		},
+		onStart(pokemon) {
+			this.useMove("curse", pokemon);
 		},
 	},
 };
