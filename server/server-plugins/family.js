@@ -36,6 +36,7 @@ function write() {
 for (let u in families) {
 	if (!families[u].brothers) families[u].brothers = [];
 	if (!families[u].sisters) families[u].sisters = [];
+	if (!families[u].pendingSiblings) families[u].pendingSiblings = [];
 }
 write();
 
@@ -308,12 +309,12 @@ exports.commands = {
 				// Lazily check if it's in the husbands/wives array as the user's profile gender may have changed (aka avoid crash)
 				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(families[targetId].husbands.indexOf(user.id), 1);
 				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(families[targetId].wives.indexOf(user.id), 1);
-				families[user.id].husbands.splice(familes[user.id].husbands.indexOf(targetId), 1);
+				families[user.id].husbands.splice(families[user.id].husbands.indexOf(targetId), 1);
 			} else if (families[user.id].wives.includes(targetId)) {
 				// Lazily check if it's in the husbands/wives array as the user's profile gender may have changed (aka avoid crash)
 				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(families[targetId].husbands.indexOf(user.id), 1);
 				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(families[targetId].wives.indexOf(user.id), 1);
-				families[user.id].wives.splice(familes[user.id].husbands.indexOf(targetId), 1);
+				families[user.id].wives.splice(families[user.id].husbands.indexOf(targetId), 1);
 			} else {
 				return this.errorReply(`It appears ${target} is not your spouse.`);
 			}
