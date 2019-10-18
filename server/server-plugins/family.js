@@ -33,6 +33,12 @@ function write() {
 	));
 }
 
+for (let u in families) {
+	if (!families[u].brothers) families[u].brothers = [];
+	if (!families[u].sisters) families[u].sisters = [];
+}
+write();
+
 exports.commands = {
 	family: {
 		initialize: "init",
@@ -50,6 +56,9 @@ exports.commands = {
 				boyfriends: [],
 				girlfriends: [],
 				pendingDates: [],
+				brothers: [],
+				sisters: [],
+				pendingSiblings: [],
 			};
 			write();
 			this.sendReply(`Initialized your family tree data.`);
@@ -91,7 +100,7 @@ exports.commands = {
 			} else {
 				families[user.id].mothers.push(adopter);
 			}
-			families[adopter].pendingAdoptions.splice(user.id);
+			families[adopter].pendingAdoptions.splice(families[adopter].pendingAdoptions.indexOf(user.id), 1);
 			write();
 			if (Users.get(adopter) && Users.get(adopter).connected) {
 				Users.get(adopter).send(`|pm|${user.getIdentity()}|${Users.get(adopter).getIdentity()}| has accepted your adoption request.`);
@@ -105,7 +114,7 @@ exports.commands = {
 			if (!families[user.id]) this.parse(`/family init`);
 			let targetId = toID(target);
 			if (!families[targetId].pendingAdoptions.includes(user.id)) return this.errorReply(`There is not a pending adoption from ${target}.`);
-			families[targetId].pendingAdoptions.splice(user.id);
+			families[targetId].pendingAdoptions.splice(families[targetId].pendingAdoptions.indexOf(user.id), 1);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has denied your adoption request.`);
@@ -113,6 +122,65 @@ exports.commands = {
 			return this.sendReply(`You have declined ${target}'s request to adopt you.`);
 		},
 
+		sibling(target, room, user) {
+			if (!target) return this.parse(`/familyhelp`);
+			if (!families[user.id]) this.parse(`/family init`);
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
+			if (!profile.gender) return this.errorReply(`You do not have your gender set.`);
+			let targetId = toID(target);
+			families[user.id].pendingSiblings.push(targetId);
+			write();
+			if (Users.get(targetId) && Users.get(targetId).connected) {
+				let message = `/html has tried to add you as a sibling. <br /><button name="send" value="/family acceptsibling ${user.id}">Click to accept</button> | <button name="send" value="/family declinesibling ${user.id}">Click to decline</button>`;
+				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}|${message}`);
+			}
+			this.sendReply(`You have asked ${target} to be your sibling.`);
+		},
+
+		acceptsibling(target, room, user) {
+			if (!target) return this.parse(`/familyhelp`);
+			if (!families[user.id]) this.parse(`/family init`);
+			let targetId = toID(target);
+			if (!families[targetId].pendingSiblings.includes(user.id)) return this.errorReply(`There is not a pending sibling request from ${target}.`);
+			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
+			let spouseProfile = Db.profile.get(targetId, {data: {title: {}, music: {}}});
+			if (!profile.gender) return this.errorReply(`You do not have your gender set.`);
+			if (!spouseProfile.gender) return this.errorReply(`${target} does not have their gender set.`);
+
+			if (profile.gender === "M") {
+				families[targetId].brothers.push(user.id);
+			} else {
+				families[targetId].sisters.push(user.id);
+			}
+
+			if (spouseProfile.gender === "M") {
+				families[user.id].brothers.push(targetId);
+			} else {
+				families[user.id].sisters.push(targetId);
+			}
+			families[targetId].pendingSiblings.splice(families[targetId].pendingSiblings.indexOf(user.id), 1);
+			write();
+			if (Users.get(targetId) && Users.get(targetId).connected) {
+				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has confirmed they are your sibling!`);
+			}
+			this.sendReply(`You have confirmed you are ${target}'s sibling.`);
+		},
+
+		"refusesibling": "declinesibling",
+		declinesibling(target, room, user) {
+			if (!target) return this.parse(`/familyhelp`);
+			if (!families[user.id]) this.parse(`/family init`);
+			let targetId = toID(target);
+			if (!families[targetId].pendingSiblings.includes(user.id)) return this.errorReply(`There is not a pending sibling confirmation from ${target}.`);
+			families[targetId].pendingSiblings.splice(families[targetId].pendingSiblings.indexOf(user.id), 1);
+			write();
+			if (Users.get(targetId) && Users.get(targetId).connected) {
+				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has denied that they are your sibling.`);
+			}
+			return this.sendReply(`You have denied that you are ${target}'s sibling.`);
+		},
+
+		disownsibling: "disownparent",
 		disownchild: "disownparent",
 		disownparent(target, room, user, connection, cmd) {
 			if (!target) return this.parse(`/familyhelp`);
@@ -121,35 +189,51 @@ exports.commands = {
 			if (cmd === "disownparent") {
 				if (families[user.id].fathers.includes(targetId)) {
 					// Lazily check if it's in the sons/daughters array as the user's profile gender may have changed (aka avoid crash)
-					if (families[targetId].sons.includes(user.id)) families[targetId].sons.splice(user.id);
-					if (families[targetId].daughters.includes(user.id)) families[targetId].daughters.splice(user.id);
-					families[user.id].fathers.splice(targetId);
+					if (families[targetId].sons.includes(user.id)) families[targetId].sons.splice(families[targetId].daughters.indexOf(user.id), 1);
+					if (families[targetId].daughters.includes(user.id)) families[targetId].daughters.splice(families[targetId].daughters.indexOf(user.id), 1);
+					families[user.id].fathers.splice(families[user.id].fathers.indexOf(targetId), 1);
 				} else if (families[user.id].mothers.includes(targetId)) {
 					// Lazily check if it's in the sons/daughters array as the user's profile gender may have changed (aka avoid crash)
-					if (families[targetId].sons.includes(user.id)) families[targetId].sons.splice(user.id);
-					if (families[targetId].daughters.includes(user.id)) families[targetId].daughters.splice(user.id);
-					families[user.id].mothers.splice(targetId);
+					if (families[targetId].sons.includes(user.id)) families[targetId].sons.splice(families[targetId].daughters.indexOf(user.id), 1);
+					if (families[targetId].daughters.includes(user.id)) families[targetId].daughters.splice(families[targetId].daughters.indexOf(user.id), 1);
+					families[user.id].nothers.splice(families[user.id].mothers.indexOf(targetId), 1);
 				} else {
 					return this.errorReply(`It appears ${target} is not your parent.`);
 				}
 				write();
 				this.sendReply(`You have disowned ${target} as your parent.`);
-			} else {
+			} else if (cmd === "disownparent") {
 				if (families[user.id].sons.includes(targetId)) {
 					// Lazily check if it's in the fathers/mothers array as the user's profile gender may have changed (aka avoid crash)
-					if (families[targetId].fathers.includes(user.id)) families[targetId].fathers.splice(user.id);
-					if (families[targetId].mothers.includes(user.id)) families[targetId].mothers.splice(user.id);
-					families[user.id].sons.splice(targetId);
+					if (families[targetId].fathers.includes(user.id)) families[targetId].fathers.splice(families[targetId].fathers.indexOf(user.id), 1);
+					if (families[targetId].mothers.includes(user.id)) families[targetId].mothers.splice(families[targetId].mothers.indexOf(user.id), 1);
+					families[user.id].sons.splice(families[user.id].sons.indexOf(targetId), 1);
 				} else if (families[user.id].daughters.includes(targetId)) {
 					// Lazily check if it's in the fathers/mothers array as the user's profile gender may have changed (aka avoid crash)
-					if (families[targetId].fathers.includes(user.id)) families[targetId].fathers.splice(user.id);
-					if (families[targetId].mothers.includes(user.id)) families[targetId].mothers.splice(user.id);
-					families[user.id].daughters.splice(targetId);
+					if (families[targetId].fathers.includes(user.id)) families[targetId].fathers.splice(families[targetId].fathers.indexOf(user.id), 1);
+					if (families[targetId].mothers.includes(user.id)) families[targetId].mothers.splice(families[targetId].mothers.indexOf(user.id), 1);
+					families[user.id].daughters.splice(families[user.id].daughters.indexOf(targetId), 1);
 				} else {
 					return this.errorReply(`It appears ${target} is not your child.`);
 				}
 				write();
 				this.sendReply(`You have disowned ${target} as your child.`);
+			} else {
+				if (families[user.id].brothers.includes(targetId)) {
+					// Lazily check if it's in the brothers/sisters array as the user's profile gender may have changed (aka avoid crash)
+					if (families[targetId].brothers.includes(user.id)) families[targetId].brothers.splice(families[targetId].brothers.indexOf(user.id), 1);
+					if (families[targetId].sisters.includes(user.id)) families[targetId].sisters.splice(families[targetId].sisters.indexOf(user.id), 1);
+					families[user.id].brothers.splice(families[user.id].brothers.indexOf(targetId), 1);
+				} else if (families[user.id].sisters.includes(targetId)) {
+					// Lazily check if it's in the brothers/sisters array as the user's profile gender may have changed (aka avoid crash)
+					if (families[targetId].brothers.includes(user.id)) families[targetId].brothers.splice(families[targetId].brothers.indexOf(user.id), 1);
+					if (families[targetId].sisters.includes(user.id)) families[targetId].sisters.splice(families[targetId].sisters.indexOf(user.id), 1);
+					families[user.id].sisters.splice(families[user.id].sisters.indexOf(targetId), 1);
+				} else {
+					return this.errorReply(`It appears ${target} is not your sibling.`);
+				}
+				write();
+				this.sendReply(`You have disowned ${target} as your sibling.`);
 			}
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has disowned you.`);
@@ -194,7 +278,7 @@ exports.commands = {
 			} else {
 				families[user.id].wives.push(targetId);
 			}
-			families[targetId].pendingSpouses.splice(user.id);
+			families[targetId].pendingSpouses.splice(families[targetId].pendingSpouses.indexOf(user.id), 1);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has accepted your proposal!  Congratulations!!!`);
@@ -208,7 +292,7 @@ exports.commands = {
 			if (!families[user.id]) this.parse(`/family init`);
 			let targetId = toID(target);
 			if (!families[targetId].pendingSpouses.includes(user.id)) return this.errorReply(`There is not a pending proposal from ${target}.`);
-			families[targetId].pendingSpouses.splice(user.id);
+			families[targetId].pendingSpouses.splice(families[targetId].pendingSpouses.indexOf(user.id), 1);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has denied your proposal.`);
@@ -222,14 +306,14 @@ exports.commands = {
 			let targetId = toID(target);
 			if (families[user.id].husbands.includes(targetId)) {
 				// Lazily check if it's in the husbands/wives array as the user's profile gender may have changed (aka avoid crash)
-				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(user.id);
-				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(user.id);
-				families[user.id].husbands.splice(targetId);
+				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(families[targetId].husbands.indexOf(user.id), 1);
+				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(families[targetId].wives.indexOf(user.id), 1);
+				families[user.id].husbands.splice(familes[user.id].husbands.indexOf(targetId), 1);
 			} else if (families[user.id].wives.includes(targetId)) {
 				// Lazily check if it's in the husbands/wives array as the user's profile gender may have changed (aka avoid crash)
-				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(user.id);
-				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(user.id);
-				families[user.id].wives.splice(targetId);
+				if (families[targetId].husbands.includes(user.id)) families[targetId].husbands.splice(families[targetId].husbands.indexOf(user.id), 1);
+				if (families[targetId].wives.includes(user.id)) families[targetId].wives.splice(families[targetId].wives.indexOf(user.id), 1);
+				families[user.id].wives.splice(familes[user.id].husbands.indexOf(targetId), 1);
 			} else {
 				return this.errorReply(`It appears ${target} is not your spouse.`);
 			}
@@ -276,7 +360,7 @@ exports.commands = {
 			} else {
 				families[user.id].girlfriends.push(targetId);
 			}
-			families[targetId].pendingDates.splice(user.id);
+			families[targetId].pendingDates.splice(families[targetId].pendingDates.indexOf(user.id), 1);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has agreed to go on a date with you!`);
@@ -290,7 +374,7 @@ exports.commands = {
 			if (!families[user.id]) this.parse(`/family init`);
 			let targetId = toID(target);
 			if (!families[targetId].pendingDates.includes(user.id)) return this.errorReply(`There is not a pending date proposal from ${target}.`);
-			families[targetId].pendingDates.splice(user.id);
+			families[targetId].pendingDates.splice(families[targetId].pendingDates.indexOf(user.id), 1);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
 				Users.get(targetId).send(`|pm|${user.getIdentity()}|${Users.get(targetId).getIdentity()}| has denied your request to go on a date.`);
@@ -304,14 +388,14 @@ exports.commands = {
 			let targetId = toID(target);
 			if (families[user.id].boyfriends.includes(targetId)) {
 				// Lazily check if it's in the boyfriends/girlfriends array as the user's profile gender may have changed (aka avoid crash)
-				if (families[targetId].boyfriends.includes(user.id)) families[targetId].boyfriends.splice(user.id);
-				if (families[targetId].girlfriends.includes(user.id)) families[targetId].girlfriends.splice(user.id);
-				families[user.id].boyfriends.splice(targetId);
+				if (families[targetId].boyfriends.includes(user.id)) families[targetId].boyfriends.splice(families[targetId].boyfriends.indexOf(user.id), 1);
+				if (families[targetId].girlfriends.includes(user.id)) families[targetId].girlfriends.splice(families[targetId].girlfriends.indexOf(user.id), 1);
+				families[user.id].boyfriends.splice(families[user.id].boyfriends.indexOf(targetId), 1);
 			} else if (families[user.id].girlfriends.includes(targetId)) {
 				// Lazily check if it's in the boyfriends/girlfriends array as the user's profile gender may have changed (aka avoid crash)
-				if (families[targetId].boyfriends.includes(user.id)) families[targetId].boyfriends.splice(user.id);
-				if (families[targetId].girlfriends.includes(user.id)) families[targetId].girlfriends.splice(user.id);
-				families[user.id].girlfriends.splice(targetId);
+				if (families[targetId].boyfriends.includes(user.id)) families[targetId].boyfriends.splice(families[targetId].boyfriends.indexOf(user.id), 1);
+				if (families[targetId].girlfriends.includes(user.id)) families[targetId].girlfriends.splice(families[targetId].girlfriends.indexOf(user.id), 1);
+				families[user.id].girlfriends.splice(families[user.id].girlfriends.indexOf(targetId), 1);
 			} else {
 				return this.errorReply(`It appears ${target} is not your date.`);
 			}
@@ -338,6 +422,8 @@ exports.commands = {
 			if (familyInfo.wives.length > 0) display += `&nbsp;<strong>Wives:</strong> ${Chat.toListString(familyInfo.wives.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			if (familyInfo.boyfriends.length > 0) display += `&nbsp;<strong>Boyfriends:</strong> ${Chat.toListString(familyInfo.boyfriends.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			if (familyInfo.girlfriends.length > 0) display += `&nbsp;<strong>Girlfriends:</strong> ${Chat.toListString(familyInfo.girlfriends.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (familyInfo.brothers.length > 0) display += `&nbsp;<strong>Brothers:</strong> ${Chat.toListString(familyInfo.brothers.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (familyInfo.sisters.length > 0) display += `&nbsp;<strong>Sisters:</strong> ${Chat.toListString(familyInfo.sisters.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			this.sendReplyBox(display);
 		},
 
@@ -352,8 +438,12 @@ exports.commands = {
 		/family adopt [user] - Sends a request to adopt [user].
 		/family acceptadoption [user] - Accepts an adoption request from [user].
 		/family declineadoption [user] - Declines an adoption request from [user].
+		/family sibling [user] - Sends a confirmation to [user] that you are their sibling.
+		/family acceptsibling [user] - Accepts the confirmation [user] is your sibling.
+		/family declinesibling [user] - Declines the confirmation that [user] is your sibling.
 		/family disownparent [user] - Removes [user] as your parent.
 		/family disownchild [user] - Removes [user] as your child.
+		/family disownsibling [user] - Removes [user] as your sibling.
 		/family marry [user] - Asks [user] to marry you.
 		/family acceptmarriage [user] - Accepts the marriage proposal from [user].
 		/family declinemarriage [user] - Declines the marriage proposal from [user].
