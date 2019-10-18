@@ -203,7 +203,7 @@ exports.commands = {
 				}
 				write();
 				this.sendReply(`You have disowned ${target} as your parent.`);
-			} else if (cmd === "disownparent") {
+			} else if (cmd === "disownchild") {
 				if (families[user.id].sons.includes(targetId)) {
 					// Lazily check if it's in the fathers/mothers array as the user's profile gender may have changed (aka avoid crash)
 					if (families[targetId].fathers.includes(user.id)) families[targetId].fathers.splice(families[targetId].fathers.indexOf(user.id), 1);
@@ -407,6 +407,17 @@ exports.commands = {
 			this.sendReply(`You have broken up with ${target}.`);
 		},
 
+		pending(target, room, user) {
+			let family = families[user.id];
+			if (!family) this.parse(`/family init`);
+			let display = `Your pending requests:<br />`;
+			if (family.pendingAdoptions.length > 0) display += `<strong>Adoptions:</strong> ${Chat.toListString(family.pendingAdoptions.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (family.pendingSpouses.length > 0) display += `<strong>Spouses:</strong> ${Chat.toListString(family.pendingSpouses.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (family.pendingDates.length > 0) display += `<strong>Dates:</strong> ${Chat.toListString(family.pendingDates.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (family.pendingSiblings.length > 0) display += `<strong>Siblings:</strong> ${Chat.toListString(family.pendingSiblings.map(p => { return Server.nameColor(p, true, true); }))}`;
+			this.sendReplyBox(display);
+		},
+
 		list: "tree",
 		tree(target, room, user) {
 			if (!this.runBroadcast()) return;
@@ -424,7 +435,7 @@ exports.commands = {
 			if (familyInfo.boyfriends.length > 0) display += `&nbsp;<strong>Boyfriends:</strong> ${Chat.toListString(familyInfo.boyfriends.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			if (familyInfo.girlfriends.length > 0) display += `&nbsp;<strong>Girlfriends:</strong> ${Chat.toListString(familyInfo.girlfriends.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
 			if (familyInfo.brothers.length > 0) display += `&nbsp;<strong>Brothers:</strong> ${Chat.toListString(familyInfo.brothers.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
-			if (familyInfo.sisters.length > 0) display += `&nbsp;<strong>Sisters:</strong> ${Chat.toListString(familyInfo.sisters.map(p => { return Server.nameColor(p, true, true); }))}<br />`;
+			if (familyInfo.sisters.length > 0) display += `&nbsp;<strong>Sisters:</strong> ${Chat.toListString(familyInfo.sisters.map(p => { return Server.nameColor(p, true, true); }))}`;
 			this.sendReplyBox(display);
 		},
 
@@ -453,6 +464,7 @@ exports.commands = {
 		/family acceptdate [user] - Accepts a date request from [user].
 		/family declinedate [user] - Declines the date request from [user].
 		/family breakup [user] - Removes [user] as your date.
+		/family pending - Shows all of your pending requests.
 		/family tree [user] - Views [user]'s family tree; defaults to yourself if no [user].
 		/family help - Displays this help command.`,
 	],
