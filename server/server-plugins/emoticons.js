@@ -205,6 +205,7 @@ exports.commands = {
 		},
 	},
 
+	"!randemote": true,
 	randomemoticon: "randemote",
 	randemoticon: "randemoticon",
 	randomemote: "randemote",
