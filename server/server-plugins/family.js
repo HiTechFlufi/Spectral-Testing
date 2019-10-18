@@ -197,7 +197,7 @@ exports.commands = {
 					// Lazily check if it's in the sons/daughters array as the user's profile gender may have changed (aka avoid crash)
 					if (families[targetId].sons.includes(user.id)) families[targetId].sons.splice(families[targetId].daughters.indexOf(user.id), 1);
 					if (families[targetId].daughters.includes(user.id)) families[targetId].daughters.splice(families[targetId].daughters.indexOf(user.id), 1);
-					families[user.id].nothers.splice(families[user.id].mothers.indexOf(targetId), 1);
+					families[user.id].mothers.splice(families[user.id].mothers.indexOf(targetId), 1);
 				} else {
 					return this.errorReply(`It appears ${target} is not your parent.`);
 				}
