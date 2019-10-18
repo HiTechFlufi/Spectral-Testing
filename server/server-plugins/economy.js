@@ -17,16 +17,14 @@ let shop = [
 	["Custom Emoticon", "You provide an image (50x50 Pixels) to be added as an emote on the server. [Can be denied]", 40],
 	["Custom PM Box", "You supply the code for a Custom PM box for people to see when they PM you.  [Can be denied]", 75],
 	["Custom Title", "Buys a title to be added on to your profile. [Can be denied].", 10],
-	["Declare", "Purchases a Global Declare to announce your message.", 15],
+	["Declare", "Purchases a Declare to announce your message to all users.", 20],
 	["FFA Symbol", "Purchases the ability to have a custom symbol for your SSBFFA Pokemon.", 15],
 	["Fix", "Buys the ability to alter your current custom avatar or trainer card.", 5],
 	["Icon", "Buy a custom icon that can be applied to the rooms you want. You must take into account that the provided image should be 32 x 32", 25],
 	["Item", "Purchases a custom item for your SSBFFA account.", 50],
-	["Kick", "Kick a user from the chatroom.", 5],
-	["League Room", "Purchases a room for league usage.", 5],
+	["League Room", "Purchases a room for league usage.", 15],
 	["Move", "Purchases a custom move for your SSBFFA account.", 50],
 	["Music", "Purchases profile music.", 25],
-	["POTD", "Allows you to change the Pokemon of the Day that shows up guaranteed in Random Battles [Can be refused, or held off if one is already active]", 25],
 	["Room", "Buys a chatroom for you to own. [Within reason, can be denied].", 30],
 	["Roomshop", "Buys a Roomshop for your League or Room. [Will be removed if abused].", 50],
 	["Shiny", "Purchases the ability for your SSBFFA Pokemon to become shiny.", 5],
@@ -161,7 +159,7 @@ function handleBoughtItem(item, user, cost) {
 		Server.ssb[user.id].canShiny = true;
 		writeSSB();
 	} else {
-		user.tokens[item] = true;
+		user.tokens[toID(item)] = true;
 	}
 }
 
@@ -382,6 +380,7 @@ exports.commands = {
 		this.sendReply("Your symbol has been removed.");
 	},
 
+	"!economystats": true,
 	economy: "economystats",
 	currency: "economystats",
 	bucks: "economystats",
