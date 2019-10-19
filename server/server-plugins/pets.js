@@ -205,7 +205,7 @@ function getSprite(monName) {
 	}
 
 	if (/alola?/.test(toID(monName))) {
-		spriteid += '-alola';
+		spriteid.replace('alola', '-alola');
 	}
 	
 	if (toID(monName).includes("pumpkaboo") && toID(monName).length !== 9) {
@@ -254,6 +254,7 @@ exports.commands = {
 			} else {
 				if (!Object.keys(PetDb.get(user.id, [])).length) {
 					randMon(user.id);
+					Db.petladder.set(user.id, {});
 					Db.petCash.set(user.id, 3000);
 				}
 				user.send(`>view-pets\n|init|html\n|title|Pets\n|pagehtml|${petsMenu(user)}`);
@@ -317,6 +318,9 @@ exports.commands = {
 			buy(target, room, user) {
 				if (!Db.petShop.has(toID(target))) return this.errorReply("That is not an item in the pet shop");
 				let item = Db.petShop.get(toID(target));
+
+				if (Db.petCash.get(user.id, 0) < item.price) return this.errorReply("You do not have enough Pokédollars.");
+
 				Db.petCash.set(user.id, Db.petCash.get(user.id) - item.price);
 
 				if (item.type === 'pet') {
