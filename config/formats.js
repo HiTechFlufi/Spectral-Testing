@@ -2469,6 +2469,14 @@ let Formats = [
 		ruleset: ['Obtainable', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview'],
 	},
 	{
+		name: "[Gen 7] Monotype Random Doubles Battle",
+
+		mod: 'gen7',
+		team: 'random',
+		gameType: "doubles",
+		ruleset: ['Obtainable', 'Same Type Clause', 'Sleep Clause Mod', 'HP Percentage Mod', 'Cancel Mod'],
+	},
+	{
 		name: "[Gen 7] Random Battle 3v3",
 		desc: `Randomized teams of level-balanced Pok&eacute;mon with sets that are generated to be competitively viable. Select 3 Pok&eacute;mon to bring to battle.`,
 		threads: [
