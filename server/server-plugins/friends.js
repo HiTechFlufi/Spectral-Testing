@@ -136,7 +136,7 @@ exports.commands = {
 			let targetUser = Users.get(target);
 			// If the user has not initalized their friends list, parse /friends init
 			if (!friends[user.id]) this.parse(`/friends init`);
-			if (!friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
+			if (!friends[targetId] || !friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
 			friends[targetId].friendsList.push(user.id);
 			friends[user.id].friendsList.push(targetId);
 			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.id), 1);
@@ -153,7 +153,7 @@ exports.commands = {
 			let targetUser = Users.get(target);
 			// If the user has not initalized their friends list, parse /friends init
 			if (!friends[user.id]) this.parse(`/friends init`);
-			if (!friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
+			if (!friends[targetId] || !friends[targetId].pendingRequests.includes(user.id)) return this.errorReply(`${target} has not sent you a friend request.`);
 			friends[targetId].pendingRequests.splice(friends[targetId].pendingRequests.indexOf(user.id), 1);
 			write();
 			if (targetUser && targetUser.connected) targetUser.send(`|pm|${user.getIdentity()}|${targetUser.getIdentity()}|/raw ${Server.nameColor(user.name, true, true)} has declined your friend request.`);
