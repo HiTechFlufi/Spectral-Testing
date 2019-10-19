@@ -49,15 +49,15 @@ let BattleStatuses = {
 		},
 		onFaint() {
 			this.add(`c|@Horrific17|Eaa...`);
-			this.add(`c|~Satori Komeiji|Horrific!`);
+			this.add(`c| Satoriiiin|Horrific!`);
 			this.add(`c|@Horrific17|I let my guard down... I'm sorry...`);
-			this.add(`c|~Satori Komeiji|Oh, no! Horrific! Horrific!`);
-			this.add(`c|@Horrific17|Calm yourself, Satori...`);
-			this.add(`c|~Satori Komeiji|But... But...`);
+			this.add(`c| Satoriiiin|Oh, no! Horrific! Horrific!`);
+			this.add(`c|@Horrific17|Calm yourself, Satoriiiin...`);
+			this.add(`c| Satoriiiin|But... But...`);
 			this.add(`c|@Horrific17|This is no time for tears, is it? Unless... Do you plan on the two of us dying here together?`);
-			this.add(`c|~Satori Komeiji|Never! That I would never allow! You must not die...`);
+			this.add(`c| Satoriiiin|Never! That I would never allow! You must not die...`);
 			this.add(`c|@Horrific17|And neither should you, my wife. Lend me your shoulder, would you?`);
-			this.add(`c|~Satori Komeiji|Yes, of course.`);
+			this.add(`c| Satoriiiin|Yes, of course.`);
 		},
 		onSourceFaint() {
 			this.add(`c|@Horrific17|You? Defeat Me? Laughable.`);
