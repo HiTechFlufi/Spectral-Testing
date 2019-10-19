@@ -233,6 +233,22 @@ function getSprite(monName) {
 		spriteid = spriteid.replace("wormadam", "wormadam-");
 	}
 
+	if (toID(monName).includes("wormadam") && toID(monName).length !== 9) {
+		spriteid = spriteid.replace("wormadam", "wormadam-");
+	}
+	
+	if (toID(monName) === "kommoo") {
+		spriteid = "kommo-o";
+	}
+
+	if (toID(monName) === "hakamoo") {
+		spriteid = "Hakamo-o";
+	}
+
+	if (toID(monName) === "jangmoo") {
+		spriteid = "Jangmo-o";
+	}
+
 	let shiny = (toID(monName).includes("shiny") ? '-shiny' : '');
 	if (Dex.getTemplate(toID(monName)).tier === 'CAP' || Dex.getTemplate(toID(monName)).tier === 'CAP LC') {
 		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${shiny}/${spriteid}.png">`;
