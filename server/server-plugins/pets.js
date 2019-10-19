@@ -2,7 +2,7 @@
 
 const uuid = require('uuid');
 let allPets = [];
-global.randGenMons = [];
+randGenMons = [];
 
 // All mythicals & legendaries + banned from random gen
 let specialMons = [
@@ -60,7 +60,7 @@ Server.addMon = addMon;
 
 function randMon(user) {
 	// how to be lazy as fuck 101
-	let idx = Math.ceil(Math.random() * randGenMons.length);
+	let idx = Math.ceil(Math.random() * randGenMons.length - 1);
 	addMon(user, randGenMons[idx]);
 }
 Server.randMon = randMon;
@@ -308,7 +308,7 @@ exports.commands = {
 				let keys = Db.petShop.keys();
 				for (let u in keys) {
 					let item = Db.petShop.get(keys[u]);
-					display += `<tr><td>${item.title}</td><td>${item.desc}</td><td><button style="" name="send" value="/pets shop buy ${toID(item.title)}">${item.price}</button></td</tr>`;
+					display += `<tr><td>${item.title}</td><td>${item.desc}</td><td><button style="" name="send" value="/pets shop buy ${toID(item.title)}">${item.price} Pokédollars</button></td</tr>`;
 				}
 				display += `</table></center>`;
 				return this.sendReplyBox(display);
