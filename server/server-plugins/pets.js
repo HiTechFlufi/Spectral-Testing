@@ -42,7 +42,7 @@ function load() {
 		let monId = toID(mon.species);
 		if (monId.indexOf("pokestar") !== -1) continue;
 		allPets.push(monId);
-		if (Dex.getTemplate(monId).battleOnly === true || Dex.getTemplate(monId).eventOnly === true || specialMons.indexOf(monId) !== -1 || Dex.getTemplate(monId).prevo.length || Dex.getTemplate(monId).tier === 'CAP' || Dex.getTemplate(monId).tier === 'CAP LC) continue;
+		if (Dex.getTemplate(monId).battleOnly === true || Dex.getTemplate(monId).eventOnly === true || specialMons.indexOf(monId) !== -1 || Dex.getTemplate(monId).prevo.length || Dex.getTemplate(monId).tier === 'CAP' || Dex.getTemplate(monId).tier === 'CAP LC') continue;
 		randGenMons.push(monId);
 	}
 }
