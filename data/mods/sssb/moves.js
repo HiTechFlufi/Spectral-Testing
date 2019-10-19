@@ -679,10 +679,10 @@ let BattleMovedex = {
 		secondaries: [
 			{
 				chance: 30,
-				status: 'confusion',
+				volatileStatus: 'confusion',
 			}, {
 				chance: 30,
-				status: 'flinch',
+				volatileStatus: 'flinch',
 			},
 		],
 		target: "normal",
