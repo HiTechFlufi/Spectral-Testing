@@ -2702,6 +2702,259 @@ let Formats = [
 		ruleset: ['[Gen 7] OU'],
 		banlist: ['Kommonium Z'],
 	},
+	// Pets
+	{
+		section: 'Pets Battling',
+		column: 5,
+	},
+	{
+		name: "[Gen 7] Pets Random Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		team: 'randomPets',
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 7] Pets Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', '+CAP'],
+		banlist: ['Aegislash', 'Arceus', 'Deoxys-Base', 'Deoxys-Attack', 'Deoxys-Defense', 'Deoxys-Speed', 'Dialga', 'Giratina', 'Giratina-Origin', 'Groudon', 'Groudon-Primal', 'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-White',
+			'Lugia', 'Lunala', 'Marshadow', 'Metagross-Mega', 'Mewtwo', 'Mewtwo-Mega-X', 'Mewtwo-Mega-Y', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Necrozma-Ultra', 'Palkia', 'Rayquaza', 'Rayquaza-Mega', 'Reshiram', 'Shaymin-Sky', 'Solgaleo', 'Xerneas', 'Yveltal', 'Zekrom',
+		],
+		unbanlist: ['Unreleased'],
+
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
+	{
+		name: "[Gen 7] Pets 1v1 Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		teamLength: {
+			validate: [1, 1],
+			battle: 1,
+		},
+		ruleset: ['[Gen 7] Pets Battle'],
+		unbanlist: ['Unreleased'],
+
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
+	{
+		name: "[Gen 7] Pets 3v3 Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		teamLength: {
+			validate: [1, 3],
+			battle: 3,
+		},
+		ruleset: ['[Gen 7] Pets Battle'],
+
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
+	{
+		name: "[Gen 7] Pets Uber Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', '+CAP'],
+		unbanlist: ['Rayquaza-Mega', 'Unreleased'],
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
+	{
+		name: "[Gen 7] Pets LC Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Team Preview', 'Little Cup', '+CAP'],
+		maxLevel: 5,
+		unbanlist: ['Unreleased'],
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
+	{
+		name: "[Gen 7] Pets Monotype Battle",
+		petBattle: true,
+		tournamentShow: false,
+		mod: 'pets',
+		ruleset: ['Obtainable', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Moody Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod', 'Same Type Clause', 'Team Preview', '+CAP'],
+		banlist: ['Aegislash', 'Arceus', 'Deoxys-Base', 'Deoxys-Attack', 'Deoxys-Defense', 'Deoxys-Speed', 'Dialga', 'Giratina', 'Giratina-Origin', 'Groudon', 'Groudon-Primal', 'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-White',
+			'Lugia', 'Lunala', 'Marshadow', 'Metagross-Mega', 'Mewtwo', 'Mewtwo-Mega-X', 'Mewtwo-Mega-Y', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Necrozma-Ultra', 'Palkia', 'Rayquaza', 'Rayquaza-Mega', 'Reshiram', 'Shaymin-Sky', 'Solgaleo', 'Xerneas', 'Yveltal', 'Zekrom',
+		],
+		unbanlist: ['Unreleased'],
+
+		onValidateSet: function (set) {
+			let template = this.dex.getTemplate(set.species);
+			let problems = [];
+			if (set.species === set.name) delete set.name;
+
+			if (template.isNonstandard && !(template.tier === 'CAP' || template.tier === 'CAP LC')) {
+				problems.push(set.species + ' is not a real Pokemon.');
+			}
+			if (set.moves) {
+				for (let i = 0; i < set.moves.length; i++) {
+					let move = this.dex.getMove(set.moves[i]);
+					if (move.category === 'Status') problems.push(move.name + ' is a banned status move!');
+				}
+			}
+			if (set.moves && set.moves.length > 4) {
+				problems.push((set.name || set.species) + ' has more than four moves.');
+			}
+
+			// Let's manually delete items.
+			if (!set.item.megaEvolves) set.item = '';
+
+			// Automatically set ability to None
+			set.ability = 'No Ability';
+
+			// They also get a useless nature, since that didn't exist
+			set.nature = 'Serious';
+
+			return problems;
+		},
+	},
 ];
 
 exports.Formats = Formats;

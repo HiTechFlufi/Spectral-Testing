@@ -504,6 +504,26 @@ class Ladder extends LadderStore {
 			return;
 		}
 
+		if (Dex.getFormat(formatid).petBattle) {
+			formatTable.delete(user.id);
+			// @ts-ignore
+			if (!Users.get('petsai')) Server.makeCOM();
+			let size = 6;
+			// @ts-ignore
+			if (Dex.getFormat(formatid).teamLength && Dex.getFormat(formatid).teamLength.battle) size = Dex.getFormat(formatid).teamLength.battle;
+			// @ts-ignore
+			let randTeam = Server.randomPetsAiTeam(size, formatid, user.id);
+			if (!randTeam) return false;
+			Rooms.createBattle(formatid, {
+				p1: user,
+				p1team: newSearch.team,
+				p2: Users.get('petsai'),
+				p2team: randTeam,
+				rated: false,
+			});
+			return;
+		}
+
 		// In order from longest waiting to shortest waiting
 		for (const search of formatTable.values()) {
 			const searcher = this.getSearcher(search);

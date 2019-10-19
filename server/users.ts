@@ -1666,6 +1666,7 @@ function pruneInactive(threshold: number) {
 			user.setStatusType('idle');
 		}
 		if (user.connected) continue;
+		if (user.id === 'petsai') continue; // Dont delete the COM!
 		if ((now - user.lastDisconnected) > threshold) {
 			user.destroy();
 		}

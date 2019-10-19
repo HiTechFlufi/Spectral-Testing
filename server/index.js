@@ -93,7 +93,7 @@ if (Config.watchconfig) {
  *********************************************************/
 
 /* our shit start */
-global.Server = {};
+global.Server = require('./Server').Server;
 
 global.Db = require('nef')(require('nef-fs')('config/db'));
 

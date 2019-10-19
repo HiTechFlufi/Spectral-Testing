@@ -12,6 +12,7 @@ import {Pokemon} from './pokemon';
 import {PRNG, PRNGSeed} from './prng';
 import {Side} from './side';
 import {State} from './state';
+import {Server} from '../server/Server.js';
 
 /** A Pokemon that has fainted. */
 interface FaintedPokemon {
@@ -1059,6 +1060,10 @@ export class Battle {
 
 		if (this.sides.every(side => side.isChoiceDone())) {
 			throw new Error(`Choices are done immediately after a request`);
+		}
+		if (this.p2.name === 'Pets AI' && this.format.petBattle && !this["p2"].isChoiceDone()) {
+			Server.decideCOM(this, "p2");
+			if (this.allChoicesDone()) this.commitDecisions();
 		}
 	}
 

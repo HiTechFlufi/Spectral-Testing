@@ -57,6 +57,12 @@ function pColor(user) {
 	return `<font color="${color}">`;
 }
 
+function getPetUrl(user) {
+	let profile = Db.profile.get(toID(user), {data: {title: {}, music: {}}});
+	let spriteid = Server.getSprite(profile.pet.species).sprite;
+	return `//play.pokemonshowdown.com/sprites/ani/${spriteid}.gif`;
+}
+
 exports.commands = {
 	devs: "dev",
 	dev: {
@@ -634,7 +640,8 @@ exports.commands = {
 		profileData += `&nbsp;${pColor(userid)}<strong>Last Seen:</strong> ${getLastSeen(userid)}</font><br />`;
 		if (Db.friendcode.has(userid)) profileData += `&nbsp;${pColor(userid)}<strong>Friend Code:</strong> ${Db.friendcode.get(userid)}</font><br />`;
 		if (Db.switchfc.has(userid)) profileData += `&nbsp;${pColor(userid)}<strong>Switch Friend Code:</strong> SW-${Db.switchfc.get(userid)}</font><br />`;
-		if (profile.data.music.link) profileData += `&nbsp;<acronym title="${profile.data.music.title}"><br /><audio src="${profile.data.music.link}" controls="" style="width: 100%;"></audio></acronym>`;
+		if (profile.data.music.link) profileData += `&nbsp;<acronym title="${profile.data.music.title}"><br /><audio src="${profile.data.music.link}" controls="" style="width: 100%;"></audio></acronym><br />`;
+		// if (profile.pet && profile.pet.species) profileData += `<div style="float: right; border: none; background: none; background: transparent; border: none;"><img src="${getPetUrl(userid)}"></div>`;
 		profileData += `</div>`;
 		this.sendReplyBox(profileData);
 	},

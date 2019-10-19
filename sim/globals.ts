@@ -1014,6 +1014,7 @@ interface ModdedFormatsData extends Partial<FormatsData> {
 }
 
 interface Format extends Readonly<BasicEffect & FormatsData> {
+	readonly petBattle: boolean
 	readonly effectType: 'Format' | 'Ruleset' | 'Rule' | 'ValidatorRule'
 	readonly baseRuleset: string[]
 	readonly banlist: string[]

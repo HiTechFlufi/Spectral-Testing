@@ -4311,6 +4311,7 @@ const commands = {
 		if (!room.game || !room.game.timer) {
 			return this.errorReply(`You can only set the timer from inside a battle room.`);
 		}
+		if (room.game.p2.userid === 'petsai') return this.errorReply('You cannot turn on timer vs Pets AI!');
 		const timer = room.game.timer;
 		if (!timer.timerRequesters) {
 			return this.sendReply(`This game's timer is managed by a different command.`);
@@ -4394,6 +4395,36 @@ const commands = {
 					return false;
 				}
 			}
+
+			if (Dex.getFormat(target).petBattle && !Dex.getFormat(target).team) {
+				let clonedPets = Object.assign({}, PetDb.get(user.id, []));
+				let userteam = Dex.fastUnpackTeam(user.team);
+				let shiny = false;
+				let title = '';
+				let message = [];
+				let foundArray = [];
+				Object.keys(userteam).forEach(function (key) {
+					for (let u in clonedPets) {
+						title = clonedPets[u].species;
+						shiny = false;
+						if (clonedPets[u].shiny) {
+							shiny = true;
+						}
+						if (!shiny && !userteam[key].shiny && userteam[key].species === title || shiny && userteam[key].shiny && userteam[key].species === title) {
+							if (shiny) title = 'shiny' + title;
+							if (foundArray.indexOf(title) === -1) foundArray.push(title);
+						}
+					}
+				});
+				if (foundArray.length !== userteam.length) {
+					message.push("You have some pokemon on your team that you do not have as a pets! Please fix this! Check the shinies and mega formes! <br />Currently Matching Pets: " + foundArray.join(', '));
+				}
+				if (message.length >= 1) {
+					user.popup('|html|' + message.join('<br />'));
+					return false;
+				}
+			}
+
 			Ladders(target).searchBattle(user, connection);
 		} else {
 			Ladders.cancelSearches(user);
@@ -4431,6 +4462,36 @@ const commands = {
 				return false;
 			}
 		}
+
+		if (Dex.getFormat(target).petBattle && !Dex.getFormat(target).team) {
+			let clonedPets = Object.assign({}, PetDb.get(user.id, []));
+			let userteam = Dex.fastUnpackTeam(user.team);
+			let shiny = false;
+			let title = '';
+			let message = [];
+			let foundArray = [];
+			Object.keys(userteam).forEach(function (key) {
+				for (let u in clonedPets) {
+					title = clonedPets[u].species;
+					shiny = false;
+					if (clonedPets[u].shiny) {
+						shiny = true;
+					}
+					if (!shiny && !userteam[key].shiny && userteam[key].species === title || shiny && userteam[key].shiny && userteam[key].species === title) {
+						if (shiny) title = 'shiny' + title;
+						if (foundArray.indexOf(title) === -1) foundArray.push(title);
+					}
+				}
+			});
+			if (foundArray.length !== userteam.length) {
+				message.push("You have some pokemon on your team that you do not have as a pets! Please fix this! Check the shinies and mega formes! <br />Currently Matching Pets: " + foundArray.join(', '));
+			}
+			if (message.length >= 1) {
+				user.popup('|html|' + message.join('<br />'));
+				return false;
+			}
+		}
+
 		Ladders(target).makeChallenge(connection, targetUser);
 	},
 
@@ -4471,6 +4532,36 @@ const commands = {
 		if (target) return this.popupReply(`This command does not support specifying multiple users`);
 		const targetUser = this.targetUser || this.pmTarget;
 		if (!targetUser) return this.popupReply(`User "${this.targetUsername}" not found.`);
+
+		if (Dex.getFormat(target).petBattle && !Dex.getFormat(target).team) {
+			let clonedPets = Object.assign({}, PetDb.get(user.id, []));
+			let userteam = Dex.fastUnpackTeam(user.team);
+			let shiny = false;
+			let title = '';
+			let message = [];
+			let foundArray = [];
+			Object.keys(userteam).forEach(function (key) {
+				for (let u in clonedPets) {
+					title = clonedPets[u].species;
+					shiny = false;
+					if (clonedPets[u].shiny) {
+						shiny = true;
+					}
+					if (!shiny && !userteam[key].shiny && userteam[key].species === title || shiny && userteam[key].shiny && userteam[key].species === title) {
+						if (shiny) title = 'shiny' + title;
+						if (foundArray.indexOf(title) === -1) foundArray.push(title);
+					}
+				}
+			});
+			if (foundArray.length !== userteam.length) {
+				message.push("You have some pokemon on your team that you do not have as a pets! Please fix this! Check the shinies and mega formes! <br />Currently Matching Pets: " + foundArray.join(', '));
+			}
+			if (message.length >= 1) {
+				user.popup('|html|' + message.join('<br />'));
+				return false;
+			}
+		}
+
 		Ladders.acceptChallenge(connection, targetUser);
 	},
 

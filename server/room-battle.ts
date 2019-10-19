@@ -767,6 +767,40 @@ export class RoomBattle extends RoomGames.RoomGame {
 		let p1score = 0.5;
 		const winnerid = toID(winner);
 
+		if (toID(this.p2) === 'petsai' && winnerid !== toID(this.p2)) {
+			if (!Db.petladder.get(toID(this.p1))) {
+				Db.petladder.set(toID(this.p1), {});
+			} else {
+				let pl = Db.petladder.get(toID(this.p1), {});
+				if (!pl[this.format]) {
+					pl[this.format] = 1;
+					Db.petladder.set(toID(this.p1), pl);
+				} else {
+					pl[this.format]++;
+					Db.petladder.set(toID(this.p1), pl);
+				}
+				if (toID(this.p2) === 'petsai' && Db.petladder.get(toID(this.p1), {})[this.format] % 10 === 0) {
+					let reward = parseInt(Db.petladder.get(toID(this.p1), {})[this.format] * 10);
+					Db.petCash.set(toID(this.p1), Db.petCash.get(toID(this.p1), 0) + reward);
+					this.room.add(`|html|<strong>You have won ${reward} Pokédollars.</strong>`);
+					this.room.add(`|html|<strong>You are now on floor ${Db.petladder.get(toID(this.p1), {})[this.format]}.</strong>`);
+				} else {
+					let reward = parseInt(Db.petladder.get(toID(this.p1), {})[this.format] / 10) * 5;
+					if (reward === 0) reward = 25;
+					Db.petCash.set(toID(this.p1), Db.petCash.get(toID(this.p1), 0) + reward);
+					this.room.add(`|html|<strong>You have won ${reward} Pokédollars.</strong>`);
+					this.room.add(`|html|<strong>You are now on floor ${Db.petladder.get(toID(this.p1), {})[this.format]}.</strong>`);
+				}
+			}
+		} else if (toID(this.p2) === 'petsai' && winnerid === toID(this.p2)) {
+			if (!Db.petladder.get(toID(this.p1))) {
+				Db.petladder.set(toID(this.p1), {});
+			}
+			let pl = Db.petladder.get(toID(this.p1), {});
+			pl[this.format] = 0;
+			Db.petladder.set(toID(this.p1), pl);
+		}
+
 		// Check if the battle was rated to update the ladder, return its response, and log the battle.
 		const p1name = this.p1.name;
 		const p2name = this.p2.name;
