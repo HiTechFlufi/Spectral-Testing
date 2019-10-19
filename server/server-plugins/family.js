@@ -28,6 +28,7 @@ function write() {
 	}
 	data = data.substr(0, data.length - 2);
 	data += "\n}";
+	if (!Object.keys(families).length) data = "{}";
 	FS("config/chat-plugins/families.json").writeUpdate(() => (
 		data
 	));
