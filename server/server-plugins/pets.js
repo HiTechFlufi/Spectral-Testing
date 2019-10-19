@@ -205,7 +205,23 @@ function getSprite(monName) {
 	}
 
 	if (/alola?/.test(toID(monName))) {
-		spriteid.replace('alola', '-alola');
+		spriteid = spriteid.replace('alola', '-alola');
+	}
+	
+	if (/mega?/.test(toID(monName))) {
+		spriteid = spriteid.replace('alola', '-mega');
+	}
+
+	if (/megax?/.test(toID(monName))) {
+		spriteid = spriteid.replace('megax', '-megax');
+	}
+
+	if (/megay?/.test(toID(monName))) {
+		spriteid = spriteid.replace('megay', '-megay');
+	}
+
+	if (/primal?/.test(toID(monName))) {
+		spriteid = spriteid.replace('primal', '-primal');
 	}
 	
 	if (toID(monName).includes("pumpkaboo") && toID(monName).length !== 9) {
