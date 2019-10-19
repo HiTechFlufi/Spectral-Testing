@@ -72,6 +72,7 @@ exports.commands = {
 			if (families[user.id].sons.includes(adopteeId) || families[user.id].daughters.includes(adopteeId)) return this.errorReply(`${target} is already adopted by you.`);
 			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.gender) return this.errorReply(`To aide this command, please specify your gender using /gender.`);
+			if (adopteeId === user.id) return this.errorReply(`You cannot adopt yourself.`);
 			if (families[user.id].pendingAdoptions.includes(adopteeId)) return this.errorReply(`You are already trying to adopt ${target}.`);
 			families[user.id].pendingAdoptions.push(adopteeId);
 			write();
@@ -129,6 +130,8 @@ exports.commands = {
 			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.gender) return this.errorReply(`You do not have your gender set.`);
 			let targetId = toID(target);
+			if (targetId === user.id) return this.errorReply(`You cannot be your own sibling.`);
+			if (families[user.id].brothers.includes(targetId) || families[user.id].sisters.includes(targetId)) return this.errorReply(`${target} is already your sibling.`);
 			families[user.id].pendingSiblings.push(targetId);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
@@ -248,6 +251,7 @@ exports.commands = {
 			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.gender) return this.errorReply(`You do not have your gender set.`);
 			let targetId = toID(target);
+			if (targetId === user.id) return this.errorReply(`You must be pretty lonely to marry yourself.  It's okay to love yourself, but geez.`);
 			if (families[user.id].husbands.includes(targetId) || families[user.id].wives.includes(targetId)) return this.errorReply(`You are already married to ${target}.`);
 			families[user.id].pendingSpouses.push(targetId);
 			write();
@@ -331,6 +335,8 @@ exports.commands = {
 			let profile = Db.profile.get(user.id, {data: {title: {}, music: {}}});
 			if (!profile.gender) return this.errorReply(`You do not have your gender set.`);
 			let targetId = toID(target);
+			if (targetId === user.id) return this.errorReply(`You must be pretty lonely to date yourself.  It's okay to love yourself, but geez.`);
+			if (families[user.id].boyfriends.includes(targetId) || families[user.id].girlfriends.includes(targetId)) return this.errorReply(`${target} is already dating you.`);
 			families[user.id].pendingDates.push(targetId);
 			write();
 			if (Users.get(targetId) && Users.get(targetId).connected) {
