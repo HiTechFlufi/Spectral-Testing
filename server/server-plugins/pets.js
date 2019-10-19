@@ -229,11 +229,7 @@ function getSprite(monName) {
 		spriteid = spriteid.replace("pumpkaboo", "pumpkaboo-");
 	}
 
-	if (toID(monName).includes("wormadam") && toID(monName).length !== 9) {
-		spriteid = spriteid.replace("wormadam", "wormadam-");
-	}
-
-	if (toID(monName).includes("wormadam") && toID(monName).length !== 9) {
+	if (toID(monName).includes("wormadam") && toID(monName).length !== 8) {
 		spriteid = spriteid.replace("wormadam", "wormadam-");
 	}
 	
