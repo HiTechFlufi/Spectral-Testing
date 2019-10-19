@@ -161,6 +161,7 @@ function detailsMenu(userid, monId) {
 	let display = `<br /><br /><button name="send" value="/pets">Back</button><br /><br /><center><strong><em><font size=7>${pet.species}</font></em></strong><br />${getSprite(toID(pet.species)).img}<br /><br />Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br /><br /><br />`;
 	// display += (profile && profile.pet && profile.pet.species === toID(pet.species) ? `<button name="send" value="/pets details select">Remove Pet from Profile</button><br />` : `<button name="send" value="/pets details select ${monId}">Set as Profile Pet</button><br />`);
 	let evoDetails = getEvoDetails(Dex.getTemplate(toID(pet.species)));
+	display += `Amount of Evolution Candies required to evolve: ${evoDetails.reqCandy}`;
 	if (evoDetails.reqCandy <= Db.petCandy.get(userid, 0)) {
 		display += 'Evolve: <br /><br />';
 		for (let u = 0; u < evoDetails.evos.length; u++) {
