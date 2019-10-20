@@ -62,7 +62,7 @@ exports.commands = {
 				
 			},
 
-			edit(target, room, user) {
+			edit(target, room, user) { // edit roomranking & positioning
 				
 			},
 
@@ -74,7 +74,7 @@ exports.commands = {
 			roomrank(target, room, user) {
 				
 			},
-			
+
 			list(target, room, user) {
 			
 			},
