@@ -151,7 +151,7 @@ function petsMenu(userid) {
 	let petsMap = pets.map(pet => {
 		return `<button style="color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default; border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;" name="send" value="/pets details viewmon ${pet.id}">${getSprite(toID(pet.species)).img}</button> `;
 	});
-	return `<div style="overflow-y: scroll;">Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br />Pokédollars: ${Db.petCash.get(toID(userid), 0)}<br />Pets: <br />${petsMap.join("")}</div>`;
+	return `<div style="overflow-y: scroll;">Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br />Pokédollars: ${Db.petCash.get(toID(userid), 0)}<br /><strong>Want more Pokédollars? Then build a team of your pets in the teambuilder and ladder against the AI in the pets battle tiers!</strong><br />* The random battles do not use pets you own<br />Pets: <br />${petsMap.join("")}</div>`;
 }
 
 function detailsMenu(userid, monId) {
