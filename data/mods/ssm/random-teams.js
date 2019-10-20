@@ -132,6 +132,20 @@ class RandomFakemonsTeams extends RandomTeams {
 				},
 				nature: 'Modest',
 			},
+			'Mew': {
+				species: 'Mew',
+				ability: 'Magic Bounce',
+				item: 'Leftovers',
+				moves: ['stealthrock', 'willowisp', 'uturn'],
+				baseSignatureMove: "genesisformation",
+				signatureMove: "Genesis Formation",
+				evs: {
+					hp: 252,
+					spd: 4,
+					spe: 252,
+				},
+				nature: 'Timid',
+			},
 		};
 		// convert moves to ids.
 		for (let k in sets) {
