@@ -823,4 +823,76 @@ exports.BattleMovedex = {
 		type: "normal",
 		zMoveEffect: 'heal',
 	},
+	
+	// Chonner
+	"dragondash": {
+		id: "dragondash",
+		name: "Dragon Dash",
+		basePower: 75,
+		accuracy: 100,
+		pp: 5,
+		priority: 2, // could be 1
+		flags: {
+			protect: 1,
+			mirror: 1,
+			contact: 1,
+			heal: 1,
+		},
+		category: "Physical",
+		isNonstandard: true,
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Extreme Speed", target); // could be something else
+		},
+		secondary: null,
+		drain: [1, 2],
+		target: "normal",
+		type: "Dragon",
+	},
+	
+	// Satoriiiin
+	"sleeplesstrauma": {
+		id: "sleeplesstrauma",
+		name: "Sleepless Trauma",
+		basePower: 80,
+		accuracy: 70,
+		pp: 15,
+		priority: 0,
+		flags: {
+			protect: 1,
+			mirror: 1,
+			heal: 1,
+		},
+		category: "Special",
+		isNonstandard: true,
+		onPrepareHit(target, source) {
+			this.add('-anim', source, "Mind Reader", target);
+			this.add('-anim', source, "Psychic", target);
+		},
+		volatileStatus: 'nightmare',
+		effect: {
+			noCopy: true,
+			onStart(pokemon) {
+				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) {
+					return false;
+				}
+				this.add('-start', pokemon, 'Sleepless Trauma');
+			},
+			onResidualOrder: 9,
+			onResidual(pokemon) {
+				this.damage(pokemon.maxhp / 4);
+			},
+		},
+		onTryHit(target) {
+			if (target.status == 'slp' || target.hasAbility('comatose')) {
+				this.heal(pokemon.maxhp / 3);
+				return null;
+			}
+		},
+		secondary: {
+			chance: 30,
+			status: 'slp',
+		},
+		target: "normal",
+		type: "Psychic",
+	},
 };

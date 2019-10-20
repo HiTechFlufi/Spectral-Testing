@@ -146,6 +146,39 @@ let BattleAbilities = {
 			this.useMove("curse", pokemon);
 		},
 	},
+	/*
+	"battlebond+": {
+		id: "battlebond+",
+		name: "Battle Bond+",
+		desc: "If this Pokemon is a Greninja, it transforms into Ash-Greninja after knocking out a Pokemon. As Ash-Greninja, its Water Shuriken has 20 base power and always hits 3 times, boosts Accuracy by 1 stage.",
+		shortDesc: "After KOing a Pokemon: becomes Ash-Greninja, Water Shuriken: 20 power, hits 3x, +1 Accuracy.",
+		onSourceFaint(target, source, effect) {
+			if (effect && effect.effectType === 'Move' && source.template.speciesid === 'greninja' && source.hp && !source.transformed && source.side.foe.pokemonLeft) {
+				this.add('-activate', source, 'ability: Battle Bond+');
+				source.formeChange('Greninja-Ash', this.effect, true);
+				this.boost({accuracy: 1});
+			}
+		},
+		onModifyMovePriority: -1,
+		onModifyMove(move, attacker) {
+			if (move.id === 'watershuriken' && attacker.template.species === 'Greninja-Ash') {
+				move.multihit = 3;
+			}
+		},
+	},
+	*/
+	
+	"mindread": {
+		id: "mindread",
+		name: "Mind Read",
+		desc: "This Pokemon uses Mean Look, Hypnosis and Mind Reader on switch-in.",
+		shortDesc: "Mean Look + Hypnosis + Mind Reader",
+		onStart(pokemon) {
+			this.useMove("meanlook", pokemon);
+			this.useMove("hypnosis", pokemon);
+			this.useMove("mindreader", pokemon);
+		},
+	},
 };
 
 exports.BattleAbilities = BattleAbilities;
