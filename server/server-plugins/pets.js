@@ -233,6 +233,10 @@ function getSprite(monName) {
 		spriteid = spriteid.replace("wormadam", "wormadam-");
 	}
 
+	if (toID(monName).includes("rotom") && toID(monName).length !== 5) {
+		spriteid = spriteid.replace("rotom", "rotom-");
+	}
+
 	let shiny = (toID(monName).includes("shiny") ? '-shiny' : '');
 	if (Dex.getTemplate(toID(monName)).tier === 'CAP' || Dex.getTemplate(toID(monName)).tier === 'CAP LC') {
 		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${shiny}/${spriteid}.png">`;
