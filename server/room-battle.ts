@@ -785,8 +785,8 @@ export class RoomBattle extends RoomGames.RoomGame {
 					this.room.add(`|html|<strong>You have won ${reward} Pokédollars.</strong>`);
 					this.room.add(`|html|<strong>You are now on floor ${Db.petladder.get(toID(this.p1), {})[this.format]}.</strong>`);
 				} else {
-					let reward = parseInt(Db.petladder.get(toID(this.p1), {})[this.format] / 10) * 5;
-					if (reward === 0) reward = 25;
+					let reward = ((parseInt(Db.petladder.get(toID(this.p1), {})[this.format]) / 10) * 5) * 5;
+					if (reward === 0) reward = 20;
 					Db.petCash.set(toID(this.p1), Db.petCash.get(toID(this.p1), 0) + reward);
 					this.room.add(`|html|<strong>You have won ${reward} Pokédollars.</strong>`);
 					this.room.add(`|html|<strong>You are now on floor ${Db.petladder.get(toID(this.p1), {})[this.format]}.</strong>`);
