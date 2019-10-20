@@ -838,7 +838,7 @@ exports.BattleMovedex = {
 			contact: 1,
 			heal: 1,
 		},
-		category: "Physical",
+		category: "Special",
 		isNonstandard: true,
 		onPrepareHit(target, source) {
 			this.add('-anim', source, "Extreme Speed", target); // could be something else
