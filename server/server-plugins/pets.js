@@ -232,18 +232,6 @@ function getSprite(monName) {
 	if (toID(monName).includes("wormadam") && toID(monName).length !== 8) {
 		spriteid = spriteid.replace("wormadam", "wormadam-");
 	}
-	
-	if (toID(monName) === "kommoo") {
-		spriteid = "kommo-o";
-	}
-
-	if (toID(monName) === "hakamoo") {
-		spriteid = "Hakamo-o";
-	}
-
-	if (toID(monName) === "jangmoo") {
-		spriteid = "Jangmo-o";
-	}
 
 	let shiny = (toID(monName).includes("shiny") ? '-shiny' : '');
 	if (Dex.getTemplate(toID(monName)).tier === 'CAP' || Dex.getTemplate(toID(monName)).tier === 'CAP LC') {
