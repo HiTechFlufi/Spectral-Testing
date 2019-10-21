@@ -75,7 +75,7 @@ class PassTheBomb {
 
 	getMsg() {
 		let msg = `bomb${this.room.bombCount}${this.round}|<div class="infobox"><center><strong>Round: ${this.round}</strong><br />`;
-		msg += `Players: ${Chat.toListString(this.getSurvivors().map(player => Server.nameColor(player[1].name)))}<br />`;
+		msg += `Players: ${Chat.toListString(this.getSurvivors().map(player => Server.nameColor(player[1].name, true, true)))}<br />`;
 		msg += `<small>Use /pb or /passbomb [player] to Pass The Bomb to another player!</small>`;
 		return msg;
 	}
@@ -125,7 +125,7 @@ class PassTheBomb {
 		}
 		this.madeMove = true;
 		this.setBomb(targetId);
-		this.room.add(`|html|${Server.nameColor(user.name, true)} passed the bomb to ${Server.nameColor(targetId, true)}</strong>!`);
+		this.room.add(`|html|${Server.nameColor(user.name, true)} passed the bomb to ${Server.nameColor(targetId, true)}</strong>!`).update();
 		if (this.checkWinner()) this.getWinner();
 	}
 
@@ -154,7 +154,7 @@ class PassTheBomb {
 
 	removeUser(userid, left) {
 		if (!this.players.has(userid)) return;
-		this.room.add(`|html|${Server.nameColor(this.players.get(userid).name, true)} has ${(left ? `left` : `been disqualified from`)} the game.`);
+		this.room.add(`|html|${Server.nameColor(this.players.get(userid).name, true)} has ${(left ? `left` : `been disqualified from`)} the game.`).update();
 		this.players.delete(userid);
 		this.madeMove = true;
 		if (this.checkWinner()) {
