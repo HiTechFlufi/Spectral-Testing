@@ -81,7 +81,7 @@ class TDI {
 	giveChallenge() {
 		let challenges = ["Uno", "Tournament of Team 1's choice", "Tournament of Team 2's choice", "Ambush", "Hangman", "Pass The Bomb", "Guess Who", "Blackjack"];
 		let challenge = challenges[Math.floor(Math.random() * challenges.length)];
-		this.room.add(`<h3>Hello contestants, your challenge for this round is ${challenge}.  Good luck!</h3>`);
+		this.room.add(`|html|<h3>Hello contestants, your challenge for this round is ${challenge}.  Good luck!</h3>`);
 	}
 
 	eliminate(target) {
@@ -132,7 +132,9 @@ exports.commands = {
 			if (room.roomid !== "totaldramaisland") return this.errorReply("This command only works in Total Drama Island.");
 			if (room.tdi) return this.errorReply("There is an ongoing season of Total Drama Island in here.");
 			if (!target) return this.errorReply(`Specify who will be hosting this season of Total Drama Island.`);
-			room.tdi = new TDI(room, toID(target));
+			let host = toID(target);
+			if (!Users.get(host) || !Users.get(host).connected) return this.errorReply(`The host must be online to host.`); 
+			room.tdi = new TDI(room, host);
 		},
 
 		j: "join",
@@ -187,7 +189,7 @@ exports.commands = {
 		players(target, room, user) {
 			if (!this.runBroadcast()) return;
 			if (!room.tdi) return this.errorReply("There is not an ongoing Total Drama Island season currently.");
-			return this.sendReplyBox(`There is currently ${this.room.tdi.players.length} player${this.room.tdi.players.length > 1 ? "s" : ""} in this season of Total Drama Island.<br /> Players: ${Chat.toListString((this.room.tdi.players.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.<br /><strong>The host is ${Server.nameColor(room.tdi.host, true, true)}</strong>`);
+			return this.sendReplyBox(`There is currently ${this.room.tdi.players.length} player${this.room.tdi.players.length > 1 ? "s" : ""} in this season of Total Drama Island.<br /> Players: ${Chat.toListString((this.room.tdi.players.map(u => { return Server.nameColor(Users.get(u).name, true, true); })))}.<br /><strong>The host is ${Server.nameColor(room.tdi.host, true, true)}.</strong>`);
 		},
 
 		forceadd: "sub",
@@ -199,14 +201,17 @@ exports.commands = {
 			if (!(subin && team)) return this.parse(`/tdihelp`);
 			subin = toID(subin), team = toID(team);
 			if (!Users.get(subin) || !Users.get(subin).connected) return this.errorReply(`${subin} does not appear to be online.`);
-			if (!["team1", "team2"].includes(team)) return this.errorReply(`${team} should be Team 1 or Team 2.`);
+			if (!["team1", "team2", "host"].includes(team)) return this.errorReply(`${team} should be Team 1, Team 2, or Host.`);
+			if (room.tdi.players.includes(subin)) return this.errorReply(`${subin} is already in the game!`);
 			room.tdi.players.push(subin);
 			if (team === "team1") {
 				room.tdi.team1.push(subin);
-			} else {
+			} else if (team === "team2") {
 				room.tdi.team2.push(subin);
+			} else {
+				room.tdi.host = subin;
 			}
-			room.add(`|html|${Server.nameColor(subin, true)} has been added to into the game joining ${team === "team1" ? "Team 1" : "Team 2"}.`);
+			room.add(`|html|${Server.nameColor(subin, true)} has been added into the game as ${team}.`);
 			Users.get(subin).popup(`|html|${Server.nameColor(user.name, true, true)} has added you into the ongoing season of Total Drama Island.`);
 		},
 
