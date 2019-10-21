@@ -149,23 +149,23 @@ function getEvoDetails(pokemon) {
 function petsMenu(userid) {
 	const pets =  PetDb.get(toID(userid), []);
 	let petsMap = pets.map(pet => {
-		return `<button style="color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default; border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;" name="send" value="/pets details viewmon ${pet.id}">${getSprite(toID(pet.species)).img}</button> `;
+		return `<button style="color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default; border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;" name="send" value="/pets details viewmon ${pet.id}">${getSprite(toID(pet.species), pet.shiny).img}</button> `;
 	});
-	return `<div style="overflow-y: scroll;">Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br />Pokédollars: ${Db.petCash.get(toID(userid), 0)}<br /><strong>Want more Pokédollars? Then build a team of your pets in the teambuilder and ladder against the AI in the pets battle tiers!</strong><br />* The random battles do not use pets you own<br />Pets: <br />${petsMap.join("")}</div>`;
+	return `<div style="overflow-y: scroll;">Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br />Pokédollars: ${Db.petCash.get(toID(userid), 0)}<br /><br /><strong>Want more Pokédollars? Then build a team of your pets in the teambuilder and ladder against the AI in the pets battle tiers!<br />Pets tiers do not allow items, abilities or status moves</strong><br /><br />* The random battles do not use pets you own<br />Pets: <br />${petsMap.join("")}</div>`;
 }
 
 function detailsMenu(userid, monId) {
 	userid = toID(userid);
 	let pet = getPet(userid, monId);
 	let profile = Db.profile.get(userid, {data: {title: {}, music: {}}});
-	let display = `<br /><br /><button name="send" value="/pets">Back</button><br /><br /><center><strong><em><font size=7>${pet.species}</font></em></strong><br />${getSprite(toID(pet.species)).img}<br /><br />Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br /><br /><br />`;
+	let display = `<br /><br /><button name="send" value="/pets">Back</button><br /><br /><center><strong><em><font size=7>${pet.species}</font></em></strong><br />${getSprite(toID(pet.species), pet.shiny).img}<br /><br />Evolution Candies: ${Db.petCandy.get(toID(userid), 0)}<br /><br /><br />`;
 	// display += (profile && profile.pet && profile.pet.species === toID(pet.species) ? `<button name="send" value="/pets details select">Remove Pet from Profile</button><br />` : `<button name="send" value="/pets details select ${monId}">Set as Profile Pet</button><br />`);
 	let evoDetails = getEvoDetails(Dex.getTemplate(toID(pet.species)));
 	display += (evoDetails.reqCandy ? `Amount of Evolution Candies required to evolve: ${evoDetails.reqCandy}<br />` : "");
 	if (evoDetails.reqCandy <= Db.petCandy.get(userid, 0)) {
 		display += 'Evolve: <br /><br />';
 		for (let u = 0; u < evoDetails.evos.length; u++) {
-			display += `<button style="color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default;" name="send" value="/pets details evolve ${monId}, ${evoDetails.evos[u]}">${getSprite(toID(evoDetails.evos[u])).img}</button> ${(u + 1 === evoDetails.evos.length ? "" : ((u + 1) % 4 === 0 ? "<br />" : ""))}`;
+			display += `<button style="color: transparent ; background-color: transparent ; border-color: transparent ; cursor: default;" name="send" value="/pets details evolve ${monId}, ${evoDetails.evos[u]}">${getSprite(toID(evoDetails.evos[u]), pet.shiny).img}</button> ${(u + 1 === evoDetails.evos.length ? "" : ((u + 1) % 4 === 0 ? "<br />" : ""))}`;
 		}
 	}
 	display += `<br />${(userid !== pet.originalOwner ? `Original Owner: ${pet.originalOwner} <br />` : ``)} Date Obtained: ${pet.dateObtained}</center>`;
@@ -192,7 +192,7 @@ function toPokemonId(str) {
 	return str.toLowerCase().replace(/é/g, 'e').replace(/[a-z0-9 -/]/g, '');
 }
 
-function getSprite(monName) {
+function getSprite(monName, shiny) {
 	let mon = toID(monName);
 	let output = '';
 	let spriteid = mon;
@@ -204,6 +204,8 @@ function getSprite(monName) {
 	if (regexp.test(mon)) {
 		mon = Dex.getTemplate(mon).baseSpecies;
 	}
+
+	// General Formes
 
 	if (/alola?/.test(toID(monName))) {
 		spriteid = spriteid.replace('alola', '-alola');
@@ -224,28 +226,169 @@ function getSprite(monName) {
 	if (/primal?/.test(toID(monName))) {
 		spriteid = spriteid.replace('primal', '-primal');
 	}
-	
-	if (toID(monName).includes("pumpkaboo") && toID(monName).length !== 9) {
-		spriteid = spriteid.replace("pumpkaboo", "pumpkaboo-");
+
+	// Specific pokemon Formes
+
+	if (toID(monName) === "aegislashblade") {
+		spriteid = "aegislash-blade";
 	}
 
-	if (toID(monName).includes("wormadam") && toID(monName).length !== 8) {
-		spriteid = spriteid.replace("wormadam", "wormadam-");
+	if (toID(monName).includes("arceus") && toID(monName).length !== 6) {
+		spriteid = spriteid.replace("arceus", "arceus-");
+	}
+
+	if (toID(monName) === "basculinbluestriped") {
+		spriteid = "basculin-bluestriped";
+	}
+
+	if (toID(monName).includes("burmy") && toID(monName).length !== 5) {
+		spriteid = spriteid.replace("burmy", "burmy-");
+	}
+
+	if (toID(monName).includes("busted")) {
+		spriteid = spriteid.replace("busted", "-busted");
+	}
+
+	if (toID(monName).includes("castform") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("castform", "castform-");
+	}
+
+	if (toID(monName) === "darmanitanzen") {
+		spriteid = "darmanitan-zen";
+	}
+
+	if (toID(monName).includes("deerling") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("deerling", "deerling-");
+	}
+
+	if (toID(monName).includes("deoxys") && toID(monName).length !== 6) {
+		spriteid = spriteid.replace("deoxys", "deoxys-");
+	}
+
+	if (toID(monName) === "eeveestarter") {
+		spriteid = "eevee-starter";
+	}
+
+	if (toID(monName).includes("flabebe") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("flabebe", "flabebe-");
+	}
+
+	if (toID(monName).includes("floette") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("floette", "floette-");
+	}
+
+	if (toID(monName).includes("florges") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("florges", "florges-");
+	}
+
+	if (toID(monName).includes("furfrou") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("furfrou", "furfrou-");
+	}
+
+	if (toID(monName) === "gastrodoneast") {
+		spriteid = "gastrodon-east";
+	}
+
+	if (toID(monName).includes("genesect") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("genesect", "genesect-");
+	}
+
+	if (toID(monName) === "giratinaorigin") {
+		spriteid = "giratina-origin";
+	}
+
+	if (toID(monName).includes("gourgeist") && toID(monName).length !== 9) {
+		spriteid = spriteid.replace("gourgeist", "gourgeist-");
+	}
+
+	if (toID(monName) === "greninjash") {
+		spriteid = "greninja-ash";
+	}
+
+	if (toID(monName) === "keldeoresolute") {
+		spriteid = "keldeo-resolute";
+	}
+
+	if (toID(monName).includes("kyurem") && toID(monName).length !== 6) {
+		spriteid = spriteid.replace("kyurem", "kyurem-");
+	}
+
+	if (toID(monName) === "magearnaoriginal") {
+		spriteid = "magearna-original";
+	}
+
+	if (toID(monName) === "meloetta") {
+		spriteid = "meloetta-pirouette";
+	}
+
+	if (toID(monName).includes("minior") && toID(monName).length !== 6) {
+		spriteid = spriteid.replace("minior", "minior-");
+	}
+
+	if (toID(monName).includes("necrozma") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("necrozma", "necrozma-");
+	}
+
+	if (toID(monName).includes("oricorio") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("oricorio", "oricorio-");
+	}
+
+	if (toID(monName).includes("pikachu") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("pikachu", "pikachu-");
+	}
+
+	if (toID(monName).includes("pumpkaboo") && toID(monName).length !== 9) {
+		spriteid = spriteid.replace("pumpkaboo", "pumpkaboo-");
 	}
 
 	if (toID(monName).includes("rotom") && toID(monName).length !== 5) {
 		spriteid = spriteid.replace("rotom", "rotom-");
 	}
 
-	if (toID(monName) === 'floetteeternal') {
-		spriteid = 'floette-eternal';
+	if (toID(monName).includes("sawsbuck") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("sawsbuck", "sawsbuck-");
 	}
 
-	let shiny = (toID(monName).includes("shiny") ? '-shiny' : '');
+	if (toID(monName) === "shelloseast") {
+		spriteid = "shellos-east";
+	}
+
+	if (toID(monName).includes("silvally") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("silvally", "silvally-");
+	}
+
+	if (toID(monName).includes("therian")) {
+		spriteid = spriteid.replace("therian", "-therian");
+	}
+
+	if (toID(monName).includes("totem")) {
+		spriteid = spriteid.replace("totem", "-totem");
+	}
+
+	if (toID(monName).includes("unown") && toID(monName).length !== 5) {
+		spriteid = spriteid.replace("unown", "unown-");
+	}
+
+	if (toID(monName).includes("vivillon") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("vivillon", "vivillon-");
+	}
+
+	if (toID(monName) === "wishiwashischool") {
+		spriteid = "wishiwashi-school";
+	}
+
+	if (toID(monName).includes("wormadam") && toID(monName).length !== 8) {
+		spriteid = spriteid.replace("wormadam", "wormadam-");
+	}
+
+	if (toID(monName).includes("zygarde") && toID(monName).length !== 7) {
+		spriteid = spriteid.replace("zygarde", "zygarde-");
+	}
+
 	if (Dex.getTemplate(toID(monName)).tier === 'CAP' || Dex.getTemplate(toID(monName)).tier === 'CAP LC') {
-		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${shiny}/${spriteid}.png">`;
+		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${(shiny ? `-shiny` : ''}/${spriteid}.png">`;
 	} else {
-		output += `<img src="//play.pokemonshowdown.com/sprites/xyani${shiny}/${spriteid}.gif">`;
+		output += `<img src="//play.pokemonshowdown.com/sprites/ani${(shiny ? `-shiny` : '')}/${spriteid}.gif">`;
 	}
 
 	return {img: output, sprite: spriteid};
@@ -277,7 +420,7 @@ exports.commands = {
 				if (!target) targetId = user.id;
 				const pets =  PetDb.get(targetId, []);
 				let petsMap = pets.map(pet => {
-					return `<span style="border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;">${getSprite(toID(pet.species)).img}</span> `;
+					return `<span style="border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;">${getSprite(toID(pet.species), pet.shiny).img}</span> `;
 				});
 				this.sendReplyBox('<div style="max-height: 300px; overflow-y: scroll;">' + petsMap.join('') + '</div><br><center><b>' + Server.nameColor(targetId, true) + ' has ' + pets.length + ' Pets.');
 			} else {
@@ -419,7 +562,7 @@ exports.commands = {
 			
 			addMon(targetId, pet, shiny);
 			user.popup(`You have successfully given ${Dex.getTemplate(pet).species} to ${targetId}.`);
-			if (Users.get(targetId)) Users.get(targetId).popup(`|html||modal|<center><strong>You have been given the pet ${Dex.getTemplate(pet).species}.</strong><br />${getSprite(pet).img}</center>`);
+			if (Users.get(targetId)) Users.get(targetId).popup(`|html||modal|<center><strong>You have been given the pet ${Dex.getTemplate(pet).species}.</strong><br />${getSprite(pet, (shiny ? true : false)).img}</center>`);
 			this.privateModAction(`${user.name} gave the pet "${Dex.getTemplate(pet).species}" to ${targetId}.`);
 		},
 		genhelp: ["/pets gen [user], [pokemon], [shiny (optional)] - Gives the specificed user a new specificed pet. Requires &, ~"],
