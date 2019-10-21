@@ -786,19 +786,19 @@ exports.BattleMovedex = {
 		volatileStatus: 'nightmare',
 		effect: {
 			noCopy: true,
-			onStart(pokemon) {
-				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) {
+			onStart(target) {
+				if (target.status !== 'slp' && !target.hasAbility('comatose')) {
 					return false;
 				}
-				this.add('-start', pokemon, 'Sleepless Trauma');
+				this.add('-start', target, 'Sleepless Trauma');
 			},
 			onResidualOrder: 9,
-			onResidual(pokemon) {
-				this.damage(pokemon.maxhp / 4);
+			onResidual(target) {
+				this.damage(target.maxhp / 4);
 			},
 		},
 		onModifyMove(move, target) {
-			if (target.status !== 'slp' && !target.hasAbility('comatose')) {
+			if (target.status === 'slp') {
 				move.drain = [1, 2];
 			}
 		},
