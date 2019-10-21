@@ -582,99 +582,7 @@ exports.BattleMovedex = {
 		desc: "30% chance to paralyze the target.",
 	},
 
-	// Insist
-	debugging: {
-		id: "debugging",
-		name: "Debugging",
-		priority: 1,
-		isNonstandard: true,
-		self: {
-			boosts: {
-				spa: 1,
-				spe: 1,
-			},
-		},
-		flags: {
-			protect: 1,
-			mirror: 1,
-		},
-		desc: "Boosts user's Special Attack and Speed by 1 stage.",
-		shortDesc: "Boosts user's SpA & Spe by 1.",
-		secondary: false,
-		category: "Special",
-		onHit(target, source, move) {
-			this.add('c|@Insist|``npm test``');
-		},
-		onPrepareHit(target, source) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Hydro Pump", target);
-		},
-		basePower: 90,
-		pp: 15,
-		accuracy: 100,
-		target: "normal",
-		type: "Water",
-		zMovePower: 140,
-		contestType: "Cool",
-	},
-
-	//Insist
-	"exiledfromallothers": {
-		id: "exiledfromallothers",
-		name: "Exiled From All Others",
-		basePower: 150,
-		accuracy: true,
-		pp: 1,
-		noPPBoosts: true,
-		secondary: false,
-		category: "Special",
-		isNonstandard: true,
-		isZ: "playniumz",
-		priority: 1,
-		flags: {
-		},
-		onHit(target, source, move) {
-			this.add('c|@Insist|Exiled from all others, we shall become greater than ever before.');
-		},
-		onPrepareHit(target, source) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Hydro Pump", target);
-		},
-		target: "normal",
-		type: "Water",
-	},
-	
-	//Revival N
-	"idealthief": {
-		id: "idealthief",
-		name: "Ideal Thief",
-		basePower: 90,
-		accuracy: 100,
-		pp: 10,
-		secondary: false,
-		category: "Physical",
-		isNonstandard: true,
-		priority: 0,
-		flags: {
-			protect: 1,
-			mirror: 1,
-			contact: 1,
-		},
-		volatileStatus: 'gastroacid',
-		onTryHit(pokemon) {
-			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'zenmode'];
-			if (bannedAbilities.includes(pokemon.ability)) {
-				return false;
-			}
-		},
-		onPrepareHit(target, source) {
-			this.add('-anim', source, "Spectral Thief", target);
-		},
-		target: "normal",
-		type: "Dark",
-	},
-	
-	//Shade Churup
+	// Shade Churup
 	"dragonstrike": {
 		id: "dragonstrike",
 		name: "Dragon Strike",
@@ -697,6 +605,8 @@ exports.BattleMovedex = {
 			mirror: 1,
 			contact: 1,
 		},
+		desc: "Boosts the user's Special Attack by 2 stages.",
+		shortDesc: "Boosts Special Attack by 2 stages.",
 		onPrepareHit(target, source) {
 			this.add('-anim', source, "Outrage", target);
 		},
@@ -705,7 +615,7 @@ exports.BattleMovedex = {
 		zMovePower: 200,
 	},
 	
-	//Shade Churup
+	// Shade Churup
 	"dragonicsmash": {
 		id: "dragonicsmash",
 		name: "dragonicsmash",
@@ -721,6 +631,8 @@ exports.BattleMovedex = {
 				},
 			},
 		},
+		desc: "Boosts the user's Attack by 2 stages.",
+		shortDesc: "Boosts Attack by 2 stages.",
 		category: "Physical",
 		isNonstandard: true,
 		isZ: "dragoniumz",
@@ -735,7 +647,7 @@ exports.BattleMovedex = {
 		type: "Dragon",
 	},
 	
-	//trees are cool
+	// trees are cool
 	"mildvines": {
 		id: "mildvines",
 		name: "Mild Vines",
@@ -759,6 +671,7 @@ exports.BattleMovedex = {
 				}
 			},
 		},
+		shortDesc: "Hits twice, boosts either Attack or Accuracy by 1 stage.",
 		multihit: 2,
 		category: "Physical",
 		isNonstandard: true,
@@ -770,7 +683,7 @@ exports.BattleMovedex = {
 		zMovePower: 100,
 	},
 	
-	//trees are cool
+	// trees are cool
 	"spicyvines": {
 		id: "spicyvines",
 		name: "Spicy Vines",
@@ -788,16 +701,16 @@ exports.BattleMovedex = {
 		onPrepareHit(target, source) {
 			this.add('-anim', source, "Fire Lash", target);
 		},
+		shortDesc: "Hits twice, drains 1/2 of the damage dealt, and ignores immunities.",
 		isZ: "carniviumz",
 		drain: [1, 2],
 		secondary: null,
 		target: "normal",
 		type: "Grass",
 		ignoreImmunities: true,
-		// I don't think this deals damage under inverse rules but whatever
 	},
 	
-	//Shade Bones
+	// Shade Bones
 	"waitwtf": {
 		id: "waitwtf",
 		name: "Wait WTF",
@@ -818,9 +731,10 @@ exports.BattleMovedex = {
 		onPrepareHit(target, source) {
 			this.add('-anim', source, "Transform", target);
 		},
+		shortDesc: "Transforms into the opponent.",
 		secondary: null,
 		target: "normal",
-		type: "normal",
+		type: "Normal",
 		zMoveEffect: 'heal',
 	},
 	
@@ -831,7 +745,7 @@ exports.BattleMovedex = {
 		basePower: 75,
 		accuracy: 100,
 		pp: 5,
-		priority: 2, // could be 1
+		priority: 1,
 		flags: {
 			protect: 1,
 			mirror: 1,
@@ -841,8 +755,9 @@ exports.BattleMovedex = {
 		category: "Special",
 		isNonstandard: true,
 		onPrepareHit(target, source) {
-			this.add('-anim', source, "Extreme Speed", target); // could be something else
+			this.add('-anim', source, "Extreme Speed", target);
 		},
+		shortDesc: "Drains 1/2 of the damage dealt.",
 		secondary: null,
 		drain: [1, 2],
 		target: "normal",
@@ -882,17 +797,67 @@ exports.BattleMovedex = {
 				this.damage(pokemon.maxhp / 4);
 			},
 		},
-		onTryHit(target) {
+		onTryHit(target, pokemon) {
 			if (target.status == 'slp' || target.hasAbility('comatose')) {
 				this.heal(pokemon.maxhp / 3);
 				return null;
 			}
 		},
+		desc: "Causes the target to have a Nightmare, heals the user's HP by 1/3 if they are asleep, and 30% chance to make the target fall asleep.",
+		desc: "30% chance to make target sleep, causes opponent to have a Nightmare, and heals by 1/3rd if they are asleep.",
 		secondary: {
 			chance: 30,
 			status: 'slp',
 		},
 		target: "normal",
 		type: "Psychic",
+	},
+
+	// Shade heir
+	"baheirier": {
+		num: 164,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "The user sets up a Substitute, and raises its Special Defense by 2 stages and Defense by 3 stages.",
+		shortDesc: "Sets up Substitute, +2 SpD and +3 Def.",
+		id: "baheirier",
+		isViable: true,
+		name: "Ba-heir-ier",
+		pp: 10,
+		priority: 0,
+		flags: {snatch: 1, nonsky: 1},
+		volatileStatus: 'substitute',
+		boosts: {
+			def: 3,
+			spd: 2,
+		},
+		secondary: null,
+		target: "self",
+		type: "Grass",
+	},
+
+	// Revival N
+	"theshockingtruth": {
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		desc: "Hits twice. If the first hit breaks the target's substitute, it will take damage for the second hit. Has a 15% chance to flinch the target.",
+		shortDesc: "Hits twice. 15% chance to flinch.",
+		id: "theshockingtruth",
+		isViable: true,
+		name: "The Shocking Truth",
+		pp: 5,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
+		multihit: 2,
+		secondary: {
+			chance: 15,
+			volatileStatus: 'flinch',
+		},
+		target: "normal",
+		type: "Electric",
+		zMovePower: 180,
+		contestType: "Clever",
 	},
 };

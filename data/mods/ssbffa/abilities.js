@@ -2,6 +2,7 @@
 
 /**@type {{[k: string]: ModdedAbilityData}} */
 let BattleAbilities = {
+	// Prof Drix
 	"fsubs": {
 		id: "fsubs",
 		name: "F Subs",
@@ -32,18 +33,19 @@ let BattleAbilities = {
 		},
 	},
 
+	// Shade Tatsu
 	"warriorsdance": {
 		id: "warriorsdance",
 		name: "Warrior's Dance",
 		desc: "Taunts the foe and boosts Speed/Accuracy by 1 stage.",
-		shortDesc: "Taunt, +1 SpA/Acc/Spe",
+		shortDesc: "Uses Taunt, +1 Accuracy and Speed.",
 		onStart(pokemon) {
 			this.useMove("taunt", pokemon);
-			this.boost({spe: 1});
-			this.boost({accuracy: 1});
+			this.boost({spe: 1, accuracy: 1});
 		},
 	},
 
+	// trees are cool
 	"honeypot": {
 		id: "honeypot",
 		name: "Honey Pot",
@@ -65,6 +67,7 @@ let BattleAbilities = {
 		},
 	},
 
+	// Shade Bones
 	"memeguard": {
 		id: "memeguard",
 		name: "Meme Guard",
@@ -87,6 +90,7 @@ let BattleAbilities = {
 		},
 	},
 
+	// Chonner
 	"ghidorahbond": {
 		id: "ghidorahbond",
 		name: "Ghidorah Bond",
@@ -111,6 +115,7 @@ let BattleAbilities = {
 		},
 	},
 
+	// Shade heir
 	"regenheirator": {
 		id: "regenheirator",
 		name: "Regen-heir-ator",
@@ -134,6 +139,7 @@ let BattleAbilities = {
 		},
 	},
 
+	// Vario64
 	"kingsblessing": {
 		id: "kingsblessing",
 		name: "King's Blessing",
@@ -146,10 +152,11 @@ let BattleAbilities = {
 			this.useMove("curse", pokemon);
 		},
 	},
-	/*
-	"battlebond+": {
-		id: "battlebond+",
-		name: "Battle Bond+",
+
+	// Shade Striky
+	"battlebondwithcontacts": {
+		id: "battlebondwithcontacts",
+		name: "Battle Bond with Contacts",
 		desc: "If this Pokemon is a Greninja, it transforms into Ash-Greninja after knocking out a Pokemon. As Ash-Greninja, its Water Shuriken has 20 base power and always hits 3 times, boosts Accuracy by 1 stage.",
 		shortDesc: "After KOing a Pokemon: becomes Ash-Greninja, Water Shuriken: 20 power, hits 3x, +1 Accuracy.",
 		onSourceFaint(target, source, effect) {
@@ -166,8 +173,8 @@ let BattleAbilities = {
 			}
 		},
 	},
-	*/
-	
+
+	// Satoriiiin
 	"mindread": {
 		id: "mindread",
 		name: "Mind Read",
@@ -177,6 +184,19 @@ let BattleAbilities = {
 			this.useMove("meanlook", pokemon);
 			this.useMove("hypnosis", pokemon);
 			this.useMove("mindreader", pokemon);
+		},
+	},
+
+	// Enrii
+	"freakyou": {
+		id: "freakyou",
+		name: "Freak You",
+		desc: "If this Pokemon is hit by a contact move, it's Attack and Speed stat is raised by one stage.",
+		shortDesc: "If hit by contact, +1 Attack and Speed.",
+		onAfterDamage(damage, target, source, move) {
+			if (source && source !== target && move && move.flags['contact']) {
+				this.boost({atk: 1, spe: 1});
+			}
 		},
 	},
 };
