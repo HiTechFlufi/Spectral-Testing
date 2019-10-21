@@ -386,7 +386,7 @@ function getSprite(monName, shiny) {
 	}
 
 	if (Dex.getTemplate(toID(monName)).tier === 'CAP' || Dex.getTemplate(toID(monName)).tier === 'CAP LC') {
-		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${(shiny ? `-shiny` : ''}/${spriteid}.png">`;
+		output += `<img src="//play.pokemonshowdown.com/sprites/gen5${(shiny ? `-shiny` : '')}/${spriteid}.png">`;
 	} else {
 		output += `<img src="//play.pokemonshowdown.com/sprites/ani${(shiny ? `-shiny` : '')}/${spriteid}.gif">`;
 	}
