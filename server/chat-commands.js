@@ -3238,6 +3238,8 @@ const commands = {
 				Chat.uncacheDir('./server/server-plugins');
 				Chat.uncacheDir('./.server-dist/chat-plugins');
 				Chat.uncacheDir('./translations');
+				Chat.uncache('./Server');
+				global.Server = require('./Server').Server;
 				global.Chat = require('../.server-dist/chat').Chat;
 
 				Chat.uncacheDir('./.server-dist/tournaments');
