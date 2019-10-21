@@ -797,14 +797,13 @@ exports.BattleMovedex = {
 				this.damage(pokemon.maxhp / 4);
 			},
 		},
-		onTryHit(target, pokemon) {
-			if (target.status == 'slp' || target.hasAbility('comatose')) {
-				this.heal(pokemon.maxhp / 3);
-				return null;
+		onModifyMove(move, target) {
+			if (target.status !== 'slp' && !target.hasAbility('comatose')) {
+				move.drain = [1, 2];
 			}
 		},
-		desc: "Causes the target to have a Nightmare, heals the user's HP by 1/3 if they are asleep, and 30% chance to make the target fall asleep.",
-		desc: "30% chance to make target sleep, causes opponent to have a Nightmare, and heals by 1/3rd if they are asleep.",
+		desc: "Causes the target to have a Nightmare, heals the user's HP by 1/2 damage dealt if they are asleep, and 30% chance to make the target fall asleep.",
+		shortDesc: "30% chance to make target sleep, causes opponent to have a Nightmare, and heals by 1/2 of damage if they are asleep.",
 		secondary: {
 			chance: 30,
 			status: 'slp',
