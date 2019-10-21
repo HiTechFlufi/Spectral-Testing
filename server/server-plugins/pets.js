@@ -212,7 +212,7 @@ function getSprite(monName, shiny) {
 	}
 	
 	if (/mega?/.test(toID(monName))) {
-		spriteid = spriteid.replace('alola', '-mega');
+		spriteid = spriteid.replace('mega', '-mega');
 	}
 
 	if (/megax?/.test(toID(monName))) {
